@@ -29,6 +29,30 @@ public class StockController {
     private StockService stockService;
 
     /**
+     * Gets the stock
+     * @param ucBuilder URI builder
+     * @return
+     */
+    @RequestMapping(value = "/stock", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<StockValueControllerResponse>> getStock(UriComponentsBuilder ucBuilder) {
+        ResponseEntity stockQueryResponse = null;
+        List<StockValue> stock = new ArrayList<StockValue>();
+        List<StockValueControllerResponse> stockResponse = null;
+        StockValueControllerResponseAdapter stockAdapter = null;
+        Integer stockSize = 0;
+
+        try {
+            stockQueryResponse = new ResponseEntity(stockResponse,HttpStatus.BAD_REQUEST);
+        }
+        catch(StockApplicationException e) {
+            stockQueryResponse = new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+            logger.debug("Error processing the stock query [{}].",e.getMessage());
+        }
+
+        return stockQueryResponse;
+    }
+
+    /**
      * Gets the stock by store id
      * @param storeid store id
      * @param ucBuilder URI builder

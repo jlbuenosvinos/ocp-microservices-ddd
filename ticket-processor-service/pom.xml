@@ -17,6 +17,14 @@
         <version>6</version>
     </parent>
 
+    <!--
+    <parent>
+        <groupId>io.openshift.booster</groupId>
+        <artifactId>spring-boot-booster-parent</artifactId>
+        <version>1.5.10-2-rhoar</version>
+    </parent>
+    -->
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -39,6 +47,7 @@
     </dependencyManagement>
 
     <dependencies>
+
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-xml</artifactId>
@@ -156,6 +165,13 @@
             <artifactId>logback-classic</artifactId>
             <version>1.0.13</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>18.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>

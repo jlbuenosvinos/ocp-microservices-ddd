@@ -1,18 +1,85 @@
+AQM 7 Installation
+__________________
 
-amq
-___
+oc login -u system:admin
+
+oc create -n openshift -f https://raw.githubusercontent.com/jboss-container-images/jboss-amq-7-broker-openshift-image/71-1.0.TP/amq-broker-7-image-streams.yaml
+
+oc replace -n openshift --force -f https://raw.githubusercontent.com/jboss-container-images/jboss-amq-7-broker-openshift-image/71-1.0.TP/amq-broker-7-image-streams.yaml
+
+oc -n openshift import-image amq-broker-71-openshift:1.0
+
+oc create -n openshift -f https://raw.githubusercontent.com/jboss-container-images/jboss-amq-7-broker-openshift-image/71-1.0.TP/templates/amq-broker-71-basic.yaml
+
+oc create -n openshift -f https://raw.githubusercontent.com/jboss-container-images/jboss-amq-7-broker-openshift-image/71-1.0.TP/templates/amq-broker-71-ssl.yaml
+
+oc create -n openshift -f https://raw.githubusercontent.com/jboss-container-images/jboss-amq-7-broker-openshift-image/71-1.0.TP/templates/amq-broker-71-persistence.yaml
+
+oc create -n openshift -f https://raw.githubusercontent.com/jboss-container-images/jboss-amq-7-broker-openshift-image/71-1.0.TP/templates/amq-broker-71-persistence-ssl.yaml
+
+oc create -n openshift -f https://raw.githubusercontent.com/jboss-container-images/jboss-amq-7-broker-openshift-image/71-1.0.TP/templates/amq-broker-71-statefulset-clustered.yaml
+
+oc replace -n openshift -f https://raw.githubusercontent.com/jboss-container-images/jboss-amq-7-broker-openshift-image/71-1.0.TP/templates/amq-broker-71-basic.yaml
+
+oc replace -n openshift -f https://raw.githubusercontent.com/jboss-container-images/jboss-amq-7-broker-openshift-image/71-1.0.TP/templates/amq-broker-71-ssl.yaml
+
+oc replace -n openshift -f https://raw.githubusercontent.com/jboss-container-images/jboss-amq-7-broker-openshift-image/71-1.0.TP/templates/amq-broker-71-persistence.yaml
+
+oc replace -n openshift -f https://raw.githubusercontent.com/jboss-container-images/jboss-amq-7-broker-openshift-image/71-1.0.TP/templates/amq-broker-71-persistence-ssl.yaml
+
+oc replace -n openshift -f https://raw.githubusercontent.com/jboss-container-images/jboss-amq-7-broker-openshift-image/71-1.0.TP/templates/amq-broker-71-statefulset-clustered.yaml
+
+oc policy add-role-to-user view -z default
+
+
+Maven
+_____
+
+export MAVEN_HOME=/Applications/Tools/apache-maven-3.5.0
+
+export PATH=$PATH:$MAVEN_HOME/bin/
+
+
+Project delete
+________________
+
+oc delete project ocp-microservices-ddd
+
+
+Project creation
+________________
+
+oc new-project ocp-microservices-ddd
+
+
+amq 6.3
+_______
 
 oc new-app --template=amq63-persistent -p MQ_USERNAME=sales-event-store -p MQ_PASSWORD=sales-event-store -p APPLICATION_NAME=sales-event-store
 
+
+AMQ 7.1
+_______
+
+oc new-app --template=amq-broker-71-statefulset-clustered -p APPLICATION_NAME=sales-event-store -p AMQ_NAME=sales-event-store -p AMQ_CLUSTERED=true -p AMQ_CLUSTER_USER=sales-event-store -p AMQ_CLUSTER_PASSWORD=sales-event-store -p AMQ_REPLICATED=true -p AMQ_REPLICAS=2
+
+
 data grid
+_________
 _________
 
 oc new-app --template=datagrid71-basic -p USERNAME=sales-data-store -p PASSWORD=sales-data-store-Mypassword123_ -p APPLICATION_NAME=sales-data-store -p INFINISPAN_CONNECTORS=rest,hotrod,memcached -p CACHE_NAMES=STOCK -p HOTROD_AUTHENTICATION=true -p CONTAINER_SECURITY_ROLE_MAPPER=identity-role-mapper -p CONTAINER_SECURITY_ROLES=sales-data-store=ALL -p ADMIN_GROUP=REST,___schema_manager,sales-data-store -p MEMCACHED_CACHE=""
 
 
-oc new-app --template=datagrid71-basic -p USERNAME=sales-data-store -p PASSWORD=sales-data-store-Mypassword123_ -p APPLICATION_NAME=sales-data-store -p INFINISPAN_CONNECTORS=rest,hotrod,memcached -p CACHE_NAMES=STOCK -p DEFAULT_CACHE=STOCK -p STOCK_CACHE_START=EAGER -p STOCK_CACHE_SECURITY_AUTHORIZATION_ENABLED=true -p STOCK_CACHE_SECURITY_AUTHORIZATION_ROLES=sales-data-store,___schema_manager,___script_manager -p HOTROD_AUTHENTICATION=true -p CONTAINER_SECURITY_ROLE_MAPPER=identity-role-mapper -p CONTAINER_SECURITY_ROLES=sales-data-store\\=ALL -p ADMIN_GROUP=REST,___schema_manager,sales-data-store
-
 Patching the sales-data-store deployment adding the STOCK cache configuration
 _____________________________________________________________________________
 
+oc env dc/sales-data-store STOCK_CACHE_START=EAGER STOCK_CACHE_SECURITY_AUTHORIZATION_ENABLED=true  STOCK_CACHE_SECURITY_AUTHORIZATION_ROLES=sales-data-store,___schema_manager,___script_manager HOTROD_AUTHENTICATION=true  CONTAINER_SECURITY_ROLE_MAPPER=identity-role-mapper CONTAINER_SECURITY_ROLES=sales-data-store\\=ALL  ADMIN_GROUP=REST,___schema_manager,sales-data-store
 
+oc scale dc/sales-data-store --replicas=2
+
+
+MS deployment
+_____________
+
+mvn clean fabric8:deploy -Popenshift
