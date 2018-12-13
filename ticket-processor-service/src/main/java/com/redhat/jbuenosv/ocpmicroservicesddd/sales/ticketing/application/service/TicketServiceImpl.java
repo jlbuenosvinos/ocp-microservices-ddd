@@ -2,7 +2,6 @@ package com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.application.serv
 
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.application.configuration.CommonConfig;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.domain.TicketProcessorEventBus;
-import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.domain.event.DomainEventPublisher;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.event.TicketGeneratedEvent;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.model.Order;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.model.OrderLineType;
@@ -31,9 +30,6 @@ class TicketServiceImpl implements TicketService {
 
     @Autowired
     TicketStore ticketStore;
-
-    @Autowired
-    DomainEventPublisher eventPublisher;
 
     @Autowired
     TicketProcessorEventBus ticketProcessorEventBus;

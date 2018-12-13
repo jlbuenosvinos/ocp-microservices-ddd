@@ -1,0 +1,38 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  creationTimestamp: '2018-04-09T14:28:21Z'
+  labels:
+    app: pipeline
+    name: pipeline
+  name: pipeline
+  namespace: ocp-microservices-ddd
+  resourceVersion: '127858419'
+  selfLink: /apis/build.openshift.io/v1/namespaces/ocp-microservices-ddd/buildconfigs/pipeline
+  uid: 40e291d2-3c02-11e8-888a-02722ccca8d2
+spec:
+  nodeSelector: null
+  output: {}
+  postCommit: {}
+  resources: {}
+  runPolicy: Serial
+  source:
+    type: None
+  strategy:
+    jenkinsPipelineStrategy:
+      jenkinsfile: |-
+        node('maven') { 
+          stage 'AMQ Deployment'
+            
+          
+        }
+    type: JenkinsPipeline
+  triggers:
+    - github:
+        secret: secret101
+      type: GitHub
+    - generic:
+        secret: secret101
+      type: Generic
+status:
+  lastVersion: 2
