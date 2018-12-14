@@ -88,3 +88,4 @@ ticket-processor-service
 oc create -f ticket-processor-service-secret.yaml
 
 mvn clean fabric8:deploy -Popenshift
+
