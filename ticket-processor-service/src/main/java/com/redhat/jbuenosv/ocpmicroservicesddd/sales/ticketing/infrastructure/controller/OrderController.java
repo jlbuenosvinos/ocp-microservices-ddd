@@ -4,6 +4,8 @@ import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.application.excep
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.builder.OrderBuilder;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.application.service.TicketService;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.model.Order;
+import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.domain.TicketProcessorEventBus;
+import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.store.TicketStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,9 @@ class OrderController {
 
     @Autowired
     private TicketService ticketService;
+
+    @Autowired
+    private TicketProcessorEventBus ticketProcessorEventBus;
 
     /**
      * Default constructor

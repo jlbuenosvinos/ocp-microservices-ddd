@@ -3,6 +3,7 @@ package com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.infrastructure.contr
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.application.exception.StockApplicationException;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.application.service.StockService;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.domain.model.StockValue;
+import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.domain.model.StoreValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,30 @@ public class StockController {
 
     @Autowired
     private StockService stockService;
+
+    /**
+     * Gets the stock
+     * @param ucBuilder URI builder
+     * @return
+     */
+    @RequestMapping(value = "/stock", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<StockValueControllerResponse>> getStock(UriComponentsBuilder ucBuilder) {
+        ResponseEntity stockQueryResponse = null;
+        List<StockValue> stock = new ArrayList<StockValue>();
+        List<StockValueControllerResponse> stockResponse = null;
+        StockValueControllerResponseAdapter stockAdapter = null;
+        Integer stockSize = 0;
+
+        try {
+            stockQueryResponse = new ResponseEntity(stockResponse,HttpStatus.BAD_REQUEST);
+        }
+        catch(StockApplicationException e) {
+            stockQueryResponse = new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+            logger.debug("Error processing the stock query [{}].",e.getMessage());
+        }
+
+        return stockQueryResponse;
+    }
 
     /**
      * Gets the stock by store id
@@ -57,7 +82,7 @@ public class StockController {
                     logger.debug("[{}] stock entries  for store [{}]",stock.size(),storeid);
 
                     stockResponse = new ArrayList<StockValueControllerResponse>(stockSize);
-                   for(int i = 0 ; i < stockSize ; i ++) {
+                    for(int i = 0 ; i < stockSize ; i ++) {
                         stockAdapter = new StockValueControllerResponseAdapter(stock.get(i));
                         stockResponse.add(stockAdapter.getStockValueControllerResponse());
                     }
@@ -116,6 +141,46 @@ public class StockController {
 
         return stockQueryResponse;
 
+    }
+
+    /**
+     * Gets the stores list
+     * @param ucBuilder URI builder
+     * @return
+     */
+    @RequestMapping(value = "/store", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<StoreValueControllerResponse>> getStores(UriComponentsBuilder ucBuilder) {
+        ResponseEntity storeQueryResponse = null;
+        List<StoreValue> stores = new ArrayList<StoreValue>();
+        List<StoreValueControllerResponse> storeResponse = null;
+        StoreValueControllerResponseAdapter storeAdapter = null;
+        Integer storesSize = 0;
+
+        try {
+
+                stores = stockService.getStores();
+                storesSize = stores.size();
+
+                if (storesSize == 0) {
+                    logger.debug("No stores found.");
+                    storeQueryResponse = new ResponseEntity(HttpStatus.NOT_FOUND);
+                }
+                else {
+                    storeResponse = new ArrayList<StoreValueControllerResponse>(storesSize);
+                    for(int i = 0 ; i < storesSize ; i ++) {
+                        storeAdapter = new StoreValueControllerResponseAdapter(stores.get(i));
+                        storeResponse.add(storeAdapter.getStoreValueControllerResponse());
+                    }
+                    storeQueryResponse = new ResponseEntity(storeResponse,HttpStatus.OK);
+                }
+
+        }
+        catch(StockApplicationException e) {
+            storeQueryResponse = new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+            logger.debug("Error processing the stores query.",e.getMessage());
+        }
+
+        return storeQueryResponse;
     }
 
 }

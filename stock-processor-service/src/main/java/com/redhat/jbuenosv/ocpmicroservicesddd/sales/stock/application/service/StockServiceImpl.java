@@ -5,13 +5,16 @@ import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.domain.event.StockEve
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.domain.model.StockKey;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.domain.model.StockValue;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.domain.model.Ticket;
-import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.infrastructure.domain.event.DomainEventPublisher;
-import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.infrastructure.store.StockEventStore;
+import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.infrastructure.domain.StockProcessorEventBus;
+import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.infrastructure.store.StockStore;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.infrastructure.util.UUIDGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 /**
  * This service includes the main logic for the ticketing projection service
@@ -23,16 +26,30 @@ public class StockServiceImpl implements StockService {
     public static final Logger logger = LoggerFactory.getLogger(StockServiceImpl.class);
 
     @Autowired
-    DomainEventPublisher eventPublisher;
-
-    @Autowired
     UUIDGenerator uuidGenerator;
 
     @Autowired
     CommonConfig config;
 
     @Autowired
-    private StockEventStore stockEventStore;
+    private StockStore stockStore;
+
+    @Autowired
+    StockProcessorEventBus stockProcessorEventBus;
+
+    @PostConstruct
+    public void init() {
+        logger.debug("StockServiceImpl init.");
+        stockProcessorEventBus.register(this.stockStore);
+        logger.debug("StockServiceImpl init ends.");
+    }
+
+    @PreDestroy
+    public void stop() {
+        logger.debug("StockServiceImpl stop.");
+        stockProcessorEventBus.unregister(this.stockStore);
+        logger.debug("StockServiceImpl stop ends.");
+    }
 
     /**
      * Projects a ticket
@@ -54,7 +71,9 @@ public class StockServiceImpl implements StockService {
         stockEvent.setStoreId(ticket.getStoreId());
         stockEvent.setUnits(ticket.getItem().getUnits());
 
-        eventPublisher.publish(stockEvent);
+        stockProcessorEventBus.post(stockEvent);
+
+        logger.debug("Ticket [{}] has been post.",ticket.getTicketId());
         logger.debug("Ticket [{}] has been processed.",ticket.getTicketId());
     }
 

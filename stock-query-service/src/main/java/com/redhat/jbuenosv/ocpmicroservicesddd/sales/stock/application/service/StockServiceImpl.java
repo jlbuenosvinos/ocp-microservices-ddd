@@ -1,12 +1,15 @@
 package com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.application.service;
 
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.domain.model.StockValue;
+import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.domain.model.StoreValue;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.infrastructure.repository.StockRepository;
+import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.infrastructure.repository.StoreRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,6 +23,10 @@ public class StockServiceImpl implements StockService {
 
     @Autowired
     private StockRepository stockRepository;
+
+    @Autowired
+    private StoreRepository storeRepository;
+
 
     /**
      * Get the current stock for an specific product and store
@@ -38,6 +45,15 @@ public class StockServiceImpl implements StockService {
      */
     public StockValue getStock(Integer storeId, String productId) {
         return stockRepository.findByStoreIdProductId(storeId,productId);
+    }
+
+
+    /**
+     * Get the stores list
+     * @return stores list
+     */
+    public List<StoreValue> getStores() {
+        return storeRepository.findAll();
     }
 
 }

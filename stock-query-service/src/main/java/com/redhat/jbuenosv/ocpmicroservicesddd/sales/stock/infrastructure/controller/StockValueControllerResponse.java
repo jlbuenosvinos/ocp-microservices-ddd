@@ -1,9 +1,11 @@
 package com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.infrastructure.controller;
 
+import java.io.Serializable;
+
 /**
  * Created by jlbuenosvinos.
  */
-public class StockValueControllerResponse {
+public class StockValueControllerResponse implements Serializable {
 
     private Integer store_id;
     private String product_id;
