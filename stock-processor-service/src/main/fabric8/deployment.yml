@@ -30,3 +30,30 @@ spec:
           periodSeconds: 10
           successThreshold: 1
           timeoutSeconds: 1
+        env:
+          - name: "TICKETING_TICKETS_DESTINATION_NAME"
+            value: "sales.ticketing.tickets.destination"
+          - name: "TICKETING_TICKETS_BROKER_URI"
+            value: "tcp://sales-event-store-amq-tcp:61616?jms.redeliveryPolicy.maximumRedeliveries=10"
+          - name: "TICKETING_TICKETS_BROKER_USERNAME"
+            value: "sales-event-store"
+          - name: "TICKETING_TICKETS_BROKER_PASSWORD"
+            valueFrom:
+              secretKeyRef:
+                name: ticket-processor-service-secret
+                key: TICKETING_TICKETS_BROKER_PASSWORD
+          - name: "TICKETING_STOCK_SUBSCRIBER_CLIENT_ID"
+            value: "sales.stock.subscriber"
+          - name: "STOCK_EVENT_VERSION"
+            value: "1.0"
+          - name: "STOCK_DATAGRID_BROKER_URI"
+            value: "sales-data-store-hotrod"
+          - name: "STOCK_DATAGRID_BROKER_URI_PORT"
+            value: "11333"
+          - name: "STOCK_DATAGRID_BROKER_USERNAME"
+            value: "sales-data-store"
+          - name: "STOCK_DATAGRID_BROKER_PASSWORD"
+            valueFrom:
+              secretKeyRef:
+                name: stock-processor-service-secret
+                key: STOCK_DATAGRID_BROKER_PASSWORD

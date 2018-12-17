@@ -6,8 +6,6 @@ import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.domain.model.StockKey
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.domain.model.StockValue;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.domain.model.Ticket;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.infrastructure.domain.StockProcessorEventBus;
-import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.infrastructure.domain.event.DomainEventPublisher;
-import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.infrastructure.store.StockEventStore;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.infrastructure.store.StockStore;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.infrastructure.util.UUIDGenerator;
 import org.slf4j.Logger;

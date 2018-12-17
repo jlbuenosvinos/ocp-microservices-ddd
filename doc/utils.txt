@@ -87,5 +87,14 @@ ticket-processor-service
 
 oc create -f ticket-processor-service-secret.yaml
 
+
+stock-processor-service
+------------------------
+
+oc create -f stock-processor-service-secret.yaml
+
+
+Maven deployment command
+
 mvn clean fabric8:deploy -Popenshift
 
