@@ -30,3 +30,15 @@ spec:
           periodSeconds: 10
           successThreshold: 1
           timeoutSeconds: 1
+        env:
+          - name: "STOCK_DATAGRID_BROKER_URI"
+            value: "sales-data-store-hotrod"
+          - name: "STOCK_DATAGRID_BROKER_URI_PORT"
+            value: "11333"
+          - name: "STOCK_DATAGRID_BROKER_USERNAME"
+            value: "sales-data-store"
+          - name: "STOCK_DATAGRID_BROKER_PASSWORD"
+            valueFrom:
+              secretKeyRef:
+                name: stock-query-service-secret
+                key: STOCK_DATAGRID_BROKER_PASSWORD
