@@ -1,1 +1,6 @@
-# stock-processor-service
+# Stock Processor Service
+@todo
+
+## Architecture Overview
+
+## Installation Process

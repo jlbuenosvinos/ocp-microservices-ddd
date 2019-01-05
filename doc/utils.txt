@@ -94,12 +94,13 @@ stock-processor-service
 oc create -f stock-processor-service-secret.yaml
 
 stock-query-service
-------------------------
+-------------------
 
 oc create -f stock-query-service-secret.yaml
 
 
 Maven deployment command
+________________________
 
 mvn clean fabric8:deploy -Popenshift
 

@@ -17,14 +17,6 @@
         <version>6</version>
     </parent>
 
-    <!--
-    <parent>
-        <groupId>io.openshift.booster</groupId>
-        <artifactId>spring-boot-booster-parent</artifactId>
-        <version>1.5.10-2-rhoar</version>
-    </parent>
-    -->
-
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -51,19 +43,19 @@
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-xml</artifactId>
-            <version>2.9.5</version>
+            <version>2.9.8</version>
         </dependency>
 
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.9.5</version>
+            <version>2.9.8</version>
         </dependency>
 
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
-            <version>2.9.5</version>
+            <version>2.9.8</version>
         </dependency>
 
         <dependency>
