@@ -1,0 +1,12 @@
+[
+  {
+    "store_id": 3,
+    "product_id": "1",
+    "units": 5
+  },
+  {
+    "store_id": 3,
+    "product_id": "2",
+    "units": 8
+  }
+]

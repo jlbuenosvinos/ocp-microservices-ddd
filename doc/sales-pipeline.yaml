@@ -1,0 +1,40 @@
+kind: "BuildConfig"
+apiVersion: "v1"
+metadata:
+  name: "sales-pipeline"
+spec:
+  strategy:
+    jenkinsPipelineStrategy:
+      jenkinsfile: |-
+        try {
+            def appName=""
+            def projectName=""
+            node {
+              stage("INIT") {
+                  //appName = ${APP_NAME}
+                  //project = ${APP_NAME}
+              }
+            }
+            node("maven") {
+              stage("CHECKOUT") {
+                  git url: "${GIT_SOURCE_URL}", branch: "${GIT_SOURCE_REF}"
+              }
+              stage("BUILD") {
+
+                  openshift.withCluster() {
+                      openshift.withProject("${APP_NAME}") {
+                          dir("ticket-processor-service") {
+                              sh "mvn clean package -Popenshift"
+                          }
+                      }
+                  }
+              }
+            }
+          } 
+          catch (err) {
+            echo "in catch block"
+            echo "Caught: ${err}"
+            currentBuild.result = 'FAILURE'
+            throw err
+          }
+      type: JenkinsPipeline

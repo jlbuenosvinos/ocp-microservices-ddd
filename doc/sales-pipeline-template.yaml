@@ -1,0 +1,80 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: sales-pipeline-template
+parameters:
+- name: APP_NAME
+  description: The name assigned to all of the application objects defined in this template.
+  displayName: Application Name
+  required: true
+  value: ocp-microservices-ddd
+- name: GIT_SOURCE_URL
+  description: The source URL for the application
+  displayName: Source URL
+  required: true
+  value: https://github.com/jlbuenosvinos/ocp-microservices-ddd.git
+- name: GIT_SOURCE_REF
+  description: The source Ref for the application
+  displayName: Source Ref
+  required: true
+  value: master
+- description: Github trigger secret. A difficult to guess string encoded as part of the webhook URL.  Not encrypted.
+  displayName: GitHub Webhook Secret
+  from: '[a-zA-Z0-9]{40}'
+  generate: expression
+  name: GITHUB_WEBHOOK_SECRET
+  required: true
+- description: A secret string used to configure the Generic webhook.
+  displayName: Generic Webhook Secret
+  from: '[a-zA-Z0-9]{40}'
+  generate: expression
+  name: GENERIC_WEBHOOK_SECRET
+  required: true
+objects:
+- apiVersion: "v1"
+  kind: "BuildConfig"
+  metadata:
+    name: "sales-pipeline"
+  spec:
+    strategy:
+      jenkinsPipelineStrategy:
+        jenkinsfile: |-
+          try {
+            def appName=""
+            def projectName=""
+            node {
+              stage("INIT") {
+                  //appName = ${APP_NAME}
+                  //project = ${APP_NAME}
+              }
+            }
+            node("maven") {
+              stage("CHECKOUT") {
+                  git url: "${GIT_SOURCE_URL}", branch: "${GIT_SOURCE_REF}"
+              }
+              stage("BUILD") {
+
+                  openshift.withCluster() {
+                      openshift.withProject("${APP_NAME}") {
+                          dir("ticket-processor-service") {
+                              sh "mvn clean package -Popenshift"
+                          }
+                      }
+                  }
+              }
+            }
+          } 
+          catch (err) {
+            echo "in catch block"
+            echo "Caught: ${err}"
+            currentBuild.result = 'FAILURE'
+            throw err
+          }
+        type: JenkinsPipeline
+      triggers:
+        - github:
+            secret: "${GITHUB_WEBHOOK_SECRET}"
+          type: GitHub
+        - generic:
+            secret: "${GENERIC_WEBHOOK_SECRET}"
+          type: Generic

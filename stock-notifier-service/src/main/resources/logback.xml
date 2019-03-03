@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>web - %date [%thread] %-5level %logger{36} - %message%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <logger name="org.springframework" level="INFO" />
+
+    <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.application.configuration" level="DEBUG" />
+    <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.domain.model" level="DEBUG" />
+    <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock" level="DEBUG" />
+    <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.application.service" level="DEBUG" />
+    <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.application.handler" level="DEBUG" />
+    <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.application.handler.controller" level="DEBUG" />
+    <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.infrastructure.store" level="DEBUG" />
+    <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.infrastructure.repository" level="DEBUG" />
+    <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.infrastructure.cache" level="DEBUG" />
+    <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.infrastructure.listener" level="DEBUG" />
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+    </root>
+
+</configuration>

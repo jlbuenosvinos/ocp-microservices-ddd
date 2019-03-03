@@ -1,0 +1,40 @@
+kind: "BuildConfig"
+apiVersion: "v1"
+metadata:
+  name: "sales-pipeline"
+spec:
+  strategy:
+    jenkinsPipelineStrategy:
+      jenkinsfile: |-
+        try {
+    
+          def appName=""
+          def project=""
+          node {
+            stage("INIT") {
+                project = env.PROJECT_NAME
+            }
+          }
+          node("maven") {
+            stage("CHECKOUT") {
+                git url: "https://github.com/jlbuenosvinos/ocp-microservices-ddd.git", branch: "master"
+            }
+            stage("BUILD") {
+
+                openshift.withCluster() {
+                    openshift.withProject("ocp-microservices-ddd") {
+                        dir("ticket-processor-service") {
+                            sh "mvn clean package -Popenshift"
+                        }
+                    }
+                }
+            }
+          }
+        } 
+        catch (err) {
+          echo "in catch block"
+          echo "Caught: ${err}"
+          currentBuild.result = 'FAILURE'
+          throw err
+        }
+      type: JenkinsPipeline
