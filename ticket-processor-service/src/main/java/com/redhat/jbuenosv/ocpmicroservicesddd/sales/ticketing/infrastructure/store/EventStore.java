@@ -1,15 +1,16 @@
 package com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.store;
 
+import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.event.TicketGeneratedEvent;
+
 /**
  * Created by jlbuenosvinos.
  */
 public interface EventStore {
 
     /**
-     * Saves an event to its store
-     * @param event event to be stored
-     * @param <T> event type
+     * Saves a Ticket Event
+     * @param event Ticket event to be store
      */
-    <T> void save(final T event);
+    void store(TicketGeneratedEvent event);
 
 }

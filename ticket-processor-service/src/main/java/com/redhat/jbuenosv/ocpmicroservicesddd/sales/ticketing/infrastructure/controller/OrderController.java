@@ -50,7 +50,7 @@ class OrderController {
         ResponseEntity orderResponse;
 
         try {
-            Order newOrder = orderBuilder.build(order.toString());
+            Order newOrder = orderBuilder.build(order);
             ticketService.processOrder(newOrder);
             HttpHeaders headers = new HttpHeaders();
             headers.setLocation(ucBuilder.path("/api/order/{" + newOrder.getOrderId() + "}").buildAndExpand(newOrder.getOrderId()).toUri());

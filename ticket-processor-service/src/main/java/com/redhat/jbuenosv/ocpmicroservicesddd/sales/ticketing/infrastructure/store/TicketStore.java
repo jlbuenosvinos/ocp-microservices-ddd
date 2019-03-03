@@ -21,7 +21,7 @@ import javax.jms.Session;
  * Created by jlbuenosvinos.
  */
 @Component
-public class TicketStore {
+public class TicketStore implements EventStore {
 
     public static final Logger logger = LoggerFactory.getLogger(TicketStore.class);
 
@@ -34,39 +34,50 @@ public class TicketStore {
      */
     @Subscribe
     public void store(TicketGeneratedEvent event) {
-        logger.debug("Saving begin.");
 
-        TicketGeneratedEvent ticketGeneratedEvent = event;
+        if (!mqConfig.getTicketsStoreEnabled()) {
 
-        ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
-        connectionFactory.setBrokerURL(mqConfig.getBrokerUrl());
-        connectionFactory.setPassword(mqConfig.getPassword());
-        connectionFactory.setUserName(mqConfig.getUserName());
-        connectionFactory.setStatsEnabled(Boolean.TRUE);
-        logger.debug("ConnectionFactory available.");
-        JmsTemplate template = new JmsTemplate();
-        template.setConnectionFactory(connectionFactory);
-        template.setDeliveryMode(DeliveryMode.PERSISTENT);
-        template.setPubSubDomain(Boolean.TRUE);
-        template.setSessionTransacted(Boolean.TRUE);
+            logger.debug("AMQ Store is disabled.");
+            logger.info("AMQ Store is disabled.");
 
-        logger.debug("JMS template is available.");
+        } // end if
+        else {
 
-        MessageCreator mc = new MessageCreator() {
-            @Override
-            public Message createMessage(Session session) throws JMSException {
-                Message msg = session.createTextMessage(ticketGeneratedEvent.getTicket().toJson());
-                msg.setStringProperty("sales-event-type",ticketGeneratedEvent.getEventType());
-                msg.setStringProperty("sales-event-id",ticketGeneratedEvent.getEventId());
-                msg.setLongProperty("sales-occuredon",ticketGeneratedEvent.getOccurredOn().getTime());
-                msg.setStringProperty("sales-event-version",ticketGeneratedEvent.getEventVersion());
-                return msg;
-            }
-        };
+            logger.debug("Saving begin.");
 
-        logger.debug("AMQ message is available.");
+            TicketGeneratedEvent ticketGeneratedEvent = event;
 
-        template.send(mqConfig.getTicketsTopicName(),mc);
+            ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
+            connectionFactory.setBrokerURL(mqConfig.getBrokerUrl());
+            connectionFactory.setPassword(mqConfig.getPassword());
+            connectionFactory.setUserName(mqConfig.getUserName());
+            connectionFactory.setStatsEnabled(Boolean.TRUE);
+            logger.debug("ConnectionFactory available.");
+            JmsTemplate template = new JmsTemplate();
+            template.setConnectionFactory(connectionFactory);
+            template.setDeliveryMode(DeliveryMode.PERSISTENT);
+            template.setPubSubDomain(Boolean.TRUE);
+            template.setSessionTransacted(Boolean.TRUE);
+
+            logger.debug("JMS template is available.");
+
+            MessageCreator mc = new MessageCreator() {
+                @Override
+                public Message createMessage(Session session) throws JMSException {
+                    Message msg = session.createTextMessage(ticketGeneratedEvent.getTicket().toJson());
+                    msg.setStringProperty("sales-event-type",ticketGeneratedEvent.getEventType());
+                    msg.setStringProperty("sales-event-id",ticketGeneratedEvent.getEventId());
+                    msg.setLongProperty("sales-occuredon",ticketGeneratedEvent.getOccurredOn().getTime());
+                    msg.setStringProperty("sales-event-version",ticketGeneratedEvent.getEventVersion());
+                    return msg;
+                }
+            };
+
+            logger.debug("AMQ message is available.");
+
+            template.send(mqConfig.getTicketsTopicName(),mc);
+
+        }
 
     }
 

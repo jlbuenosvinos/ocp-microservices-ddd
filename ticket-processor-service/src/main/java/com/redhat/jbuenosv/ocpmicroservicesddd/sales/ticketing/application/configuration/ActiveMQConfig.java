@@ -21,6 +21,9 @@ public class ActiveMQConfig {
     @Value("${ticketing.activemq.tickets.topic}")
     String ticketsTopicName;
 
+    @Value("${ticketing.activemq.store.amq.enabled}")
+    Boolean ticketsStoreEnabled;
+
     public String getBrokerUrl() {
         return brokerUrl;
     }
@@ -35,6 +38,10 @@ public class ActiveMQConfig {
 
     public String getTicketsTopicName() {
         return ticketsTopicName;
+    }
+
+    public Boolean getTicketsStoreEnabled() {
+        return ticketsStoreEnabled;
     }
 
 }
