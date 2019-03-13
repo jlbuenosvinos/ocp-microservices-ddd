@@ -202,7 +202,6 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
         </profile>
-
         <profile>
             <id>openshift</id>
            <build>

@@ -1,0 +1,359 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: ctti-templates
+  annotations:
+    description: "CTTI Application Jenkins templates creation."
+    iconClass: "icon-stackoverflow"
+parameters:
+- name: OCP_SYSTEM_USER_TOKEN
+  description: OpenShift system token
+  displayName: OpenShift system token
+  required: true
+  value: cQt1AGPXgo4GrvmunRizpfC_xGO7SwPLELcC27b_QJc
+- name: OCP_ADMIN_USER_TOKEN
+  description: OpenShift admin token
+  displayName: OpenShift admin token
+  required: true
+  value: cQt1AGPXgo4GrvmunRizpfC_xGO7SwPLELcC27b_QJc
+- name: APP_NAME
+  description: The name assigned to all of the application objects defined in this template.
+  displayName: Application Name
+  required: true
+  value: ctti-app
+- name: APP_NAME_DEV
+  description: The name assigned to all of the application objects defined in this template.
+  displayName: DEV Application Name
+  required: true
+  value: ctti-app-dev
+- name: APP_NAME_PRE
+  description: The name assigned to all of the application objects defined in this template.
+  displayName: PRE Application Name
+  required: true
+  value: ctti-app-pre
+- name: APP_NAME_PRO
+  description: The name assigned to all of the application objects defined in this template.
+  displayName: PRO Application Name
+  required: true
+  value: ctti-app-pro
+- name: GIT_SOURCE_URL
+  description: The source URL for the application
+  displayName: Source URL
+  required: true
+  value: https://github.com/jlbuenosvinos/ocp-microservices-ddd.git
+- name: GIT_SOURCE_REF
+  description: The source Ref for the application
+  displayName: Source Ref
+  required: true
+  value: dev
+- description: Github trigger secret. A difficult to guess string encoded as part of the webhook URL.  Not encrypted.
+  displayName: GitHub Webhook Secret
+  from: '[a-zA-Z0-9]{40}'
+  generate: expression
+  name: GITHUB_WEBHOOK_SECRET
+  required: true
+- description: A secret string used to configure the Generic webhook.
+  displayName: Generic Webhook Secret
+  from: '[a-zA-Z0-9]{40}'
+  generate: expression
+  name: GENERIC_WEBHOOK_SECRET
+  required: true
+objects:
+- apiVersion: "v1"
+  kind: "BuildConfig"
+  metadata:
+    name: "sales-deploy-ticket-processor-pipeline"
+  spec:
+    strategy:
+      jenkinsPipelineStrategy:
+        jenkinsfile: |-
+          try {
+            def appName=""
+            def projectName=""
+            node {
+              stage("INIT") {
+              }
+            }
+            node("maven") {
+              stage("CHECKOUT") {
+                  git url: "${GIT_SOURCE_URL}", branch: "${GIT_SOURCE_REF}"
+              }
+              stage("BUILD") {
+
+                  openshift.withCluster() {
+
+                    openshift.withCredentials() {
+                        openshift.withProject('${APP_NAME_DEV}') {
+                            dir("doc") {
+                                openshift.raw('create','-f ticket-processor-service-secret.yaml')
+                                echo "Secret [ticket-processor-service-secret] has been created."
+                            }
+                        }
+                        dir("ticket-processor-service") {
+                            sh "mvn clean fabric8:deploy -P openshift -Dfabric8.namespace=${APP_NAME_DEV}"
+                        }
+                        
+                    }
+
+                  }
+              }
+            }
+            node {
+              stage("FINISH") {
+                  
+              }
+            }
+          } 
+          catch (err) {
+            echo "in catch block"
+            echo "Caught: ${err}"
+            currentBuild.result = 'FAILURE'
+            throw err
+          }
+        type: JenkinsPipeline
+      triggers:
+        - github:
+            secret: "${GITHUB_WEBHOOK_SECRET}"
+          type: GitHub
+        - generic:
+            secret: "${GENERIC_WEBHOOK_SECRET}"
+          type: Generic
+- apiVersion: "v1"
+  kind: "BuildConfig"
+  metadata:
+    name: "sales-init-pipeline"
+  spec:
+    strategy:
+      jenkinsPipelineStrategy:
+        jenkinsfile: |-
+          try {
+            def appName=""
+            def projectName=""
+            def result=""
+            node {
+              stage("INIT") {
+              }
+            }
+            node("maven") {
+              stage("PROJECTS-CREATION") {
+                  openshift.withCluster() {
+                      openshift.withCredentials('${OCP_ADMIN_USER_TOKEN}') {
+
+                          def devProject = openshift.selector('project','${APP_NAME_DEV}').exists()
+                          if (!devProject) {
+                              result = openshift.raw('new-project','${APP_NAME_DEV}','--display-name=${APP_NAME_DEV}','--description=${APP_NAME_DEV}')
+                              echo "Project [${APP_NAME_DEV}] has been created."
+                          }
+                          else {
+                              echo "Project [${APP_NAME_DEV}] already exists."
+                          }
+                          def preProject = openshift.selector('project','${APP_NAME_PRE}').exists()
+                          if (!preProject) {
+                              result = openshift.raw('new-project','${APP_NAME_PRE}','--display-name=${APP_NAME_PRE}','--description=${APP_NAME_PRE}')
+                              echo "Project [${APP_NAME_PRE}] has been created."
+                          }
+                          else {
+                              echo "Project [${APP_NAME_PRE}] already exists."
+                          }
+                          def proProject = openshift.selector('project','${APP_NAME_PRO}').exists()
+                          if (!proProject) {
+                              result = openshift.raw('new-project','${APP_NAME_PRO}','--display-name=${APP_NAME_PRO}','--description=${APP_NAME_PRO}')
+                              echo "Project [${APP_NAME_PRO}] has been created."
+                          }
+                          else {
+                              echo "Project [${APP_NAME_PRO}] already exists."
+                          }
+
+                          openshift.raw('policy','add-role-to-user edit system:serviceaccount:devtools:jenkins -n ${APP_NAME_DEV}')
+                          openshift.raw('policy','add-role-to-user edit system:serviceaccount:devtools:jenkins -n ${APP_NAME_PRE}')
+                          openshift.raw('policy','add-role-to-user edit system:serviceaccount:devtools:jenkins -n ${APP_NAME_PRO}')
+                          openshift.raw('policy','add-role-to-group system:image-puller system:serviceaccounts:${APP_NAME_PRE} -n ${APP_NAME_DEV}')
+                          openshift.raw('policy','add-role-to-group system:image-puller system:serviceaccounts:${APP_NAME_PRO} -n ${APP_NAME_DEV}')
+
+                      }
+                  }
+              }
+            }
+            node {
+              stage("FINISH") {
+              }
+            }
+          } 
+          catch (err) {
+            echo "in catch block"
+            echo "Caught: ${err}"
+            currentBuild.result = 'FAILURE'
+            throw err
+          }          
+        type: JenkinsPipeline
+      triggers:
+        - github:
+            secret: "${GITHUB_WEBHOOK_SECRET}"
+          type: GitHub
+        - generic:
+            secret: "${GENERIC_WEBHOOK_SECRET}"
+          type: Generic
+- apiVersion: "v1"
+  kind: "BuildConfig"
+  metadata:
+    name: "sales-prereqs-pipeline"
+  spec:
+    strategy:
+      jenkinsPipelineStrategy:
+        jenkinsfile: |-
+          try {
+            def appName=""
+            def projectName=""
+            def result=""
+            node {
+              stage("INIT") {
+              }
+            }
+            node("maven") {
+              stage("PREREQS") {
+                  openshift.withCluster() {
+                      openshift.withCredentials('${OCP_ADMIN_USER_TOKEN}') {
+                          openshift.withProject('openshift') {
+                              def template
+                              def templateSelector = openshift.selector( 'template', "amq-broker-71-statefulset-clustered")
+                              def templateExists = templateSelector.exists()
+                              
+                              if (!templateExists) {
+                                  openshift.raw('create','-n openshift','-f https://raw.githubusercontent.com/jboss-container-images/jboss-amq-7-broker-openshift-image/71-1.0.TP/templates/amq-broker-71-statefulset-clustered.yaml')
+                                  openshift.raw('replace','-n openshift','-f https://raw.githubusercontent.com/jboss-container-images/jboss-amq-7-broker-openshift-image/71-1.0.TP/templates/amq-broker-71-statefulset-clustered.yaml')
+                                  echo "Image [amq-broker-71-statefulset-clustered] has been created." 
+                              } 
+                              else {
+                                  echo "Image [amq-broker-71-statefulset-clustered] already exists." 
+                                  template = templateSelector.object()
+                              }
+                          }
+                          openshift.raw('policy','add-role-to-user view -z default')
+                          echo "view add-role-to-user to default has been set." 
+                      }
+                  }
+              }
+            }
+            node {
+              stage("FINISH") {
+              }
+            }
+          } 
+          catch (err) {
+            echo "in catch block"
+            echo "Caught: ${err}"
+            currentBuild.result = 'FAILURE'
+            throw err
+          }
+        type: JenkinsPipeline
+      triggers:
+        - github:
+            secret: "${GITHUB_WEBHOOK_SECRET}"
+          type: GitHub
+        - generic:
+            secret: "${GENERIC_WEBHOOK_SECRET}"
+          type: Generic
+- apiVersion: "v1"
+  kind: "BuildConfig"
+  metadata:
+    name: "sales-infra-pipeline"
+  spec:
+    strategy:
+      jenkinsPipelineStrategy:
+        jenkinsfile: |-
+          try {
+            def appName="sales-event-store"
+            def appReplicasCount="2"
+            node {
+              stage("INIT") {
+              }
+            }
+            node("maven") {
+              stage("AMQ") {
+                  openshift.withCluster() {
+                      openshift.withCredentials('${OCP_ADMIN_USER_TOKEN}') {
+                          openshift.withProject('${APP_NAME_DEV}') {
+
+                            def salesStatefulSet = openshift.selector('statefulset','sales-event-store-amq').exists()
+                    
+                            if (!salesStatefulSet) {
+                                  
+                                  echo "Application [sales-event-store] has to be installed."
+                                  def rawResult = openshift.raw('new-app','--template=amq-broker-71-statefulset-clustered -p APPLICATION_NAME=sales-event-store -p AMQ_NAME=sales-event-store -p AMQ_CLUSTERED=true -p AMQ_CLUSTER_USER=sales-event-store -p AMQ_CLUSTER_PASSWORD=sales-event-store -p AMQ_REPLICATED=true -p AMQ_REPLICAS=2')
+                                  def salesAppPods = openshift.selector('pod', [app: "sales-event-store-amq"])
+                                  echo "Application [sales-event-store] pods has been prepared."
+                                  salesAppPods.untilEach {
+                                      echo "[sales-event-store,${it.name()},${it.object().status.containerStatuses[0].ready}]"
+                                      return it.object().status.containerStatuses[0].ready
+                                  }
+                                  echo "Application [sales-event-store] has been created."
+
+                            } 
+                            else {
+                              def numSalesAppPods = openshift.selector('pod', [app: "sales-event-store-amq"]).count()
+                              echo "Application [sales-event-store] already exists with [${numSalesAppPods}] running pods."
+                            }
+
+                            
+                          }
+                      }
+                  }
+              } // end stage("AMQ")
+
+              stage("DG") {
+                openshift.withCluster() {
+                    openshift.withCredentials('${OCP_ADMIN_USER_TOKEN}') {
+                        openshift.withProject('${APP_NAME_DEV}') {
+                    
+                          def salesDataStore = openshift.selector('dc','sales-data-store').exists()
+                          if (!salesDataStore) {
+
+                              echo "Application [sales-data-store] has to be installed."
+                              def rawResult = openshift.raw('new-app','--template=datagrid71-basic -p USERNAME=sales-data-store -p PASSWORD=sales-data-store-Mypassword123_ -p APPLICATION_NAME=sales-data-store -p INFINISPAN_CONNECTORS=rest,hotrod,memcached -p CACHE_NAMES=STOCK -p HOTROD_AUTHENTICATION=true -p CONTAINER_SECURITY_ROLE_MAPPER=identity-role-mapper -p CONTAINER_SECURITY_ROLES=sales-data-store=ALL -p ADMIN_GROUP=REST,___schema_manager,sales-data-store -p MEMCACHED_CACHE=""')
+                              def salesDataStorewPods = openshift.selector('pod', [application: "sales-data-store"])
+                              echo "Application [sales-data-store] pods has been prepared."
+                              salesDataStorewPods.untilEach {
+                                  echo "[sales-data-store,${it.name()},${it.object().status.containerStatuses[0].ready}]"
+                                  return it.object().status.containerStatuses[0].ready
+                              }
+                              
+                              echo "Application [sales-data-store] has to be updated."
+                              rawResult = openshift.raw('env',"dc/sales-data-store STOCK_CACHE_START=EAGER STOCK_CACHE_SECURITY_AUTHORIZATION_ENABLED=true  STOCK_CACHE_SECURITY_AUTHORIZATION_ROLES=sales-data-store,___schema_manager,___script_manager HOTROD_AUTHENTICATION=true  CONTAINER_SECURITY_ROLE_MAPPER=identity-role-mapper CONTAINER_SECURITY_ROLES=sales-data-store\\=ALL  ADMIN_GROUP=REST,___schema_manager,sales-data-store")
+                              salesDataStorewPods = openshift.selector('pod', [deployment: "sales-data-store-2"])
+                              echo "Application [sales-data-store] pods has been prepared."
+                              salesDataStorewPods.untilEach {
+                                  echo "[sales-data-store,${it.name()},${it.object().status.containerStatuses[0].ready}]"
+                                  return it.object().status.containerStatuses[0].ready
+                              }
+
+                              echo "Application [sales-data-store] has been updated."
+                          }
+                          else {
+                              def numSalesDataStorePods = openshift.selector('pod', [application: "sales-data-store"]).count()
+                              echo "Application [sales-data-store] already exists with [${numSalesDataStorePods}] running pods."
+                          }
+                        }
+                    }
+                }
+              } // end 
+
+            }
+            node {
+              stage("FINISH") {
+              }
+            }
+          } 
+          catch (err) {
+            echo "in catch block"
+            echo "Caught: ${err}"
+            currentBuild.result = 'FAILURE'
+            throw err
+          }
+        type: JenkinsPipeline
+      triggers:
+        - github:
+            secret: "${GITHUB_WEBHOOK_SECRET}"
+          type: GitHub
+        - generic:
+            secret: "${GENERIC_WEBHOOK_SECRET}"
+          type: Generic

@@ -1,3 +1,70 @@
+Jenkins Installation
+____________________
+
+
+
+oc policy add-role-to-group system:image-puller system:serviceaccounts:devtools -n ctti-app-dev
+
+oc policy add-role-to-group system:image-puller system:serviceaccounts:devtools -n ctti-app-pre
+
+oc policy add-role-to-group system:image-puller system:serviceaccounts:devtools -n ctti-app-pro
+
+oc policy add-role-to-user edit system:serviceaccount:devtools:jenkins -n ocp-microservices-ddd
+
+oc policy add-role-to-user edit system:serviceaccount:devtools:jenkins -n ocp-microservices-ddd
+
+oc policy add-role-to-group system:image-puller system:serviceaccounts:ocp-microservices-ddd -n ocp-microservices-ddd
+
+oc new-project devtools --display-name='devtools' --description='devtools'
+
+oc policy add-role-to-user edit system:serviceaccount:devtools:jenkins -n ctti-app-dev
+
+oc policy add-role-to-user edit system:serviceaccount:devtools:jenkins -n ctti-app-pre
+
+oc policy add-role-to-user edit system:serviceaccount:devtools:jenkins -n ctti-app-pro
+
+oc policy add-role-to-group system:image-puller system:serviceaccounts:ctti-app-pre -n ctti-app-dev
+
+oc policy add-role-to-group system:image-puller system:serviceaccounts:ctti-app-pro -n ctti-app-dev
+
+
+oc new-app --template=jenkins-ephemeral -p JENKINS_IMAGE_STREAM_TAG=jenkins:2 -p NAMESPACE=openshift -p MEMORY_LIMIT=512Mi -p ENABLE_OAUTH=true
+
+
+- pipelines template creation
+oc create -n devtools -f sales-pipeline.yaml
+
+
+-- JENKINS PERMISSIONS TO CREATE PROJECTS
+
+cat << EOF > clusterpolicy.json
+{
+  "apiVersion": "v1",
+  "kind": "ClusterRole",
+  "metadata": {
+    "name": "create_project_role"
+  },
+  "rules": [
+  {
+      "verbs": ["create"],
+      "resources": ["projectrequests"]
+  },
+  {
+      "verbs": ["get","list","watch"],
+      "resources": ["*"]
+  }
+  ]
+}
+EOF
+
+oc create -f clusterpolicy.json
+
+oc adm policy add-cluster-role-to-user create_project_role system:serviceaccount:devtools:jenkins
+
+-- END JENKINS PERMISSIONS TO CREATE PROJECTS
+
+
+
 AQM 7 Installation
 __________________
 
@@ -43,22 +110,10 @@ export PATH=$PATH:$MAVEN_HOME/bin/
 oc login https://192.168.99.100:8443 --token=GSg4Sg-czsIFM7gMK1G2-W-zytziahWfpb_SSelvGBw
 
 
-Jenkins Installation
-____________________
-
-oc policy add-role-to-user edit system:serviceaccount:devtools:jenkins -n ocp-microservices-ddd
-
-oc policy add-role-to-group system:image-puller system:serviceaccounts:ocp-microservices-ddd -n ocp-microservices-ddd
-
-oc new-project devtools --display-name='devtools' --description='devtools'
-
-oc new-app --template=jenkins-ephemeral -p JENKINS_IMAGE_STREAM_TAG=jenkins:latest -p NAMESPACE=openshift -p MEMORY_LIMIT=512Mi -p ENABLE_OAUTH=true
-
-oc create -n devtools -f sales-pipeline.yaml
-
-
-
-
+script {
+                        sh "./mvnw fabric8:resource -Dfabric8.enricher.fmp-controller.replicaCount=4"
+                        sh "./mvnw fabric8:apply -Dfabric8.namespace=production"
+                    }
 
 
 

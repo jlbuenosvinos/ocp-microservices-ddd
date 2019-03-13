@@ -1,13 +1,41 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: sales-pipeline-template
+  name: CTTI Templates
+  annotations:
+    description: "CTTI Application Jenkins templates creation."
+    iconClass: "icon-stackoverflow"
 parameters:
+- name: OCP_SYSTEM_USER_TOKEN
+  description: OpenShift system token
+  displayName: OpenShift system token
+  required: true
+  value: hiavROrBuSE-8jLdL8KmaTdQuVkXo1mrzMXrlkKYUjg
+- name: OCP_ADMIN_USER_TOKEN
+  description: OpenShift admin token
+  displayName: OpenShift admin token
+  required: true
+  value: fPeolxhDirbIDfzF3dSvI__z1gM2zcneBM5mfA8KFwE
 - name: APP_NAME
   description: The name assigned to all of the application objects defined in this template.
   displayName: Application Name
   required: true
-  value: ocp-microservices-ddd
+  value: ctti-app
+- name: APP_NAME_DEV
+  description: The name assigned to all of the application objects defined in this template.
+  displayName: DEV Application Name
+  required: true
+  value: ctti-app-dev
+- name: APP_NAME_PRE
+  description: The name assigned to all of the application objects defined in this template.
+  displayName: PRE Application Name
+  required: true
+  value: ctti-app-pre
+- name: APP_NAME_PRO
+  description: The name assigned to all of the application objects defined in this template.
+  displayName: PRO Application Name
+  required: true
+  value: ctti-app-pro
 - name: GIT_SOURCE_URL
   description: The source URL for the application
   displayName: Source URL
@@ -17,7 +45,7 @@ parameters:
   description: The source Ref for the application
   displayName: Source Ref
   required: true
-  value: master
+  value: dev
 - description: Github trigger secret. A difficult to guess string encoded as part of the webhook URL.  Not encrypted.
   displayName: GitHub Webhook Secret
   from: '[a-zA-Z0-9]{40}'
@@ -34,7 +62,7 @@ objects:
 - apiVersion: "v1"
   kind: "BuildConfig"
   metadata:
-    name: "sales-pipeline"
+    name: "sales-deploy-ticket-processor-pipeline"
   spec:
     strategy:
       jenkinsPipelineStrategy:
@@ -61,6 +89,111 @@ objects:
                           }
                       }
                   }
+              }
+            }
+            node {
+              stage("FINISH") {
+                  
+              }
+            }
+          } 
+          catch (err) {
+            echo "in catch block"
+            echo "Caught: ${err}"
+            currentBuild.result = 'FAILURE'
+            throw err
+          }
+        type: JenkinsPipeline
+      triggers:
+        - github:
+            secret: "${GITHUB_WEBHOOK_SECRET}"
+          type: GitHub
+        - generic:
+            secret: "${GENERIC_WEBHOOK_SECRET}"
+          type: Generic
+- apiVersion: "v1"
+  kind: "BuildConfig"
+  metadata:
+    name: "sales-init-pipeline"
+  spec:
+    strategy:
+      jenkinsPipelineStrategy:
+        jenkinsfile: |-
+          try {
+            def appName=""
+            def projectName=""
+            def result=""
+            node {
+              stage("INIT") {
+              }
+            }
+            node("maven") {
+              stage("PROJECTS-CREATION") {
+                  openshift.withCluster() {
+                      openshift.withCredentials('${OCP_SYSTEM_USER_TOKEN}') {
+                          result = openshift.raw('new-project','${APP_NAME_DEV}','--display-name=${APP_NAME_DEV}','--description=${APP_NAME_DEV}')
+                          result = openshift.raw('new-project','${APP_NAME_PRE}','--display-name=${APP_NAME_PRE}','--description=${APP_NAME_PRE}')
+                          result = openshift.raw('new-project','${APP_NAME_PRO}','--display-name=${APP_NAME_PRO}','--description=${APP_NAME_PRO}')
+                          // echo "cluster status: ${result.out}"  
+                      }
+                  }
+              }
+            }
+            node {
+              stage("FINISH") {
+              }
+            }
+          } 
+          catch (err) {
+            echo "in catch block"
+            echo "Caught: ${err}"
+            currentBuild.result = 'FAILURE'
+            throw err
+          }
+        type: JenkinsPipeline
+      triggers:
+        - github:
+            secret: "${GITHUB_WEBHOOK_SECRET}"
+          type: GitHub
+        - generic:
+            secret: "${GENERIC_WEBHOOK_SECRET}"
+          type: Generic
+- apiVersion: "v1"
+  kind: "BuildConfig"
+  metadata:
+    name: "sales-prereqs-pipeline"
+  spec:
+    strategy:
+      jenkinsPipelineStrategy:
+        jenkinsfile: |-
+          try {
+            def appName=""
+            def projectName=""
+            def result=""
+            node {
+              stage("INIT") {
+              }
+            }
+            node("maven") {
+              stage("PREREQS") {
+                  openshift.withCluster() {
+                      openshift.withCredentials('${OCP_ADMIN_USER_TOKEN}') {
+                      //    result = openshift.raw('new-project','${APP_NAME_DEV}','--display-name=${APP_NAME_DEV}','--description=${APP_NAME_DEV}')
+                      //    result = openshift.raw('new-project','${APP_NAME_PRE}','--display-name=${APP_NAME_PRE}','--description=${APP_NAME_PRE}')
+                      //    result = openshift.raw('new-project','${APP_NAME_PRO}','--display-name=${APP_NAME_PRO}','--description=${APP_NAME_PRO}')
+                      //    echo "cluster status: ${result.out}"  
+
+                      // oc create -n openshift -f https://raw.githubusercontent.com/jboss-container-images/jboss-amq-7-broker-openshift-image/71-1.0.TP/amq-broker-7-image-streams.yaml
+
+                      result = openshift.raw('create','-n openshift','-f https://raw.githubusercontent.com/jboss-container-images/jboss-amq-7-broker-openshift-image/71-1.0.TP/amq-broker-7-image-streams.yaml')
+
+
+                      }
+                  }
+              }
+            }
+            node {
+              stage("FINISH") {
               }
             }
           } 
