@@ -212,6 +212,37 @@
         </plugins>
     </build>
 
+    <repositories>
+        <repository>
+            <id>jboss-ga-repository</id>
+            <name>jboss-ga-repository</name>
+            <url>http://maven.repository.redhat.com/techpreview/all</url>
+            <layout>default</layout>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>jboss-ga-repository</id>
+            <name>jboss-ga-repository</name>
+            <url>http://maven.repository.redhat.com/techpreview/all</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+
     <profiles>
         <profile>
             <id>local</id>
