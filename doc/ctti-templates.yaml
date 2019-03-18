@@ -6,16 +6,21 @@ metadata:
     description: "CTTI Application Jenkins templates creation."
     iconClass: "icon-stackoverflow"
 parameters:
+- name: OCP_DEVOPS_PROJECT_ID
+  description: OpenShift DevOps Project Identier
+  displayName: 
+  required: true
+  value: cicd-ocpadmin
 - name: OCP_SYSTEM_USER_TOKEN
   description: OpenShift system token
   displayName: OpenShift system token
   required: true
-  value: cQt1AGPXgo4GrvmunRizpfC_xGO7SwPLELcC27b_QJc
+  value: scFmUciSwFYyB5zpRNG4pDMRwN5rQpu3Fj26X7py-u0
 - name: OCP_ADMIN_USER_TOKEN
   description: OpenShift admin token
   displayName: OpenShift admin token
   required: true
-  value: cQt1AGPXgo4GrvmunRizpfC_xGO7SwPLELcC27b_QJc
+  value: scFmUciSwFYyB5zpRNG4pDMRwN5rQpu3Fj26X7py-u0
 - name: APP_NAME
   description: The name assigned to all of the application objects defined in this template.
   displayName: Application Name
@@ -82,17 +87,223 @@ objects:
 
                   openshift.withCluster() {
 
-                    openshift.withCredentials() {
+                    openshift.withCredentials('${OCP_ADMIN_USER_TOKEN}') {
+
                         openshift.withProject('${APP_NAME_DEV}') {
-                            dir("doc") {
-                                openshift.raw('create','-f ticket-processor-service-secret.yaml')
-                                echo "Secret [ticket-processor-service-secret] has been created."
-                            }
+
+
+                          def ticketServicePods=""
+                          def ticketService = openshift.selector('dc','ticket-processor-service').exists()
+                          def ticketProcessorSecret = openshift.selector('secret','ticket-processor-service-secret').exists()
+
+                          echo "ticketService [${ticketService}]"
+
+                          if (!ticketProcessorSecret) {
+                              dir("doc") {
+                                  openshift.raw('create','-f ticket-processor-service-secret.yaml')
+                                  echo "Secret has been created."
+                              }
+                          }
+                          else {
+                              echo "Secret already exists."
+                          }
+                          
+                          dir("ticket-processor-service") {
+                              sh "mvn clean fabric8:deploy -P openshift -Dfabric8.namespace=${APP_NAME_DEV}"
+                          }
+                          
+                          if (!ticketService) {
+                              ticketServicePods = openshift.selector('pod', [application: "ticket-processor-service"])
+                          }
+                          else {
+                              ticketServicePods = openshift.selector('pod', [deployment: "ticket-processor-service-2"])
+                          }
+                          
+                          /*
+                          ticketServicePods.untilEach {
+                              echo "[ticket-processor-service,${it.name()},${it.object().status.containerStatuses[0].ready}]"
+                              return it.object().status.containerStatuses[0].ready
+                          }
+                          */
+
+
                         }
-                        dir("ticket-processor-service") {
-                            sh "mvn clean fabric8:deploy -P openshift -Dfabric8.namespace=${APP_NAME_DEV}"
+                    }
+
+                  }
+              }
+            }
+            node {
+              stage("FINISH") {
+                  
+              }
+            }
+          } 
+          catch (err) {
+            echo "in catch block"
+            echo "Caught: ${err}"
+            currentBuild.result = 'FAILURE'
+            throw err
+          }
+        type: JenkinsPipeline
+      triggers:
+        - github:
+            secret: "${GITHUB_WEBHOOK_SECRET}"
+          type: GitHub
+        - generic:
+            secret: "${GENERIC_WEBHOOK_SECRET}"
+          type: Generic
+- apiVersion: "v1"
+  kind: "BuildConfig"
+  metadata:
+    name: "sales-deploy-stock-processor-pipeline"
+  spec:
+    strategy:
+      jenkinsPipelineStrategy:
+        jenkinsfile: |-
+          try {
+            def appName=""
+            def projectName=""
+            node {
+              stage("INIT") {
+              }
+            }
+            node("maven") {
+              stage("CHECKOUT") {
+                  git url: "${GIT_SOURCE_URL}", branch: "${GIT_SOURCE_REF}"
+              }
+              stage("BUILD") {
+
+                  openshift.withCluster() {
+
+                    openshift.withCredentials('${OCP_ADMIN_USER_TOKEN}') {
+
+                        openshift.withProject('${APP_NAME_DEV}') {
+
+                          def stockProcessorServicePods=""
+                          def stockProcessorService = openshift.selector('dc','stock-processor-service').exists()
+                          def stockProcessorSecret = openshift.selector('secret','stock-processor-service-secret').exists()
+
+                          echo "stockProcessorService [${stockProcessorService}]"
+
+                          if (!stockProcessorSecret) {
+                              dir("doc") {
+                                  openshift.raw('create','-f stock-processor-service-secret.yaml')
+                                  echo "Secret has been created."
+                              }
+                          }
+                          else {
+                              echo "Secret already exists."
+                          }
+                          
+                          dir("stock-processor-service") {
+                              sh "mvn clean fabric8:deploy -P openshift -Dfabric8.namespace=${APP_NAME_DEV}"
+                          }
+                          
+                          if (!stockProcessorService) {
+                              stockProcessorServicePods = openshift.selector('pod', [application: "stock-processor-service"])
+                          }
+                          else {
+                              stockProcessorServicePods = openshift.selector('pod', [deployment: "stock-processor-service-2"])
+                          }
+                          
+                          /*
+                          stockProcessorServicePods.untilEach {
+                              echo "[stock-processor-service,${it.name()},${it.object().status.containerStatuses[0].ready}]"
+                              return it.object().status.containerStatuses[0].ready
+                          }
+                          */
+
+
                         }
-                        
+                    }
+
+                  }
+              }
+            }
+            node {
+              stage("FINISH") {
+                  
+              }
+            }
+          } 
+          catch (err) {
+            echo "in catch block"
+            echo "Caught: ${err}"
+            currentBuild.result = 'FAILURE'
+            throw err
+          }
+        type: JenkinsPipeline
+      triggers:
+        - github:
+            secret: "${GITHUB_WEBHOOK_SECRET}"
+          type: GitHub
+        - generic:
+            secret: "${GENERIC_WEBHOOK_SECRET}"
+          type: Generic
+- apiVersion: "v1"
+  kind: "BuildConfig"
+  metadata:
+    name: "sales-deploy-stock-query-pipeline"
+  spec:
+    strategy:
+      jenkinsPipelineStrategy:
+        jenkinsfile: |-
+          try {
+            def appName=""
+            def projectName=""
+            node {
+              stage("INIT") {
+              }
+            }
+            node("maven") {
+              stage("CHECKOUT") {
+                  git url: "${GIT_SOURCE_URL}", branch: "${GIT_SOURCE_REF}"
+              }
+              stage("BUILD") {
+
+                  openshift.withCluster() {
+
+                    openshift.withCredentials('${OCP_ADMIN_USER_TOKEN}') {
+
+                        openshift.withProject('${APP_NAME_DEV}') {
+
+                          def stockQueryServicePods=""
+                          def stockQueryService = openshift.selector('dc','stock-query-service').exists()
+                          def stockQuerySecret = openshift.selector('secret','stock-query-service-secret').exists()
+
+                          echo "stockQueryService [${stockQueryService}]"
+
+                          if (!stockQuerySecret) {
+                              dir("doc") {
+                                  openshift.raw('create','-f stock-query-service-secret.yaml')
+                                  echo "Secret has been created."
+                              }
+                          }
+                          else {
+                              echo "Secret already exists."
+                          }
+                          
+                          dir("stock-query-service") {
+                              sh "mvn clean fabric8:deploy -P openshift -Dfabric8.namespace=${APP_NAME_DEV}"
+                          }
+                          
+                          if (!stockQueryService) {
+                              stockQueryServicePods = openshift.selector('pod', [application: "stock-query-service"])
+                          }
+                          else {
+                              stockQueryServicePods = openshift.selector('pod', [deployment: "stock-query-service-2"])
+                          }
+                          
+                          /*
+                          stockQueryServicePods.untilEach {
+                              echo "[stock-query-service,${it.name()},${it.object().status.containerStatuses[0].ready}]"
+                              return it.object().status.containerStatuses[0].ready
+                          }
+                          */
+
+
+                        }
                     }
 
                   }
@@ -164,9 +375,9 @@ objects:
                               echo "Project [${APP_NAME_PRO}] already exists."
                           }
 
-                          openshift.raw('policy','add-role-to-user edit system:serviceaccount:devtools:jenkins -n ${APP_NAME_DEV}')
-                          openshift.raw('policy','add-role-to-user edit system:serviceaccount:devtools:jenkins -n ${APP_NAME_PRE}')
-                          openshift.raw('policy','add-role-to-user edit system:serviceaccount:devtools:jenkins -n ${APP_NAME_PRO}')
+                          openshift.raw('policy','add-role-to-user edit system:serviceaccount:${OCP_DEVOPS_PROJECT_ID}:jenkins -n ${APP_NAME_DEV}')
+                          openshift.raw('policy','add-role-to-user edit system:serviceaccount:${OCP_DEVOPS_PROJECT_ID}:jenkins -n ${APP_NAME_PRE}')
+                          openshift.raw('policy','add-role-to-user edit system:serviceaccount:${OCP_DEVOPS_PROJECT_ID}:jenkins -n ${APP_NAME_PRO}')
                           openshift.raw('policy','add-role-to-group system:image-puller system:serviceaccounts:${APP_NAME_PRE} -n ${APP_NAME_DEV}')
                           openshift.raw('policy','add-role-to-group system:image-puller system:serviceaccounts:${APP_NAME_PRO} -n ${APP_NAME_DEV}')
 
@@ -213,6 +424,7 @@ objects:
               stage("PREREQS") {
                   openshift.withCluster() {
                       openshift.withCredentials('${OCP_ADMIN_USER_TOKEN}') {
+                      
                           openshift.withProject('openshift') {
                               def template
                               def templateSelector = openshift.selector( 'template', "amq-broker-71-statefulset-clustered")
@@ -282,10 +494,12 @@ objects:
                                   def rawResult = openshift.raw('new-app','--template=amq-broker-71-statefulset-clustered -p APPLICATION_NAME=sales-event-store -p AMQ_NAME=sales-event-store -p AMQ_CLUSTERED=true -p AMQ_CLUSTER_USER=sales-event-store -p AMQ_CLUSTER_PASSWORD=sales-event-store -p AMQ_REPLICATED=true -p AMQ_REPLICAS=2')
                                   def salesAppPods = openshift.selector('pod', [app: "sales-event-store-amq"])
                                   echo "Application [sales-event-store] pods has been prepared."
-                                  salesAppPods.untilEach {
-                                      echo "[sales-event-store,${it.name()},${it.object().status.containerStatuses[0].ready}]"
-                                      return it.object().status.containerStatuses[0].ready
-                                  }
+                                  
+                                  //salesAppPods.untilEach {
+                                  //    echo "[sales-event-store,${it.name()},${it.object().status.containerStatuses[0].ready}]"
+                                  //    return it.object().status.containerStatuses[0].ready
+                                  //}
+
                                   echo "Application [sales-event-store] has been created."
 
                             } 
@@ -303,6 +517,7 @@ objects:
               stage("DG") {
                 openshift.withCluster() {
                     openshift.withCredentials('${OCP_ADMIN_USER_TOKEN}') {
+
                         openshift.withProject('${APP_NAME_DEV}') {
                     
                           def salesDataStore = openshift.selector('dc','sales-data-store').exists()

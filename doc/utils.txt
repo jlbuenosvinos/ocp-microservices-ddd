@@ -1,27 +1,35 @@
+oc delete bc sales-deploy-ticket-processor-pipeline
+oc delete bc sales-deploy-stock-processor-pipeline
+oc delete bc sales-deploy-stock-query-pipeline
+oc delete bc sales-infra-pipeline
+oc delete bc sales-init-pipeline
+oc delete bc sales-prereqs-pipeline
+
+
+
 Jenkins Installation
+
 ____________________
 
+oc policy add-role-to-group system:image-puller system:serviceaccounts:cicd-ocpadmin -n ctti-app-dev
 
+oc policy add-role-to-group system:image-puller system:serviceaccounts:cicd-ocpadmin -n ctti-app-pre
 
-oc policy add-role-to-group system:image-puller system:serviceaccounts:devtools -n ctti-app-dev
+oc policy add-role-to-group system:image-puller system:serviceaccounts:cicd-ocpadmin -n ctti-app-pro
 
-oc policy add-role-to-group system:image-puller system:serviceaccounts:devtools -n ctti-app-pre
+oc policy add-role-to-user edit system:serviceaccount:cicd-ocpadmin:jenkins -n ocp-microservices-ddd
 
-oc policy add-role-to-group system:image-puller system:serviceaccounts:devtools -n ctti-app-pro
-
-oc policy add-role-to-user edit system:serviceaccount:devtools:jenkins -n ocp-microservices-ddd
-
-oc policy add-role-to-user edit system:serviceaccount:devtools:jenkins -n ocp-microservices-ddd
+oc policy add-role-to-user edit system:serviceaccount:cicd-ocpadmin:jenkins -n ocp-microservices-ddd
 
 oc policy add-role-to-group system:image-puller system:serviceaccounts:ocp-microservices-ddd -n ocp-microservices-ddd
 
-oc new-project devtools --display-name='devtools' --description='devtools'
+oc new-project cicd-ocpadmin --display-name='cicd-ocpadmin' --description='cicd-ocpadmin'
 
-oc policy add-role-to-user edit system:serviceaccount:devtools:jenkins -n ctti-app-dev
+oc policy add-role-to-user edit system:serviceaccount:cicd-ocpadmin:jenkins -n ctti-app-dev
 
-oc policy add-role-to-user edit system:serviceaccount:devtools:jenkins -n ctti-app-pre
+oc policy add-role-to-user edit system:serviceaccount:cicd-ocpadmin:jenkins -n ctti-app-pre
 
-oc policy add-role-to-user edit system:serviceaccount:devtools:jenkins -n ctti-app-pro
+oc policy add-role-to-user edit system:serviceaccount:cicd-ocpadmin:jenkins -n ctti-app-pro
 
 oc policy add-role-to-group system:image-puller system:serviceaccounts:ctti-app-pre -n ctti-app-dev
 
@@ -32,7 +40,9 @@ oc new-app --template=jenkins-ephemeral -p JENKINS_IMAGE_STREAM_TAG=jenkins:2 -p
 
 
 - pipelines template creation
-oc create -n devtools -f sales-pipeline.yaml
+oc create -n cicd-ocpadmin -f sales-pipeline.yaml
+
+oc create -n cicd-ocpadmin -f ctti-templates.yaml
 
 
 -- JENKINS PERMISSIONS TO CREATE PROJECTS
@@ -107,13 +117,13 @@ export MAVEN_HOME=/Applications/Tools/apache-maven-3.5.0
 export PATH=$PATH:$MAVEN_HOME/bin/
 
 
-oc login https://192.168.99.100:8443 --token=GSg4Sg-czsIFM7gMK1G2-W-zytziahWfpb_SSelvGBw
+
 
 
 script {
                         sh "./mvnw fabric8:resource -Dfabric8.enricher.fmp-controller.replicaCount=4"
                         sh "./mvnw fabric8:apply -Dfabric8.namespace=production"
-                    }
+}
 
 
 
