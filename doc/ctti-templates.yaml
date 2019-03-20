@@ -119,13 +119,10 @@ objects:
                               ticketServicePods = openshift.selector('pod', [deployment: "ticket-processor-service-2"])
                           }
                           
-                          /*
                           ticketServicePods.untilEach {
                               echo "[ticket-processor-service,${it.name()},${it.object().status.containerStatuses[0].ready}]"
                               return it.object().status.containerStatuses[0].ready
                           }
-                          */
-
 
                         }
                     }
@@ -206,14 +203,11 @@ objects:
                           else {
                               stockProcessorServicePods = openshift.selector('pod', [deployment: "stock-processor-service-2"])
                           }
-                          
-                          /*
+
                           stockProcessorServicePods.untilEach {
                               echo "[stock-processor-service,${it.name()},${it.object().status.containerStatuses[0].ready}]"
                               return it.object().status.containerStatuses[0].ready
                           }
-                          */
-
 
                         }
                     }
@@ -294,14 +288,11 @@ objects:
                           else {
                               stockQueryServicePods = openshift.selector('pod', [deployment: "stock-query-service-2"])
                           }
-                          
-                          /*
+
                           stockQueryServicePods.untilEach {
                               echo "[stock-query-service,${it.name()},${it.object().status.containerStatuses[0].ready}]"
                               return it.object().status.containerStatuses[0].ready
                           }
-                          */
-
 
                         }
                     }

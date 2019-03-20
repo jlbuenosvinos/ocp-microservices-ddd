@@ -5,7 +5,7 @@ oc delete bc sales-infra-pipeline
 oc delete bc sales-init-pipeline
 oc delete bc sales-prereqs-pipeline
 
-
+oc start-build sales-init-pipeline -n cicd-ocpadmin
 
 Jenkins Installation
 

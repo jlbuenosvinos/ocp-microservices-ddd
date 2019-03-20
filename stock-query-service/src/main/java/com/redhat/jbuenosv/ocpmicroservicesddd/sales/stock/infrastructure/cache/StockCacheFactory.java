@@ -60,7 +60,7 @@ public class StockCacheFactory implements CacheFactory {
                     .callbackHandler(new StockSecurityCallbackHandler(config.getUserName(),config.getPassword(),"ApplicationRealm"))
                     .enable();
 
-            logger.debug("Configuration security.");
+            logger.debug("Configuration security [{},{}].",config.getUserName(),config.getPassword());
 
             builder.marshaller(new ProtoStreamMarshaller());
             cacheManager = new RemoteCacheManager(builder.build());
