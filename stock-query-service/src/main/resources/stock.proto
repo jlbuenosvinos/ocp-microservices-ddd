@@ -1,0 +1,12 @@
+package stock;
+
+message StockKey {
+    required int32 storeId = 1;
+    required string productId = 2;
+}
+
+message StockValue {
+    required int32 storeId = 1;
+    required string productId = 2;
+    required int32 units = 3;
+}
