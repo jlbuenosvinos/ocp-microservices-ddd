@@ -68,6 +68,8 @@ public class StockCacheFactory implements CacheFactory {
 
             if (cache != null) {
 
+                logger.debug("Cache [{}] has been registered.",STOCK_CACHE_NAME);
+
                 ctx = ProtoStreamMarshaller.getSerializationContext(cacheManager);
                 ctx.registerProtoFiles(FileDescriptorSource.fromResources(PROTOBUF_DEFINITION_RESOURCE));
                 ctx.registerMarshaller(new StockKeyMarshaller());
@@ -76,14 +78,17 @@ public class StockCacheFactory implements CacheFactory {
                 RemoteCache<String, String> metadataCache = cacheManager.getCache(ProtobufMetadataManagerConstants.PROTOBUF_METADATA_CACHE_NAME);
                 metadataCache.put(PROTOBUF_DEFINITION_RESOURCE, fileUtils.readResource(PROTOBUF_DEFINITION_RESOURCE));
 
+                logger.debug("Cache [{}] protobuf has been registered.",STOCK_CACHE_NAME);
+
                 errors = metadataCache.get(ProtobufMetadataManagerConstants.ERRORS_KEY_SUFFIX);
 
                 if (errors != null) {
                     logger.error("Unable to register the Protobuf schema context due to [{}]",errors);
                     throw new StockApplicationException("Unable to register the Protobuf schema context.");
                 }
-
-                logger.debug("Protobuf schema have been registered.");
+                else {
+                    logger.debug("Protobuf schema have been registered.");
+                }
 
             }
             else {
