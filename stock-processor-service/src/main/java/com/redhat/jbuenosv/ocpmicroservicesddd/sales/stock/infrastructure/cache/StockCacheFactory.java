@@ -32,7 +32,7 @@ public class StockCacheFactory implements CacheFactory {
 
     private static final String STOCK_CACHE_NAME = "STOCK";
 
-    private static final String PROTOBUF_DEFINITION_RESOURCE = "stock.proto";
+    private static final String PROTOBUF_DEFINITION_RESOURCE = "/stock.proto";
 
     @Autowired
     DataGridConfig config;
