@@ -32,7 +32,7 @@ public class StockCacheFactory implements CacheFactory {
 
     private static final String STOCK_CACHE_NAME = "STOCK";
 
-    private static final String PROTOBUF_DEFINITION_RESOURCE = "stock.proto";
+    private static final String PROTOBUF_DEFINITION_RESOURCE = "/stock.proto";
 
     @Autowired
     DataGridConfig config;
@@ -71,23 +71,38 @@ public class StockCacheFactory implements CacheFactory {
                 logger.debug("Cache [{}] has been registered.",STOCK_CACHE_NAME);
 
                 ctx = ProtoStreamMarshaller.getSerializationContext(cacheManager);
+                logger.debug("SerializationContext has been instanciated.");
                 ctx.registerProtoFiles(FileDescriptorSource.fromResources(PROTOBUF_DEFINITION_RESOURCE));
+                logger.debug("Protofiles have been registered.");
                 ctx.registerMarshaller(new StockKeyMarshaller());
+                logger.debug("StockKeyMarshaller has been registered.");
                 ctx.registerMarshaller(new StockValueMarshaller());
+                logger.debug("StockValueMarshaller has been registered.");
 
                 RemoteCache<String, String> metadataCache = cacheManager.getCache(ProtobufMetadataManagerConstants.PROTOBUF_METADATA_CACHE_NAME);
-                metadataCache.put(PROTOBUF_DEFINITION_RESOURCE, fileUtils.readResource(PROTOBUF_DEFINITION_RESOURCE));
 
-                logger.debug("Cache [{}] protobuf has been registered.",STOCK_CACHE_NAME);
 
-                errors = metadataCache.get(ProtobufMetadataManagerConstants.ERRORS_KEY_SUFFIX);
+                if (metadataCache != null) {
+                    logger.debug("Cache [{}] has been instanciated.",ProtobufMetadataManagerConstants.PROTOBUF_METADATA_CACHE_NAME);
 
-                if (errors != null) {
-                    logger.error("Unable to register the Protobuf schema context due to [{}]",errors);
-                    throw new StockApplicationException("Unable to register the Protobuf schema context.");
+                    metadataCache.put(PROTOBUF_DEFINITION_RESOURCE, fileUtils.readResource(PROTOBUF_DEFINITION_RESOURCE));
+                    logger.debug("Cache [{}] has been instanciated.",ProtobufMetadataManagerConstants.PROTOBUF_METADATA_CACHE_NAME);
+                    logger.debug("Cache [{}] protobuf has been registered.",STOCK_CACHE_NAME);
+
+                    errors = metadataCache.get(ProtobufMetadataManagerConstants.ERRORS_KEY_SUFFIX);
+
+                    if (errors != null) {
+                        logger.error("Unable to register the Protobuf schema context due to [{}]",errors);
+                        throw new StockApplicationException("Unable to register the Protobuf schema context.");
+                    }
+                    else {
+                        logger.debug("Protobuf schema have been registered.");
+                    }
+
                 }
                 else {
-                    logger.debug("Protobuf schema have been registered.");
+                    logger.error("Unable to register the Protobuf schema context in [{}]",ProtobufMetadataManagerConstants.PROTOBUF_METADATA_CACHE_NAME);
+                    throw new StockApplicationException("Unable to register the Protobuf schema context in " + ProtobufMetadataManagerConstants.PROTOBUF_METADATA_CACHE_NAME + ".");
                 }
 
             }
