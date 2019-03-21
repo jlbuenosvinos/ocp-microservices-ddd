@@ -201,7 +201,7 @@
                         <goals>
                             <goal>repackage</goal>
                         </goals>
-                    </execution>]]
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
@@ -217,7 +217,7 @@
                 <enabled>true</enabled>
                 <updatePolicy>never</updatePolicy>
             </releases>
-            <snapshots>]
+            <snapshots>
                 <enabled>true</enabled>
                 <updatePolicy>never</updatePolicy>
             </snapshots>
