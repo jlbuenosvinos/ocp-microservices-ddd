@@ -6,6 +6,7 @@ import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.application.servi
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.model.Order;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.domain.TicketProcessorEventBus;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.store.TicketStore;
+import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  * Created by jlbuenosvinos.
  */
 @RestController
+@Api(value="/api",description="Stock Query API",produces ="application/json")
 @RequestMapping("/api")
 class OrderController {
 

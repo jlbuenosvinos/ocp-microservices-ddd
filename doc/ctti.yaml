@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: ctti-templates
+  name: ctti
   annotations:
     description: "CTTI Application Jenkins templates creation."
     iconClass: "icon-stackoverflow"
@@ -11,16 +11,6 @@ parameters:
   displayName: 
   required: true
   value: cicd-ocpadmin
-- name: OCP_SYSTEM_USER_TOKEN
-  description: OpenShift system token
-  displayName: OpenShift system token
-  required: true
-  value: scFmUciSwFYyB5zpRNG4pDMRwN5rQpu3Fj26X7py-u0
-- name: OCP_ADMIN_USER_TOKEN
-  description: OpenShift admin token
-  displayName: OpenShift admin token
-  required: true
-  value: scFmUciSwFYyB5zpRNG4pDMRwN5rQpu3Fj26X7py-u0
 - name: APP_NAME
   description: The name assigned to all of the application objects defined in this template.
   displayName: Application Name
@@ -75,6 +65,7 @@ objects:
           try {
             def appName=""
             def projectName=""
+            def token = env.SEC_TOKEN
             node {
               stage("INIT") {
               }
@@ -87,7 +78,7 @@ objects:
 
                   openshift.withCluster() {
 
-                    openshift.withCredentials('${OCP_ADMIN_USER_TOKEN}') {
+                    openshift.withCredentials(token) {
 
                         openshift.withProject('${APP_NAME_DEV}') {
 
@@ -95,8 +86,6 @@ objects:
                           def ticketServicePods=""
                           def ticketService = openshift.selector('dc','ticket-processor-service').exists()
                           def ticketProcessorSecret = openshift.selector('secret','ticket-processor-service-secret').exists()
-
-                          echo "ticketService [${ticketService}]"
 
                           if (!ticketProcessorSecret) {
                               dir("doc") {
@@ -111,20 +100,9 @@ objects:
                           dir("ticket-processor-service") {
                               sh "mvn clean fabric8:deploy -P openshift -Dfabric8.namespace=${APP_NAME_DEV}"
                           }
-                          
-                          if (!ticketService) {
-                              ticketServicePods = openshift.selector('pod', [application: "ticket-processor-service"])
-                          }
-                          else {
-                              ticketServicePods = openshift.selector('pod', [deployment: "ticket-processor-service-2"])
-                          }
-                          
-                          /*
-                          ticketServicePods.untilEach {
-                              echo "[ticket-processor-service,${it.name()},${it.object().status.containerStatuses[0].ready}]"
-                              return it.object().status.containerStatuses[0].ready
-                          }
-                          */
+
+                          def ticketServiceDeploymentConfig = openshift.selector('dc','ticket-processor-service')
+                          ticketServiceDeploymentConfig.rollout().status()
 
                         }
                     }
@@ -163,6 +141,7 @@ objects:
           try {
             def appName=""
             def projectName=""
+            def token = env.SEC_TOKEN
             node {
               stage("INIT") {
               }
@@ -175,12 +154,11 @@ objects:
 
                   openshift.withCluster() {
 
-                    openshift.withCredentials('${OCP_ADMIN_USER_TOKEN}') {
+                    openshift.withCredentials(token) {
 
                         openshift.withProject('${APP_NAME_DEV}') {
 
                           def stockProcessorServicePods=""
-                          def stockProcessorService = openshift.selector('dc','stock-processor-service').exists()
                           def stockProcessorSecret = openshift.selector('secret','stock-processor-service-secret').exists()
 
                           echo "stockProcessorService [${stockProcessorService}]"
@@ -199,19 +177,19 @@ objects:
                               sh "mvn clean fabric8:deploy -P openshift -Dfabric8.namespace=${APP_NAME_DEV}"
                           }
                           
-                          if (!stockProcessorService) {
-                              stockProcessorServicePods = openshift.selector('pod', [application: "stock-processor-service"])
-                          }
-                          else {
-                              stockProcessorServicePods = openshift.selector('pod', [deployment: "stock-processor-service-2"])
-                          }
+                          def stockProcessorServiceDeploymentConfig = openshift.selector('dc','stock-processor-service')
+                          stockProcessorServiceDeploymentConfig.rollout().status()
 
-                          /*
-                          stockProcessorServicePods.untilEach {
-                              echo "[stock-processor-service,${it.name()},${it.object().status.containerStatuses[0].ready}]"
-                              return it.object().status.containerStatuses[0].ready
+                          def scaleResult = openshift.raw('scale','dc/stock-processor-service --replicas=2')
+                          echo "Project [stock-processor-service] has been scaled."
+
+                          def latestDeploymentVersion = openshift.selector('dc',"stock-processor-service").object().status.latestVersion
+                          def rc = openshift.selector('rc', "stock-processor-service-${latestDeploymentVersion}")
+
+                          rc.untilEach(1){
+                            def rcMap = it.object()
+                            return (rcMap.status.replicas.equals(rcMap.status.readyReplicas))
                           }
-                          */
 
                         }
                     }
@@ -250,6 +228,7 @@ objects:
           try {
             def appName=""
             def projectName=""
+            def token = env.SEC_TOKEN
             node {
               stage("INIT") {
               }
@@ -262,7 +241,7 @@ objects:
 
                   openshift.withCluster() {
 
-                    openshift.withCredentials('${OCP_ADMIN_USER_TOKEN}') {
+                    openshift.withCredentials(token) {
 
                         openshift.withProject('${APP_NAME_DEV}') {
 
@@ -285,20 +264,9 @@ objects:
                           dir("stock-query-service") {
                               sh "mvn clean fabric8:deploy -P openshift -Dfabric8.namespace=${APP_NAME_DEV}"
                           }
-                          
-                          if (!stockQueryService) {
-                              stockQueryServicePods = openshift.selector('pod', [application: "stock-query-service"])
-                          }
-                          else {
-                              stockQueryServicePods = openshift.selector('pod', [deployment: "stock-query-service-2"])
-                          }
 
-                          /*
-                          stockQueryServicePods.untilEach {
-                              echo "[stock-query-service,${it.name()},${it.object().status.containerStatuses[0].ready}]"
-                              return it.object().status.containerStatuses[0].ready
-                          }
-                          */
+                          def stockQueryDeploymentConfig = openshift.selector('dc','stock-query-service')
+                          stockQueryDeploymentConfig.rollout().status()
 
                         }
                     }
@@ -338,6 +306,7 @@ objects:
             def appName=""
             def projectName=""
             def result=""
+            def token = env.SEC_TOKEN
             node {
               stage("INIT") {
               }
@@ -345,7 +314,7 @@ objects:
             node("maven") {
               stage("PROJECTS-CREATION") {
                   openshift.withCluster() {
-                      openshift.withCredentials('${OCP_ADMIN_USER_TOKEN}') {
+                      openshift.withCredentials(token) {
 
                           def devProject = openshift.selector('project','${APP_NAME_DEV}').exists()
                           if (!devProject) {
@@ -413,6 +382,7 @@ objects:
             def appName=""
             def projectName=""
             def result=""
+            def token = env.SEC_TOKEN
             node {
               stage("INIT") {
               }
@@ -420,7 +390,7 @@ objects:
             node("maven") {
               stage("PREREQS") {
                   openshift.withCluster() {
-                      openshift.withCredentials('${OCP_ADMIN_USER_TOKEN}') {
+                      openshift.withCredentials(token) {
                       
                           openshift.withProject('openshift') {
                               def template
@@ -473,6 +443,7 @@ objects:
           try {
             def appName="sales-event-store"
             def appReplicasCount="2"
+            def token = env.SEC_TOKEN
             node {
               stage("INIT") {
               }
@@ -480,7 +451,7 @@ objects:
             node("maven") {
               stage("AMQ") {
                   openshift.withCluster() {
-                      openshift.withCredentials('${OCP_ADMIN_USER_TOKEN}') {
+                      openshift.withCredentials(token) {
                           openshift.withProject('${APP_NAME_DEV}') {
 
                             def salesStatefulSet = openshift.selector('statefulset','sales-event-store-amq').exists()
@@ -489,13 +460,19 @@ objects:
                                   
                                   echo "Application [sales-event-store] has to be installed."
                                   def rawResult = openshift.raw('new-app','--template=amq-broker-71-statefulset-clustered -p APPLICATION_NAME=sales-event-store -p AMQ_NAME=sales-event-store -p AMQ_CLUSTERED=true -p AMQ_CLUSTER_USER=sales-event-store -p AMQ_CLUSTER_PASSWORD=sales-event-store -p AMQ_REPLICATED=true -p AMQ_REPLICAS=2')
-                                  def salesAppPods = openshift.selector('pod', [app: "sales-event-store-amq"])
                                   echo "Application [sales-event-store] pods has been prepared."
                                   
-                                  //salesAppPods.untilEach {
-                                  //    echo "[sales-event-store,${it.name()},${it.object().status.containerStatuses[0].ready}]"
-                                  //    return it.object().status.containerStatuses[0].ready
-                                  //}
+                                  timeout(30) {
+                                    waitUntil {
+                                       openshift.selector('pod', [app: "sales-event-store-amq"]).count() > 1
+                                    }
+                                  }
+
+                                  def salesAppPods = openshift.selector('pod', [app: "sales-event-store-amq"])
+                                  salesAppPods.untilEach {
+                                      echo "[sales-event-store,${it.name()},${it.object().status.containerStatuses[0].ready}]"
+                                      return it.object().status.containerStatuses[0].ready
+                                  }
 
                                   echo "Application [sales-event-store] has been created."
 
@@ -513,7 +490,7 @@ objects:
 
               stage("DG") {
                 openshift.withCluster() {
-                    openshift.withCredentials('${OCP_ADMIN_USER_TOKEN}') {
+                    openshift.withCredentials(token) {
 
                         openshift.withProject('${APP_NAME_DEV}') {
                     

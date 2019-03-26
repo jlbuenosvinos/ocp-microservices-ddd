@@ -1,3 +1,4 @@
+
 oc delete bc sales-deploy-ticket-processor-pipeline
 oc delete bc sales-deploy-stock-processor-pipeline
 oc delete bc sales-deploy-stock-query-pipeline
@@ -10,6 +11,12 @@ oc start-build sales-init-pipeline -n cicd-ocpadmin
 Jenkins Installation
 
 ____________________
+
+Jenkins credentials: https://github.com/openshift/jenkins-client-plugin#setting-up-credentials
+
+
+oc start-build <buildconfig_name> --env=<key>=<value>
+
 
 oc policy add-role-to-group system:image-puller system:serviceaccounts:cicd-ocpadmin -n ctti-app-dev
 
@@ -35,14 +42,50 @@ oc policy add-role-to-group system:image-puller system:serviceaccounts:ctti-app-
 
 oc policy add-role-to-group system:image-puller system:serviceaccounts:ctti-app-pro -n ctti-app-dev
 
-
 oc new-app --template=jenkins-ephemeral -p JENKINS_IMAGE_STREAM_TAG=jenkins:2 -p NAMESPACE=openshift -p MEMORY_LIMIT=512Mi -p ENABLE_OAUTH=true
+
+oc new-app --template=jenkins-ephemeral -p JENKINS_IMAGE_STREAM_TAG=jenkins-2-centos7:latest -p NAMESPACE=openshift -p MEMORY_LIMIT=512Mi -p ENABLE_OAUTH=true
+
+oc get is
+
+oc import-image jenkins-2-rhel7 --from=registry.access.redhat.com/openshift3/jenkins-2-rhel7 --confirm
+
+oc new-app --template=jenkins-ephemeral -p JENKINS_IMAGE_STREAM_TAG=jenkins-2-rhel7:latest -p MEMORY_LIMIT=512Mi -p ENABLE_OAUTH=true
+
+oc new-app -e JENKINS_PASSWORD=<password> \
+    openshift/jenkins-2-centos7
 
 
 - pipelines template creation
-oc create -n cicd-ocpadmin -f sales-pipeline.yaml
 
 oc create -n cicd-ocpadmin -f ctti-templates.yaml
+
+
+
+oc login https://masterdns6fkvd2aq5m6cg.westeurope.cloudapp.azure.com:443 --token=RCf0OMDEJkNyx90RoErAdWqX3gOFz87a18WmXSagEVU
+
+Templates execution
+
+oc start-build sales-prereqs-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=RCf0OMDEJkNyx90RoErAdWqX3gOFz87a18WmXSagEVU --wait
+oc start-build sales-init-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=RCf0OMDEJkNyx90RoErAdWqX3gOFz87a18WmXSagEVU --wait
+oc start-build sales-infra-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=RCf0OMDEJkNyx90RoErAdWqX3gOFz87a18WmXSagEVU --wait
+
+oc start-build sales-deploy-ticket-processor-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=RCf0OMDEJkNyx90RoErAdWqX3gOFz87a18WmXSagEVU --wait
+oc start-build sales-deploy-stock-query-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=RCf0OMDEJkNyx90RoErAdWqX3gOFz87a18WmXSagEVU --wait
+oc start-build sales-deploy-stock-processor-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=RCf0OMDEJkNyx90RoErAdWqX3gOFz87a18WmXSagEVU --wait
+
+
+
+
+
+oc login https://192.168.99.106:8443 --token=LQJorhpo0RKjfVOBy83hJM_KrXVlAO2IJwsOlTArlkQ
+
+docker login -u admin -p LQJorhpo0RKjfVOBy83hJM_KrXVlAO2IJwsOlTArlkQ docker-registry-default.192.168.99.106.nip.io
+
+
+
+docker login -u jbuenosv -p RCf0OMDEJkNyx90RoErAdWqX3gOFz87a18WmXSagEVU https://docker-registry-default.51.144.36.254.nip.io
+
 
 
 -- JENKINS PERMISSIONS TO CREATE PROJECTS
@@ -113,19 +156,7 @@ Maven
 _____
 
 export MAVEN_HOME=/Applications/Tools/apache-maven-3.5.0
-
 export PATH=$PATH:$MAVEN_HOME/bin/
-
-
-
-
-
-script {
-                        sh "./mvnw fabric8:resource -Dfabric8.enricher.fmp-controller.replicaCount=4"
-                        sh "./mvnw fabric8:apply -Dfabric8.namespace=production"
-}
-
-
 
 
 Project delete

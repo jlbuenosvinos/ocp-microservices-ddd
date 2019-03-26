@@ -4,6 +4,7 @@ import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.application.exception
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.application.service.StockService;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.domain.model.StockValue;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.domain.model.StoreValue;
+import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import java.util.List;
  * Created by jlbuenosvinos.
  */
 @RestController
+@Api(value="/api",description="Stock Query API",produces ="application/json")
 @RequestMapping("/api")
 public class StockController {
 
