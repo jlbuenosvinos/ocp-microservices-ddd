@@ -82,9 +82,6 @@ objects:
 
                         openshift.withProject('${APP_NAME_DEV}') {
 
-
-                          def ticketServicePods=""
-                          def ticketService = openshift.selector('dc','ticket-processor-service').exists()
                           def ticketProcessorSecret = openshift.selector('secret','ticket-processor-service-secret').exists()
 
                           if (!ticketProcessorSecret) {

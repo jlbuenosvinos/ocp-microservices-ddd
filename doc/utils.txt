@@ -70,11 +70,9 @@ oc start-build sales-prereqs-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=RCf0OMDEJ
 oc start-build sales-init-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=RCf0OMDEJkNyx90RoErAdWqX3gOFz87a18WmXSagEVU --wait
 oc start-build sales-infra-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=RCf0OMDEJkNyx90RoErAdWqX3gOFz87a18WmXSagEVU --wait
 
-oc start-build sales-deploy-ticket-processor-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=RCf0OMDEJkNyx90RoErAdWqX3gOFz87a18WmXSagEVU --wait
-oc start-build sales-deploy-stock-query-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=RCf0OMDEJkNyx90RoErAdWqX3gOFz87a18WmXSagEVU --wait
-oc start-build sales-deploy-stock-processor-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=RCf0OMDEJkNyx90RoErAdWqX3gOFz87a18WmXSagEVU --wait
-
-
+oc start-build sales-deploy-ticket-processor-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=RW0cqv6L3VmIy1y5ojhlz0Aft_gGLcepevoYCcti_W54 --wait
+oc start-build sales-deploy-stock-query-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=W0cqv6L3VmIy1y5ojhlz0Aft_gGLcepevoYCcti_W54 --wait
+oc start-build sales-deploy-stock-processor-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=W0cqv6L3VmIy1y5ojhlz0Aft_gGLcepevoYCcti_W54 --wait
 
 
 
