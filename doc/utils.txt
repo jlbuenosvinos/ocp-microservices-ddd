@@ -58,7 +58,7 @@ oc new-app -e JENKINS_PASSWORD=<password> \
 
 - pipelines template creation
 
-oc create -n cicd-ocpadmin -f ctti-templates.yaml
+oc create -n cicd-ocpadmin -f ctti.yaml
 
 
 
@@ -69,11 +69,26 @@ Templates execution
 oc start-build sales-prereqs-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=RCf0OMDEJkNyx90RoErAdWqX3gOFz87a18WmXSagEVU --wait
 oc start-build sales-init-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=RCf0OMDEJkNyx90RoErAdWqX3gOFz87a18WmXSagEVU --wait
 oc start-build sales-infra-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=RCf0OMDEJkNyx90RoErAdWqX3gOFz87a18WmXSagEVU --wait
-
 oc start-build sales-deploy-ticket-processor-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=RW0cqv6L3VmIy1y5ojhlz0Aft_gGLcepevoYCcti_W54 --wait
 oc start-build sales-deploy-stock-query-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=W0cqv6L3VmIy1y5ojhlz0Aft_gGLcepevoYCcti_W54 --wait
 oc start-build sales-deploy-stock-processor-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=W0cqv6L3VmIy1y5ojhlz0Aft_gGLcepevoYCcti_W54 --wait
 
+
+oc start-build sales-prereqs-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=FhIT3FwP1t9eAB0GIiBUtY9D6iMEbxT0uBdS9Y9DN2g
+oc start-build sales-init-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=FhIT3FwP1t9eAB0GIiBUtY9D6iMEbxT0uBdS9Y9DN2g
+oc start-build sales-infra-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=FhIT3FwP1t9eAB0GIiBUtY9D6iMEbxT0uBdS9Y9DN2g
+oc start-build sales-deploy-ticket-processor-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=FhIT3FwP1t9eAB0GIiBUtY9D6iMEbxT0uBdS9Y9DN2g
+oc start-build sales-deploy-stock-query-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=FhIT3FwP1t9eAB0GIiBUtY9D6iMEbxT0uBdS9Y9DN2g
+oc start-build sales-deploy-stock-processor-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=FhIT3FwP1t9eAB0GIiBUtY9D6iMEbxT0uBdS9Y9DN2g
+
+FhIT3FwP1t9eAB0GIiBUtY9D6iMEbxT0uBdS9Y9DN2g
+
+
+FhIT3FwP1t9eAB0GIiBUtY9D6iMEbxT0uBdS9Y9DN2g
+
+
+Token para la API de CTTI
+eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJ0b3dlciIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJqbGJ1ZW5vc3Zpbm9zLXRva2VuLXAyanoyIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6ImpsYnVlbm9zdmlub3MiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiIzZWQ2MzQyZi01MGE2LTExZTktYjg5MC0wMDBkM2E0NDcyZWYiLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6dG93ZXI6amxidWVub3N2aW5vcyJ9.ppAUlZUS4K3l9kfROYfCbekOK5YTrPVCdJxhjtZOm3jxpAUc21q-VRU0KQCzyp5OK0StYhHWmtPU7a1b4uU4nHvMn6CrS0C1D5xDd85I88-AUlJGEOT-IIyjfqjSX7IV2Ee5JhvH7KNs052OAvBt6JIyZA2TvyW2u3iq5pawICElglUMKzbFjR1-xdxxmcTlbm9XqsBQPGKrJU2Ct3xDzNYv3Kl0GYG4un0ydCnheqFMGh2cHQxBB7MKdFwrOSHtN6Y-W5rxIbP39Ds62_QDa7uVC6oHfiu827De4IcHZbAwHTcmzpYrCMN7ZOkC5VyPuDQrNh0xY4ebbXI5ZXaFWA
 
 
 oc login https://192.168.99.106:8443 --token=LQJorhpo0RKjfVOBy83hJM_KrXVlAO2IJwsOlTArlkQ
