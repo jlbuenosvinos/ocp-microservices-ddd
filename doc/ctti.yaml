@@ -154,11 +154,8 @@ objects:
                     openshift.withCredentials(token) {
 
                         openshift.withProject('${APP_NAME_DEV}') {
-
-                          def stockProcessorServicePods=""
+                          
                           def stockProcessorSecret = openshift.selector('secret','stock-processor-service-secret').exists()
-
-                          echo "stockProcessorService [${stockProcessorService}]"
 
                           if (!stockProcessorSecret) {
                               dir("doc") {
@@ -466,6 +463,7 @@ objects:
                                   }
 
                                   def salesAppPods = openshift.selector('pod', [app: "sales-event-store-amq"])
+
                                   salesAppPods.untilEach {
                                       echo "[sales-event-store,${it.name()},${it.object().status.containerStatuses[0].ready}]"
                                       return it.object().status.containerStatuses[0].ready
@@ -496,17 +494,27 @@ objects:
 
                               echo "Application [sales-data-store] has to be installed."
                               def rawResult = openshift.raw('new-app','--template=datagrid71-basic -p USERNAME=sales-data-store -p PASSWORD=sales-data-store-Mypassword123_ -p APPLICATION_NAME=sales-data-store -p INFINISPAN_CONNECTORS=rest,hotrod,memcached -p CACHE_NAMES=STOCK -p HOTROD_AUTHENTICATION=true -p CONTAINER_SECURITY_ROLE_MAPPER=identity-role-mapper -p CONTAINER_SECURITY_ROLES=sales-data-store=ALL -p ADMIN_GROUP=REST,___schema_manager,sales-data-store -p MEMCACHED_CACHE=""')
-                              def salesDataStorewPods = openshift.selector('pod', [application: "sales-data-store"])
                               echo "Application [sales-data-store] pods has been prepared."
+
+                              timeout(30) {
+                                  waitUntil {
+                                    openshift.selector('pod', [app: "sales-data-store"]).count() > 0
+                                  }
+                              }
+
+                              def salesDataStorewPods = openshift.selector('pod', [application: "sales-data-store"])
+
                               salesDataStorewPods.untilEach {
                                   echo "[sales-data-store,${it.name()},${it.object().status.containerStatuses[0].ready}]"
                                   return it.object().status.containerStatuses[0].ready
                               }
                               
                               echo "Application [sales-data-store] has to be updated."
-                              rawResult = openshift.raw('env',"dc/sales-data-store STOCK_CACHE_START=EAGER STOCK_CACHE_SECURITY_AUTHORIZATION_ENABLED=true  STOCK_CACHE_SECURITY_AUTHORIZATION_ROLES=sales-data-store,___schema_manager,___script_manager HOTROD_AUTHENTICATION=true  CONTAINER_SECURITY_ROLE_MAPPER=identity-role-mapper CONTAINER_SECURITY_ROLES=sales-data-store\\=ALL  ADMIN_GROUP=REST,___schema_manager,sales-data-store")
+                              rawResult = openshift.raw("set","env dc/sales-data-store STOCK_CACHE_START=EAGER STOCK_CACHE_SECURITY_AUTHORIZATION_ENABLED=true  STOCK_CACHE_SECURITY_AUTHORIZATION_ROLES=sales-data-store,___schema_manager,___script_manager HOTROD_AUTHENTICATION=true  CONTAINER_SECURITY_ROLE_MAPPER=identity-role-mapper CONTAINER_SECURITY_ROLES=sales-data-store\\=ALL  ADMIN_GROUP=REST,___schema_manager,sales-data-store")
+                              
                               salesDataStorewPods = openshift.selector('pod', [deployment: "sales-data-store-2"])
                               echo "Application [sales-data-store] pods has been prepared."
+                              
                               salesDataStorewPods.untilEach {
                                   echo "[sales-data-store,${it.name()},${it.object().status.containerStatuses[0].ready}]"
                                   return it.object().status.containerStatuses[0].ready
