@@ -1,4 +1,3 @@
-
 oc delete bc sales-deploy-ticket-processor-pipeline
 oc delete bc sales-deploy-stock-processor-pipeline
 oc delete bc sales-deploy-stock-query-pipeline
@@ -74,12 +73,45 @@ oc start-build sales-deploy-stock-query-pipeline -n cicd-ocpadmin --env=SEC_TOKE
 oc start-build sales-deploy-stock-processor-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=W0cqv6L3VmIy1y5ojhlz0Aft_gGLcepevoYCcti_W54 --wait
 
 
-oc start-build sales-prereqs-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=FhIT3FwP1t9eAB0GIiBUtY9D6iMEbxT0uBdS9Y9DN2g
-oc start-build sales-init-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=FhIT3FwP1t9eAB0GIiBUtY9D6iMEbxT0uBdS9Y9DN2g
-oc start-build sales-infra-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=FhIT3FwP1t9eAB0GIiBUtY9D6iMEbxT0uBdS9Y9DN2g
-oc start-build sales-deploy-ticket-processor-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=FhIT3FwP1t9eAB0GIiBUtY9D6iMEbxT0uBdS9Y9DN2g
-oc start-build sales-deploy-stock-query-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=FhIT3FwP1t9eAB0GIiBUtY9D6iMEbxT0uBdS9Y9DN2g
-oc start-build sales-deploy-stock-processor-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=FhIT3FwP1t9eAB0GIiBUtY9D6iMEbxT0uBdS9Y9DN2g
+oc start-build sales-prereqs-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=vt8_ZHhj1RrMOGJTXevgjvQQCwvOCqRiD6VfKgVYVpM
+oc start-build sales-init-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=vt8_ZHhj1RrMOGJTXevgjvQQCwvOCqRiD6VfKgVYVpM
+oc start-build sales-infra-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=vt8_ZHhj1RrMOGJTXevgjvQQCwvOCqRiD6VfKgVYVpM
+oc start-build sales-deploy-ticket-processor-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=vt8_ZHhj1RrMOGJTXevgjvQQCwvOCqRiD6VfKgVYVpM
+oc start-build sales-deploy-stock-query-pipeline -n cicd-ocpadmin --env=STOCKEC_TOKEN=vt8_ZHhj1RrMOGJTXevgjvQQCwvOCqRiD6VfKgVYVpM
+oc start-build sales-deploy-stock-processor-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=vt8_ZHhj1RrMOGJTXevgjvQQCwvOCqRiD6VfKgVYVpM
+
+
+
+oc login https://192.168.99.100:8443 --token=vt8_ZHhj1RrMOGJTXevgjvQQCwvOCqRiD6VfKgVYVpM
+
+
+Login
+
+curl -X GET -H "Authorization: Bearer bOVJsmTpvW2UCQsfu7Wx0p-DoIsT5hHavBC8gQtJR7k" https://192.168.99.100:8443/oapi/v1 --insecure
+
+Execute a build config:
+
+curl -X POST -H "Content-Type: application/json" -k https://192.168.99.100:8443/apis/build.openshift.io/v1/namespaces/cicd-ocpadmin/buildconfigs/sales-prereqs-pipeline/webhooks/secretvalue1/generic
+
+curl -X POST -H "Content-Type: application/json" -k https://192.168.99.100:8443/apis/build.openshift.io/v1/namespaces/cicd-ocpadmin/buildconfigs/sales-init-pipeline/webhooks/secretvalue1/generic
+
+curl -X POST -H "Content-Type: application/json" -k https://192.168.99.100:8443/apis/build.openshift.io/v1/namespaces/cicd-ocpadmin/buildconfigs/sales-infra-pipeline/webhooks/secretvalue1/generic
+
+curl -X POST -H "Content-Type: application/json" -k https://192.168.99.100:8443/apis/build.openshift.io/v1/namespaces/cicd-ocpadmin/buildconfigs/sales-deploy-ticket-processor-pipeline/webhooks/secretvalue1/generic
+
+curl -X POST -H "Content-Type: application/json" -k https://192.168.99.100:8443/apis/build.openshift.io/v1/namespaces/cicd-ocpadmin/buildconfigs/sales-deploy-stock-query-pipeline/webhooks/secretvalue1/generic
+
+curl -X POST -H "Content-Type: application/json" -k https://192.168.99.100:8443/apis/build.openshift.io/v1/namespaces/cicd-ocpadmin/buildconfigs/sales-deploy-stock-processor-pipeline/webhooks/secretvalue1/generic
+
+
+
+
+-d "{\"query\":\"$name\", \"turnOff\":true}"
+
+curl -X POST -H "Content-Type: application/json" -d "{\"SEC_TOKEN\":\"zgqrq5D8-C3a4SoRJSZ-KBO2uh-BQRpTwLTDTanqKAU\"}" -k https://192.168.99.100:8443/apis/build.openshift.io/v1/namespaces/cicd-ocpadmin/buildconfigs/sales-prereqs-pipeline/webhooks/secretvalue1/generic
+
+curl -X POST -H "Content-Type: application/json" -d "{\"sec_token_param\":\"zgqrq5D8-C3a4SoRJSZ-KBO2uh-BQRpTwLTDTanqKAU\"}" -k https://192.168.99.100:8443/apis/build.openshift.io/v1/namespaces/cicd-ocpadmin/buildconfigs/sales-prereqs-pipeline/webhooks/secretvalue1/generic
+
 
 FhIT3FwP1t9eAB0GIiBUtY9D6iMEbxT0uBdS9Y9DN2g
 
@@ -93,9 +125,9 @@ eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiw
 
 oc login https://192.168.99.106:8443 --token=LQJorhpo0RKjfVOBy83hJM_KrXVlAO2IJwsOlTArlkQ
 
+
+
 docker login -u admin -p LQJorhpo0RKjfVOBy83hJM_KrXVlAO2IJwsOlTArlkQ docker-registry-default.192.168.99.106.nip.io
-
-
 
 docker login -u jbuenosv -p RCf0OMDEJkNyx90RoErAdWqX3gOFz87a18WmXSagEVU https://docker-registry-default.51.144.36.254.nip.io
 
@@ -125,7 +157,9 @@ EOF
 
 oc create -f clusterpolicy.json
 
-oc adm policy add-cluster-role-to-user create_project_role system:serviceaccount:devtools:jenkins
+
+oc adm policy add-cluster-role-to-user cluster-admin -z jenkins
+
 
 -- END JENKINS PERMISSIONS TO CREATE PROJECTS
 

@@ -1,0 +1,10 @@
+- name: sales-prereqs-pipeline
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: sales-prereqs-pipeline
+      command: curl -X POST -H "Content-Type: application/json" -k https://192.168.99.100:8443/apis/build.openshift.io/v1/namespaces/cicd-ocpadmin/buildconfigs/sales-prereqs-pipeline/webhooks/secretvalue1/generic
+    - name: sleep for 10 seconds and continue with play
+      wait_for: timeout=10
+      delegate_to: localhost
+    

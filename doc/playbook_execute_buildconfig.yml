@@ -1,0 +1,17 @@
+---
+#
+# This playbook executes an OpenShift Build Config.
+#
+# parameters:
+# * user
+# * api_url
+# * api_key
+# * sec_token
+# * project_name
+# * build_config_name
+
+- name: Executes a build config
+  hosts: all
+  gather_facts: false
+  tasks:
+  
