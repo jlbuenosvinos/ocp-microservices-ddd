@@ -116,7 +116,7 @@ objects:
     triggers:
       - generic:
           allowEnv: true
-          secret: secretvalue1
+          secret: ${GENERIC_WEBHOOK_SECRET}
         type: Generic
 - apiVersion: "v1"
   kind: "BuildConfig"
@@ -197,7 +197,7 @@ objects:
     triggers:
       - generic:
           allowEnv: true
-          secret: secretvalue1
+          secret: ${GENERIC_WEBHOOK_SECRET}
         type: Generic
 - apiVersion: "v1"
   kind: "BuildConfig"
@@ -271,7 +271,7 @@ objects:
     triggers:
       - generic:
           allowEnv: true
-          secret: secretvalue1
+          secret: ${GENERIC_WEBHOOK_SECRET}
         type: Generic
 - apiVersion: "v1"
   kind: "BuildConfig"
@@ -344,7 +344,7 @@ objects:
     triggers:
       - generic:
           allowEnv: true
-          secret: secretvalue1
+          secret: ${GENERIC_WEBHOOK_SECRET}
         type: Generic
 - apiVersion: "v1"
   kind: "BuildConfig"
@@ -403,7 +403,7 @@ objects:
     triggers:
       - generic:
           allowEnv: true
-          secret: secretvalue1
+          secret: ${GENERIC_WEBHOOK_SECRET}
         type: Generic
 - apiVersion: "v1"
   kind: "BuildConfig"
@@ -510,5 +510,5 @@ objects:
     triggers:
       - generic:
           allowEnv: true
-          secret: secretvalue1
+          secret: ${GENERIC_WEBHOOK_SECRET}
         type: Generic

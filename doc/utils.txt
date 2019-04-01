@@ -104,6 +104,19 @@ curl -X POST -H "Content-Type: application/json" -k https://192.168.99.100:8443/
 curl -X POST -H "Content-Type: application/json" -k https://192.168.99.100:8443/apis/build.openshift.io/v1/namespaces/cicd-ocpadmin/buildconfigs/sales-deploy-stock-processor-pipeline/webhooks/secretvalue1/generic
 
 
+CTTI:
+
+curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer 792YNsLAJv1P0TwWF50fhIEtelVnOyWmpEgEZOxJyPY" -k https://masterdns6fkvd2aq5m6cg.westeurope.cloudapp.azure.com:443/apis/build.openshift.io/v1/namespaces/cicd-ocpadmin/buildconfigs/sales-prereqs-pipeline/webhooks/secretvalue2/generic
+
+curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer 792YNsLAJv1P0TwWF50fhIEtelVnOyWmpEgEZOxJyPY" -k https://masterdns6fkvd2aq5m6cg.westeurope.cloudapp.azure.com:443/apis/build.openshift.io/v1/namespaces/cicd-ocpadmin/buildconfigs/sales-init-pipeline/webhooks/secretvalue2/generic
+
+curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer 792YNsLAJv1P0TwWF50fhIEtelVnOyWmpEgEZOxJyPY" -k https://masterdns6fkvd2aq5m6cg.westeurope.cloudapp.azure.com:443/apis/build.openshift.io/v1/namespaces/cicd-ocpadmin/buildconfigs/sales-infra-pipeline/webhooks/secretvalue2/generic
+
+curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer 792YNsLAJv1P0TwWF50fhIEtelVnOyWmpEgEZOxJyPY" -k https://masterdns6fkvd2aq5m6cg.westeurope.cloudapp.azure.com:443/apis/build.openshift.io/v1/namespaces/cicd-ocpadmin/buildconfigs/sales-deploy-ticket-processor-pipeline/webhooks/secretvalue2/generic
+
+curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer 792YNsLAJv1P0TwWF50fhIEtelVnOyWmpEgEZOxJyPY" -k https://masterdns6fkvd2aq5m6cg.westeurope.cloudapp.azure.com:443/apis/build.openshift.io/v1/namespaces/cicd-ocpadmin/buildconfigs/sales-deploy-stock-query-pipeline/webhooks/secretvalue2/generic
+
+curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer 792YNsLAJv1P0TwWF50fhIEtelVnOyWmpEgEZOxJyPY" -k https://masterdns6fkvd2aq5m6cg.westeurope.cloudapp.azure.com:443/apis/build.openshift.io/v1/namespaces/cicd-ocpadmin/buildconfigs/sales-deploy-stock-processor-pipeline/webhooks/secretvalue2/generic
 
 
 -d "{\"query\":\"$name\", \"turnOff\":true}"
