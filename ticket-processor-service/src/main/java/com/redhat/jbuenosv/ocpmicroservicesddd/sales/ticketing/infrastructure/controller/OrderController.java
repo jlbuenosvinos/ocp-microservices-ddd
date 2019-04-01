@@ -54,10 +54,9 @@ class OrderController {
         try {
             Order newOrder = orderBuilder.build(order);
             ticketService.processOrder(newOrder);
-            HttpHeaders headers = new HttpHeaders();
-            headers.setLocation(ucBuilder.path("/api/order/{" + newOrder.getOrderId() + "}").buildAndExpand(newOrder.getOrderId()).toUri());
+
             logger.debug("Order [{}] has been created.", newOrder.getOrderId());
-            orderResponse = new ResponseEntity<String>(headers, HttpStatus.CREATED);
+            orderResponse = new ResponseEntity<String>(HttpStatus.CREATED);
         }
         catch(TicketApplicationException e) {
             orderResponse = new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
