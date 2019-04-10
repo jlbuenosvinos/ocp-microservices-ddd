@@ -5,6 +5,7 @@ metadata:
     project: ${project.artifactId}
     version: ${project.version}
     provider: fabric8
+    team: ctti-apps
 spec:
   template:
     spec:
