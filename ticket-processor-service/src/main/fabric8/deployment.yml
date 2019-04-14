@@ -5,7 +5,7 @@ metadata:
     project: ${project.artifactId}
     version: ${project.version}
     provider: fabric8
-    team: ctti-apps
+    monitorGroup: ctti
 spec:
   template:
     spec:
@@ -17,7 +17,7 @@ spec:
               path: /api/health
               port: 8080
               scheme: HTTP
-            initialDelaySeconds: 180
+            initialDelaySeconds: 125
             periodSeconds: 10
             successThreshold: 1
             timeoutSeconds: 1
@@ -27,7 +27,7 @@ spec:
               path: /api/health
               port: 8080
               scheme: HTTP
-            initialDelaySeconds: 300
+            initialDelaySeconds: 120
             periodSeconds: 10
             successThreshold: 1
             timeoutSeconds: 1

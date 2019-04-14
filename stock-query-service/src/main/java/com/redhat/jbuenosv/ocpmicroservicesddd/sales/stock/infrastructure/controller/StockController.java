@@ -4,6 +4,7 @@ import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.application.exception
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.application.service.StockService;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.domain.model.StockValue;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.domain.model.StoreValue;
+import io.micrometer.core.annotation.Timed;
 import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +36,7 @@ public class StockController {
      * @param ucBuilder URI builder
      * @return
      */
+    @Timed
     @RequestMapping(value = "/stock", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<StockValueControllerResponse>> getStock(UriComponentsBuilder ucBuilder) {
         ResponseEntity stockQueryResponse = null;
@@ -60,6 +62,7 @@ public class StockController {
      * @param ucBuilder URI builder
      * @return
      */
+    @Timed
     @RequestMapping(value = "/stock/{storeid}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<StockValueControllerResponse>> getStock(@PathVariable Integer storeid, UriComponentsBuilder ucBuilder) {
         ResponseEntity stockQueryResponse = null;
@@ -110,6 +113,7 @@ public class StockController {
      * @param ucBuilder URI builder
      * @return
      */
+    @Timed
     @RequestMapping(value = "/stock/{storeid}/{productid}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<StockValueControllerResponse> getStock(@PathVariable Integer storeid, @PathVariable String productid, UriComponentsBuilder ucBuilder) {
         ResponseEntity stockQueryResponse = null;
@@ -150,6 +154,7 @@ public class StockController {
      * @param ucBuilder URI builder
      * @return
      */
+    @Timed
     @RequestMapping(value = "/store", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<StoreValueControllerResponse>> getStores(UriComponentsBuilder ucBuilder) {
         ResponseEntity storeQueryResponse = null;
