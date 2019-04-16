@@ -51,6 +51,7 @@ class TicketingController {
      * @param message
      * @param session
      */
+    @Timed
     @JmsListener(destination = "${ticketing.activemq.tickets.topic}", containerFactory = "jmsListenerContainerFactory")
     public void receiveTicket(@Payload String ticket, @Headers MessageHeaders headers, Message message, Session session) {
         Ticket ticketEvent = null;

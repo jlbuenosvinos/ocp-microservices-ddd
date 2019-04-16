@@ -6,6 +6,7 @@ import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.application.servi
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.model.Order;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.domain.TicketProcessorEventBus;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.store.TicketStore;
+import io.micrometer.core.annotation.Timed;
 import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +48,7 @@ class OrderController {
      * @param ucBuilder uri builder
      * @return
      */
+    @Timed
     @RequestMapping(value = "/order", method = RequestMethod.POST)
     public ResponseEntity<?> processOrder(@RequestBody String order, UriComponentsBuilder ucBuilder) {
         ResponseEntity orderResponse;

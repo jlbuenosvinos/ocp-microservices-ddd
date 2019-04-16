@@ -1,4 +1,4 @@
-package com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.application.configuration;
+package com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.application.configuration;
 
 import io.micrometer.core.aop.TimedAspect;
 import io.micrometer.core.instrument.MeterRegistry;
