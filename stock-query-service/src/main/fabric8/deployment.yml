@@ -51,3 +51,5 @@ spec:
             value: TRUE
           - name: "STOCK_METRICS_PROMETHEUS_EXPORT_ENABLED"
             value: TRUE
+          - name: "STOCK_METRICS_ARTIFACTID_NAME"
+            value: "stock-query-service"
