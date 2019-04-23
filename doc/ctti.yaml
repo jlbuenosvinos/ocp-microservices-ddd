@@ -3,6 +3,7 @@ kind: Template
 metadata:
   name: ctti
   annotations:
+    openshift.io/display-name: "CTTI Application Jenkins templates creation."
     description: "CTTI Application Jenkins templates creation."
     iconClass: "icon-stackoverflow"
 parameters:
