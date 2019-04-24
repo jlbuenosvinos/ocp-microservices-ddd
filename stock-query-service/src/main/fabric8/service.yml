@@ -8,7 +8,6 @@ metadata:
     project: ${project.artifactId}
     version: ${project.version}
     provider: fabric8
-    monitorGroup: ctti
 spec:
   ports:
     - name: web
