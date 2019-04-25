@@ -7,6 +7,7 @@ import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.model.Orde
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.model.OrderLineType;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.model.Ticket;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.model.TicketItem;
+import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.store.StockStore;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.store.TicketStore;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.util.UUIDGenerator;
 import org.slf4j.Logger;
@@ -32,6 +33,9 @@ class TicketServiceImpl implements TicketService {
     TicketStore ticketStore;
 
     @Autowired
+    StockStore stockStore;
+
+    @Autowired
     TicketProcessorEventBus ticketProcessorEventBus;
 
     @Autowired
@@ -43,14 +47,26 @@ class TicketServiceImpl implements TicketService {
     @PostConstruct
     public void init() {
         logger.debug("TicketServiceImpl init.");
-        ticketProcessorEventBus.register(this.ticketStore);
+        if (config.isServiceMesh()) {
+            ticketProcessorEventBus.register(this.stockStore);
+            logger.debug("The StockStore has been registered.");
+        }
+        else {
+            ticketProcessorEventBus.register(this.ticketStore);
+            logger.debug("The TicketStore has been registered.");
+        }
         logger.debug("TicketServiceImpl init ends.");
     }
 
     @PreDestroy
     public void stop() {
         logger.debug("TicketServiceImpl stop.");
-        ticketProcessorEventBus.unregister(this.ticketStore);
+        if (config.isServiceMesh()) {
+            ticketProcessorEventBus.unregister(this.stockStore);
+        }
+        else {
+            ticketProcessorEventBus.unregister(this.ticketStore);
+        }
         logger.debug("TicketServiceImpl stop ends.");
     }
 

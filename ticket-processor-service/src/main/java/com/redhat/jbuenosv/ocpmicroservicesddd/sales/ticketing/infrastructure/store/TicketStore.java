@@ -1,6 +1,7 @@
 package com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.store;
 
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.application.configuration.ActiveMQConfig;
+import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.application.configuration.CommonConfig;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.event.TicketGeneratedEvent;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.slf4j.Logger;
@@ -28,6 +29,9 @@ public class TicketStore implements EventStore {
     @Autowired
     ActiveMQConfig mqConfig;
 
+    @Autowired
+    CommonConfig commonConfig;
+
     /**
      * Saves a ticket event
      * @param event ticket event
@@ -35,49 +39,47 @@ public class TicketStore implements EventStore {
     @Subscribe
     public void store(TicketGeneratedEvent event) {
 
-        if (!mqConfig.getTicketsStoreEnabled()) {
+            if (!mqConfig.getTicketsStoreEnabled()) {
+                logger.debug("AMQ Store is disabled.");
+                logger.info("AMQ Store is disabled.");
+            } // end if
+            else {
 
-            logger.debug("AMQ Store is disabled.");
-            logger.info("AMQ Store is disabled.");
+                logger.debug("Saving begin.");
 
-        } // end if
-        else {
+                TicketGeneratedEvent ticketGeneratedEvent = event;
 
-            logger.debug("Saving begin.");
+                ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
+                connectionFactory.setBrokerURL(mqConfig.getBrokerUrl());
+                connectionFactory.setPassword(mqConfig.getPassword());
+                connectionFactory.setUserName(mqConfig.getUserName());
+                connectionFactory.setStatsEnabled(Boolean.TRUE);
+                logger.debug("ConnectionFactory available.");
+                JmsTemplate template = new JmsTemplate();
+                template.setConnectionFactory(connectionFactory);
+                template.setDeliveryMode(DeliveryMode.PERSISTENT);
+                template.setPubSubDomain(Boolean.TRUE);
+                template.setSessionTransacted(Boolean.TRUE);
 
-            TicketGeneratedEvent ticketGeneratedEvent = event;
+                logger.debug("JMS template is available.");
 
-            ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
-            connectionFactory.setBrokerURL(mqConfig.getBrokerUrl());
-            connectionFactory.setPassword(mqConfig.getPassword());
-            connectionFactory.setUserName(mqConfig.getUserName());
-            connectionFactory.setStatsEnabled(Boolean.TRUE);
-            logger.debug("ConnectionFactory available.");
-            JmsTemplate template = new JmsTemplate();
-            template.setConnectionFactory(connectionFactory);
-            template.setDeliveryMode(DeliveryMode.PERSISTENT);
-            template.setPubSubDomain(Boolean.TRUE);
-            template.setSessionTransacted(Boolean.TRUE);
+                MessageCreator mc = new MessageCreator() {
+                    @Override
+                    public Message createMessage(Session session) throws JMSException {
+                        Message msg = session.createTextMessage(ticketGeneratedEvent.getTicket().toJson());
+                        msg.setStringProperty("sales-event-type", ticketGeneratedEvent.getEventType());
+                        msg.setStringProperty("sales-event-id", ticketGeneratedEvent.getEventId());
+                        msg.setLongProperty("sales-occuredon", ticketGeneratedEvent.getOccurredOn().getTime());
+                        msg.setStringProperty("sales-event-version", ticketGeneratedEvent.getEventVersion());
+                        return msg;
+                    }
+                };
 
-            logger.debug("JMS template is available.");
+                logger.debug("AMQ message is available.");
 
-            MessageCreator mc = new MessageCreator() {
-                @Override
-                public Message createMessage(Session session) throws JMSException {
-                    Message msg = session.createTextMessage(ticketGeneratedEvent.getTicket().toJson());
-                    msg.setStringProperty("sales-event-type",ticketGeneratedEvent.getEventType());
-                    msg.setStringProperty("sales-event-id",ticketGeneratedEvent.getEventId());
-                    msg.setLongProperty("sales-occuredon",ticketGeneratedEvent.getOccurredOn().getTime());
-                    msg.setStringProperty("sales-event-version",ticketGeneratedEvent.getEventVersion());
-                    return msg;
-                }
-            };
+                template.send(mqConfig.getTicketsTopicName(), mc);
 
-            logger.debug("AMQ message is available.");
-
-            template.send(mqConfig.getTicketsTopicName(),mc);
-
-        }
+            }
 
     }
 

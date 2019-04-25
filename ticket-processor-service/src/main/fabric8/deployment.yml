@@ -31,6 +31,10 @@ spec:
             successThreshold: 1
             timeoutSeconds: 1
           env:
+            - name: "TICKETING_TICKETS_SERVICE_MESH_ON"
+              value: TRUE
+            - name: "TICKETING_STOCK_PROCESSOR_SERVICE_URI"
+              value: "http://stock-processor-service.ctti-app-dev.svc.cluster.local:8080/api/ticket"
             - name: "TICKETING_EVENT_VERSION"
               value: "1.0"
             - name: "TICKETING_TICKETS_DESTINATION_NAME"

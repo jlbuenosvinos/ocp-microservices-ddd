@@ -21,7 +21,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  * Created by jlbuenosvinos.
  */
 @RestController
-@Api(value="/api",description="Stock Query API",produces ="application/json")
+@Api(value="/api",produces ="application/json")
 @RequestMapping("/api")
 class OrderController {
 

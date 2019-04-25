@@ -27,17 +27,33 @@ public class TicketBuilder {
      * @return ticket object based on the event representation
      */
     public Ticket build(Message ticket) {
+        Ticket newTicket;
+        TextMessage ticketMessage = (TextMessage)ticket;
+        try {
+            newTicket = build(ticketMessage.getText());
+        }
+        catch(Exception e) {
+            logger.error("Unable to build the ticket. [{}]",e.getMessage());
+            throw new StockApplicationException(e) ;
+        }
+        return newTicket;
+    }
+
+    /**
+     * Builds a Ticket type reading its JSON representation
+     * @param ticket ticket item
+     * @return ticket object based on the event representation
+     */
+    public Ticket build(String ticket) {
         JsonNode nameNode;
         JsonNode jsonItem;
         Ticket newTicket = new Ticket();
         TicketItem ticketItem = new TicketItem();
-        TextMessage ticketMessage = (TextMessage)ticket;
 
         try {
-            String ticketJSON = ticketMessage.getText();
 
             ObjectMapper mapper = new ObjectMapper();
-            JsonNode rootNode = mapper.readTree(ticketJSON);
+            JsonNode rootNode = mapper.readTree(ticket);
 
             nameNode = rootNode.path("store_id");
             Integer nodeStoreId = nameNode.intValue();
