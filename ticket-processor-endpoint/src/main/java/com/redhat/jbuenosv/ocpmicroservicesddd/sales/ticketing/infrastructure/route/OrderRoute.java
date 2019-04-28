@@ -1,8 +1,11 @@
 package com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.route;
 
-import org.apache.camel.Processor;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.application.configuration.CommonConfig;
+import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.rest.RestBindingMode;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -11,41 +14,33 @@ import org.springframework.stereotype.Component;
 @Component
 public class OrderRoute extends RouteBuilder {
 
+    @Autowired
+    CommonConfig config;
+
     @Override
     public void configure() throws Exception {
+
+        onException(JsonProcessingException.class)
+                .handled(true)
+                .to("log:Unable to parse the JSON Payload.")
+                .setHeader(Exchange.HTTP_RESPONSE_CODE, constant(400));
+
+        onException(Exception.class)
+                .handled(true)
+                .setHeader(Exchange.HTTP_RESPONSE_CODE, constant(500));
 
         restConfiguration()
                 .component("servlet")
                 .bindingMode(RestBindingMode.json);
 
         rest()
-                .get("/hello")
-                .to("direct:hello");
+                .post("/order")
+                .to("direct:ticket-processor-service");
 
-        from("direct:hello")
-                .log("Hello World");
-
-
-        /*
-        rest("/student").produces("application/json")
-                .get("/hello/{name}")
-                .route().transform().simple("Hello ${header.name}, Welcome to JavaOutOfBounds.com")
-                .endRest()
-                .get("/records/{name}").to("direct:records");
-
-        from("direct:records")
-                .process(new Processor() {
-
-                    final AtomicLong counter = new AtomicLong();
-
-                    @Override
-                    public void process(Exchange exchange) throws Exception {
-
-                        final String name = exchange.getIn().getHeader("name",String.class);
-                        exchange.getIn().setBody(new Student(counter.incrementAndGet(),name,"Camel + SpringBoot"));
-                    }
-                });
-         */
+        from("direct:ticket-processor-service")
+                .to("http4:" + config.getTicketingTicketProcessorUri() + "?bridgeEndpoint=true")
+                .log("${body}")
+                .end();
 
     }
 
