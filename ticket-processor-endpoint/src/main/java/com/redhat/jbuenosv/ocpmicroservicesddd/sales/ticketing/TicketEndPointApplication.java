@@ -8,10 +8,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
-@ComponentScan("com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.route")
 @SpringBootApplication
 public class TicketEndPointApplication {
+
+	//@ComponentScan("com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.route")
 
 	/**
 	 * main method
@@ -21,11 +21,13 @@ public class TicketEndPointApplication {
 		SpringApplication.run(TicketEndPointApplication.class, args);
 	}
 
+	/*
 	@Bean
 	public ServletRegistrationBean camelServletRegistrationBean() {
-		ServletRegistrationBean registration = new ServletRegistrationBean(new CamelHttpTransportServlet(), "/api/*");
+		ServletRegistrationBean registration = new ServletRegistrationBean(new CamelHttpTransportServlet(), "/camel/*");
 		registration.setName("CamelServlet");
 		return registration;
 	}
+	*/
 
 }
