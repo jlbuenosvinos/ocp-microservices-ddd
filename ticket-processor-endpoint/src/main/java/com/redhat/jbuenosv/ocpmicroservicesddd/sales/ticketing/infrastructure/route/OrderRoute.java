@@ -38,9 +38,10 @@ public class OrderRoute extends RouteBuilder {
                 .to("direct:ticket-processor-service");
 
         from("direct:ticket-processor-service")
-                .to("http4:" + config.getTicketingTicketProcessorUri() + "?bridgeEndpoint=true")
                 .log("${body}")
-                .end();
+                //.to("http4:" + config.getTicketingTicketProcessorUri())
+                //.to("rest:put:api/order?host=" + config.getTicketingTicketProcessorUri())
+                .to("undertow:" + config.getTicketingTicketProcessorUri());
 
     }
 

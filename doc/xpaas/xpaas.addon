@@ -1,0 +1,17 @@
+# Name: xpaas
+# Description: Imports xPaaS templates
+# Url: https://github.com/openshift/openshift-ansible/tree/release-3.11/roles/openshift_examples/files/examples/latest
+# Required-Vars: OPENSHIFT_VERSION
+# Var-Defaults: OPENSHIFT_VERSION=3.11
+# Depends-On: redhat-registry-login
+
+echo Info: Xpaas addon depends on redhat-registry-login and has to be applied after the redhat-registry-login is applied.
+
+# Image Streams
+oc apply -f v#{OPENSHIFT_VERSION}/xpaas-streams -n openshift
+
+# Templates
+oc apply -f v#{OPENSHIFT_VERSION}/xpaas-templates -n openshift
+
+echo XPaaS imagestream and templates for OpenShift installed
+echo See https://github.com/openshift/openshift-ansible/tree/release-#{OPENSHIFT_VERSION}/roles/openshift_examples/files/examples

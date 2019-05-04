@@ -382,6 +382,7 @@ objects:
                                   echo "Image [amq-broker-71-statefulset-clustered] already exists." 
                                   template = templateSelector.object()
                               }
+
                           }
                           openshift.raw('policy','add-role-to-user view -z default')
                           echo "view add-role-to-user to default has been set." 

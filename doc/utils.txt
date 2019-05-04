@@ -7,6 +7,8 @@ oc delete bc sales-prereqs-pipeline
 
 oc start-build sales-init-pipeline -n cicd-ocpadmin
 
+https://github.com/openshift/library
+
 Jenkins Installation
 
 ____________________
@@ -49,10 +51,29 @@ oc get is
 
 oc import-image jenkins-2-rhel7 --from=registry.access.redhat.com/openshift3/jenkins-2-rhel7 --confirm
 
+oc import-image jenkins-2-rhel7 --from=registry.access.redhat.com/openshift3/jenkins-2-rhel7:v3.11.88-2 --confirm
+
+oc import-image jenkins-2-rhel7 --from=registry.access.redhat.com/openshift3/jenkins-2-rhel7:v3.11.82-3 --confirm
+
+oc import-image jenkins-2-rhel7 --from=registry.access.redhat.com/openshift3/jenkins-2-rhel7:v3.11.82-3 --confirm
+
+oc import-image jenkins-2-rhel7 --from=registry.access.redhat.com/openshift3/jenkins-2-rhel7:v3.10.127 --confirm
+oc import-image jenkins-agent-maven-35-rhel7 --from=registry.access.redhat.com/openshift3/jenkins-agent-maven-35-rhel7:v3.10.127 --confirm
 oc new-app --template=jenkins-ephemeral -p JENKINS_IMAGE_STREAM_TAG=jenkins-2-rhel7:latest -p MEMORY_LIMIT=512Mi -p ENABLE_OAUTH=true
 
-oc new-app -e JENKINS_PASSWORD=<password> \
-    openshift/jenkins-2-centos7
+oc adm policy add-cluster-role-to-user cluster-admin -z jenkins
+
+oc adm policy add-cluster-role-to-user cluster-admin -z admin
+
+oc import-image fuse7/fuse-java-openshift --from=registry.redhat.io/fuse7/fuse-java-openshift --confirm
+
+oc apply -f v3.11/xpaas-streams/datagrid71-image-stream.json -n openshift
+
+
+eval $(minishift docker-env)
+docker login -p $(oc whoami -t) 172.30.1.1:5000
+docker pull registry.redhat.io/jboss-datagrid-7/datagrid71-openshift:1.3
+
 
 
 - pipelines template creation
@@ -294,6 +315,4 @@ mvn clean fabric8:deploy -Popenshift
 
 oc scale dc/stock-processor-service --replicas=2
 
-
-oc create -n devtools -f sales-pipeline.yaml
 

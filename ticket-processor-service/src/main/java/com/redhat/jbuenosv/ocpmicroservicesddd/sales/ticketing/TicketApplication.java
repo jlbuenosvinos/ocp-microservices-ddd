@@ -18,7 +18,7 @@ public class TicketApplication extends SpringBootServletInitializer {
 	 * @param args application arguments
 	 */
 	public static void main(String[] args) {
-	    SpringApplication.run(TicketApplication.class, args);
+		SpringApplication.run(TicketApplication.class, args);
 	}
 
 }
