@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.application.configuration.CommonConfig;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.model.rest.RestBindingMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,6 @@ public class OrderRoute extends RouteBuilder {
     public void configure() throws Exception {
 
         logger.debug("TicketProcessor Endpoint [{}]", config.getTicketingTicketProcessorUriHost() +  ":" +  config.getTicketingTicketProcessorUriPort());
-
 
         onException(JsonProcessingException.class)
                 .handled(true)
