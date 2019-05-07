@@ -12,8 +12,21 @@ public class CommonConfig {
     @Value("${ticketing.ticket.processor.service.uri}")
     String ticketingTicketProcessorUri;
 
+    @Value("${ticketing.ticket.processor.service.uri.host}")
+    String ticketingTicketProcessorUriHost;
+
+    @Value("${ticketing.ticket.processor.service.uri.port}")
+    Integer ticketingTicketProcessorUriPort;
+
+    public String getTicketingTicketProcessorUriHost() {
+        return ticketingTicketProcessorUriHost;
+    }
+
+    public Integer getTicketingTicketProcessorUriPort() {
+        return ticketingTicketProcessorUriPort;
+    }
+
     public String getTicketingTicketProcessorUri() {
         return ticketingTicketProcessorUri;
     }
-
 }

@@ -11,6 +11,7 @@
     <logger name="org.springframework" level="INFO"/>
     <logger name="org.springframework" level="OFF"/>
     <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.application.configuration" level="DEBUG"/>
+    <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure" level="DEBUG"/>
 
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
