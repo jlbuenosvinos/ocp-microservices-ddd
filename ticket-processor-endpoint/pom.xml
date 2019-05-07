@@ -89,13 +89,6 @@
             <artifactId>camel-swagger-java-starter</artifactId>
         </dependency>
 
-        <!--
-        <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-servlet</artifactId>
-        </dependency>
-        -->
-
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-http4-starter</artifactId>

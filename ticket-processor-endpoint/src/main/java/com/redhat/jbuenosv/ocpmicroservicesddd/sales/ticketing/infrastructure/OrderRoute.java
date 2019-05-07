@@ -26,7 +26,7 @@ public class OrderRoute extends RouteBuilder {
 
         logger.debug("TicketProcessor Endpoint [{}]", config.getTicketingTicketProcessorUriHost() +  ":" +  config.getTicketingTicketProcessorUriPort());
 
-        /*
+
         onException(JsonProcessingException.class)
                 .handled(true)
                 .to("log:Unable to parse the JSON Payload.")
@@ -35,16 +35,11 @@ public class OrderRoute extends RouteBuilder {
         onException(Exception.class)
                 .handled(true)
                 .setHeader(Exchange.HTTP_RESPONSE_CODE, constant(500));
-         */
 
         restConfiguration()
                 .component("servlet");
-                //.bindingMode(org.apache.camel.model.rest.RestBindingMode);
-                //.host(config.getTicketingTicketProcessorUriHost())
-                //.port(config.getTicketingTicketProcessorUriPort()
 
         rest()
-                //.consumes("application/json")
                 .post("/order")
                 .type(String.class)
                 .outType(String.class)
@@ -53,10 +48,7 @@ public class OrderRoute extends RouteBuilder {
         from("direct:ticket-processor-service")
                 .log("direct:ticket-processor-service body [${body}]")
                 .setHeader(Exchange.HTTP_METHOD,constant(org.apache.camel.component.http4.HttpMethods.POST))
-                //.to("rest:post:order");
-                //.to("bean:ticketProcessorService?method=processOrder");
                 .to("http4://" + config.getTicketingTicketProcessorUriHost() +  ":" +  config.getTicketingTicketProcessorUriPort()  + "/api/order?bridgeEndpoint=true");
-                // .to("http4://camel-saga-payment-service:8080/api/pay?bridgeEndpoint=true&type=flight")
 
     }
 
