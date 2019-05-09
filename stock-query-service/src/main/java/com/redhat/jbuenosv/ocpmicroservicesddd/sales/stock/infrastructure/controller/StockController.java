@@ -57,6 +57,28 @@ public class StockController {
     }
 
     /**
+     * Removes the stock
+     * @param ucBuilder URI builder
+     * @return
+     */
+    @Timed
+    @RequestMapping(value = "/stock", method = RequestMethod.DELETE)
+    public ResponseEntity<List<StockValueControllerResponse>> removeStock(UriComponentsBuilder ucBuilder) {
+        ResponseEntity stockQueryResponse = null;
+
+        try {
+            stockService.removeStock();
+            logger.debug("The stock has been removed.");
+        }
+        catch(StockApplicationException e) {
+            stockQueryResponse = new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+            logger.debug("Error removing the stock.",e.getMessage());
+        }
+
+        return stockQueryResponse;
+    }
+
+    /**
      * Gets the stock by store id
      * @param storeid store id
      * @param ucBuilder URI builder

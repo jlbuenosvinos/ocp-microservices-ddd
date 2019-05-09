@@ -25,6 +25,12 @@ public interface StockService {
     List<StoreValue> getStores();
 
     /**
+     * Removes the stock
+     * @return void
+     */
+    void removeStock();
+
+    /**
      * Get the current stock for an specific product and store
      * @param storeId store id
      * @param productId product id

@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,7 +25,6 @@ public class StockServiceImpl implements StockService {
 
     @Autowired
     private StoreRepository storeRepository;
-
 
     /**
      * Get the current stock for an specific product and store
@@ -47,6 +45,13 @@ public class StockServiceImpl implements StockService {
         return stockRepository.findByStoreIdProductId(storeId,productId);
     }
 
+    /**
+     * Removes the stock
+     * @return void
+     */
+    public void removeStock() {
+        stockRepository.removeStock();
+    }
 
     /**
      * Get the stores list

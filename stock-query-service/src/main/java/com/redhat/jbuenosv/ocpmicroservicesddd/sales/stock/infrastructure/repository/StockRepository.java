@@ -24,4 +24,10 @@ public interface StockRepository {
      */
     StockValue findByStoreIdProductId(Integer storeId, String productId);
 
+
+    /**
+     * Removes the stock
+     */
+    void removeStock();
+
 }

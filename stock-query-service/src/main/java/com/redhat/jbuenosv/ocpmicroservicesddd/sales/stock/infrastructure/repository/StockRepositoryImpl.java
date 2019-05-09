@@ -130,6 +130,30 @@ public class StockRepositoryImpl implements StockRepository {
         return stockValue;
     }
 
+    /**
+     * Removes the stock
+     */
+    public void removeStock() {
+
+        try {
+
+            if (cache != null) {
+                logger.debug("cache size [{}].",cache.size());
+                cache.clear();
+                logger.debug("cache size [{}].",cache.size());
+            }
+            else {
+                logger.error("Unable to get a reference to cache [{}]",STOCK_CACHE_NAME);
+            }
+
+        }
+        catch(Exception e) {
+            logger.error("Error removing the stock.");
+            throw new StockApplicationException("Error removing the stock.");
+        }
+
+    }
+
     @PreDestroy
     public void stop() {
         try {
