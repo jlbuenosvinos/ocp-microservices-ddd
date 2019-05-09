@@ -40,13 +40,13 @@ public class StockQueryRoute extends RouteBuilder {
                 .component("servlet");
 
         rest()
-                .post("/stock/${storeid}")
+                .get("/stock/{storeid}")
                     .produces("application/json")
                     .type(String.class)
                     .to("direct:stock-query-service");
 
         rest()
-                .post("/stock/{storeid}/{productid}")
+                .get("/stock/{storeid}/{productid}")
                     .produces("application/json")
                     .type(String.class)
                     .to("direct:stock-query-service");
@@ -59,7 +59,7 @@ public class StockQueryRoute extends RouteBuilder {
                 .setHeader(Exchange.HTTP_METHOD,constant(org.apache.camel.component.http4.HttpMethods.GET))
                 .to("http4://" + config.getSalesStockQueryUriHost() +  ":" +  config.getSalesStockQueryUriPort()  + "?bridgeEndpoint=true");
 
-        from("direct:stock-query-service")
+        from("direct:stock-query-service-delete")
                 .setHeader(Exchange.HTTP_METHOD,constant(org.apache.camel.component.http4.HttpMethods.DELETE))
                 .to("http4://" + config.getSalesStockQueryUriHost() +  ":" +  config.getSalesStockQueryUriPort()  + "?bridgeEndpoint=true");
 
