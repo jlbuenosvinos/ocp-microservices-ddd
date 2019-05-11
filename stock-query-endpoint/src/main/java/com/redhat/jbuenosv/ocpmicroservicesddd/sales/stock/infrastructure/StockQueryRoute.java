@@ -39,6 +39,10 @@ public class StockQueryRoute extends RouteBuilder {
         restConfiguration().component("servlet");
 
         rest()
+                .get("/health")
+                .to("http4://" + config.getSalesStockQueryUriHost() +  ":" +  config.getSalesStockQueryUriPort()  + "/api/health?bridgeEndpoint=true");
+
+        rest()
                 .get("/api/stock/{storeid}")
                     .produces("application/json")
                     .type(String.class)
