@@ -35,10 +35,13 @@ public class OrderRoute extends RouteBuilder {
                 .setHeader(Exchange.HTTP_RESPONSE_CODE, constant(500));
 
         restConfiguration()
-                .component("servlet");
+                .component("servlet")
+                .apiContextPath("/api-doc")
+                .apiProperty("Ticket Query API", "Ticket Query API").apiProperty("api.version", "1.0.0");
 
         rest()
                 .post("/order")
+                .description("Sends and order to be processed.")
                 .type(String.class)
                 .outType(String.class)
                 .to("direct:ticket-processor-service");

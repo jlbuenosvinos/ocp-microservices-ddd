@@ -30,7 +30,8 @@ public class SwaggerConfig {
 
     private ApiInfo getApiInfo() {
         return new ApiInfoBuilder()
-                .title("Ticket Processor Rest APIs")
+                .title("Ticket Processor Rest API")
+                .version("1.0.0")
                 .description("This page lists all the rest apis for Ticket Processor Ingestion Management.")
                 .build();
     }

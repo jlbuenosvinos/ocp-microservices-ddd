@@ -30,7 +30,8 @@ public class SwaggerConfig {
 
     private ApiInfo getApiInfo() {
         return new ApiInfoBuilder()
-                .title("Stock Query Management Rest APIs")
+                .title("Stock Query Management Rest API")
+                .version("1.0.0")
                 .description("This page lists all the rest apis for Stock Query Management.")
                 .build();
     }
