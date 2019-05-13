@@ -49,21 +49,17 @@ oc new-app --template=jenkins-ephemeral -p JENKINS_IMAGE_STREAM_TAG=jenkins-2-ce
 
 oc get is
 
-oc import-image jenkins-2-rhel7 --from=registry.access.redhat.com/openshift3/jenkins-2-rhel7 --confirm
-
-oc import-image jenkins-2-rhel7 --from=registry.access.redhat.com/openshift3/jenkins-2-rhel7:v3.11.88-2 --confirm
-
-oc import-image jenkins-2-rhel7 --from=registry.access.redhat.com/openshift3/jenkins-2-rhel7:v3.11.82-3 --confirm
-
-oc import-image jenkins-2-rhel7 --from=registry.access.redhat.com/openshift3/jenkins-2-rhel7:v3.11.82-3 --confirm
-
 oc import-image jenkins-2-rhel7 --from=registry.access.redhat.com/openshift3/jenkins-2-rhel7:v3.10.127 --confirm
+
 oc import-image jenkins-agent-maven-35-rhel7 --from=registry.access.redhat.com/openshift3/jenkins-agent-maven-35-rhel7:v3.10.127 --confirm
+
 oc new-app --template=jenkins-ephemeral -p JENKINS_IMAGE_STREAM_TAG=jenkins-2-rhel7:latest -p MEMORY_LIMIT=512Mi -p ENABLE_OAUTH=true
 
 oc adm policy add-cluster-role-to-user cluster-admin -z jenkins
 
 oc adm policy add-cluster-role-to-user cluster-admin -z admin
+
+oc adm policy add-cluster-role-to-user cluster-admin -z jbuenosv-redhat.com
 
 oc import-image fuse7/fuse-java-openshift --from=registry.redhat.io/fuse7/fuse-java-openshift --confirm
 
@@ -314,5 +310,57 @@ ________________________
 mvn clean fabric8:deploy -Popenshift
 
 oc scale dc/stock-processor-service --replicas=2
+
+
+Istio Installation
+__________________
+
+Minishift Istio addon: https://github.com/minishift/minishift-addons/tree/master/add-ons/istio
+
+
+https://github.com/istio/istio/releases/tag/0.7.1
+
+minishift env setup
+
+eval $(minishift oc-env)
+eval $(minishift docker-env)
+
+oc adm policy add-scc-to-user anyuid -z istio-ingress-service-account -n istio-system
+
+oc adm policy add-scc-to-user anyuid -z default -n istio-system
+
+oc adm policy add-scc-to-user anyuid -z prometheus -n istio-system
+
+oc create -f install/kubernetes/istio.yaml
+
+oc project istio-system
+
+oc apply -f install/kubernetes/addons/prometheus.yaml
+
+oc apply -f install/kubernetes/addons/grafana.yaml
+
+oc apply -f install/kubernetes/addons/servicegraph.yaml
+
+oc process -f  https://raw.githubusercontent.com/jaegertracing/jaeger-openshift/master/all-in-one/jaeger-all-in-one-template.yml | oc create -f -
+
+oc expose svc servicegraph
+oc expose svc grafana
+oc expose svc prometheus
+oc expose svc istio-ingress
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
