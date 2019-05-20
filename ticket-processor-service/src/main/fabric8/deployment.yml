@@ -1,5 +1,5 @@
 metadata:
-  name: ${project.artifactId}
+  name: ${project.artifactId}-${project.version}
   labels:
     group: ${project.groupId}
     project: ${project.artifactId}
@@ -31,6 +31,8 @@ spec:
             successThreshold: 1
             timeoutSeconds: 1
           env:
+            - name: "TICKETING_TICKETS_SERVICE_SALE_VITAMINE_ON"
+              value: TRUE
             - name: "TICKETING_TICKETS_SERVICE_MESH_ON"
               value: TRUE
             - name: "TICKETING_STOCK_PROCESSOR_SERVICE_URI"

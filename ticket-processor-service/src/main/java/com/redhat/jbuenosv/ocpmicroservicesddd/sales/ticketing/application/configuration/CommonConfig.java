@@ -18,6 +18,9 @@ public class CommonConfig {
     @Value("${ticketing.servicemesh.on}")
     Boolean isServiceMesh;
 
+    @Value("${ticketing.sales.vitamine.on}")
+    Boolean isSaleVitamine;
+
     public String getTicketingEventVersion() {
         return ticketingEventVersion;
     }
@@ -28,6 +31,10 @@ public class CommonConfig {
 
     public String getTicketingStockProcessorUri() {
         return ticketingStockProcessorUri;
+    }
+
+    public Boolean isSaleViatamine() {
+        return isSaleVitamine;
     }
 
 }
