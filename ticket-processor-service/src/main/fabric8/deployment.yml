@@ -63,4 +63,4 @@ spec:
             - name: "TICKETING_METRICS_PROMETHEUS_EXPORT_ENABLED"
               value: TRUE
             - name: "TICKETING_METRICS_ARTIFACTID_NAME"
-              value: "ticket-processor-service"
+              value: "${project.artifactId}"
