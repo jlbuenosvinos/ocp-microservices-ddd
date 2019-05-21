@@ -39,6 +39,8 @@ spec:
               value: "http://stock-processor-service:8080/api/ticket"
             - name: "TICKETING_EVENT_VERSION"
               value: "1.0"
+            - name: "TICKETING_SERVICE_VERSION"
+              value: "${project.version}"
             - name: "TICKETING_TICKETS_DESTINATION_NAME"
               value: "sales.ticketing.tickets.destination"
             - name: "TICKETING_TICKETS_BROKER_URI"

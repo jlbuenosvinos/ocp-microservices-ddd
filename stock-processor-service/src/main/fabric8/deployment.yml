@@ -37,6 +37,8 @@ spec:
             value: "tcp://sales-event-store-amq-tcp:61616?jms.redeliveryPolicy.maximumRedeliveries=10"
           - name: "TICKETING_TICKETS_BROKER_USERNAME"
             value: "sales-event-store"
+          - name: "STOCK_SERVICE_VERSION"
+            value: "${project.version}"
           - name: "TICKETING_TICKETS_BROKER_PASSWORD"
             valueFrom:
               secretKeyRef:
