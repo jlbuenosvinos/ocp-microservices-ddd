@@ -5,7 +5,7 @@
 
     <groupId>com.redhat.jbuenosv.ocpmicroservicesddd.sales</groupId>
     <artifactId>stock-query-service</artifactId>
-    <version>v2</version>
+    <version>v1</version>
     <packaging>jar</packaging>
 
     <name>stock-query-service</name>
