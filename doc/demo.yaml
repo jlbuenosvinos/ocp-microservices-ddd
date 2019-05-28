@@ -119,6 +119,70 @@ objects:
           allowEnv: true
           secret: ${GENERIC_WEBHOOK_SECRET}
         type: Generic
+      - github:
+          secret: "${GENERIC_WEBHOOK_SECRET}"
+        type: GitHub
+- apiVersion: "v1"
+  kind: "BuildConfig"
+  metadata:
+    name: "sales-deploy-ticket-processor-endpoint-pipeline"
+  spec:
+    strategy:
+      jenkinsPipelineStrategy:
+        jenkinsfile: |-
+          try {
+            def appName=""
+            def projectName=""
+            node {
+              stage("INIT") {
+              }
+            }
+            node("maven") {
+              stage("CHECKOUT") {
+                  git url: "${GIT_SOURCE_URL}", branch: "${GIT_SOURCE_REF}"
+              }
+              stage("BUILD") {
+
+                  openshift.withCluster() {
+
+                    openshift.withCredentials() {
+
+                        openshift.withProject('${APP_NAME_DEV}') {
+                          
+                          dir("ticket-processor-endpoint") {
+                              sh "mvn clean fabric8:deploy -P openshift -Dfabric8.namespace=${APP_NAME_DEV} -Dopenshift.namespace=${APP_NAME_DEV}"
+                          }
+
+                          def ticketServiceDeploymentConfig = openshift.selector('dc','ticket-processor-endpoint')
+                          ticketServiceDeploymentConfig.rollout().status()
+
+                        }
+                    }
+
+                  }
+              }
+            }
+            node {
+              stage("FINISH") {
+                  
+              }
+            }
+          } 
+          catch (err) {
+            echo "in catch block"
+            echo "Caught: ${err}"
+            currentBuild.result = 'FAILURE'
+            throw err
+          }
+        type: JenkinsPipeline
+    triggers:
+      - generic:
+          allowEnv: true
+          secret: ${GENERIC_WEBHOOK_SECRET}
+        type: Generic
+      - github:
+          secret: "${GENERIC_WEBHOOK_SECRET}"
+        type: GitHub
 - apiVersion: "v1"
   kind: "BuildConfig"
   metadata:
