@@ -92,7 +92,7 @@ objects:
                           }
                           
                           dir("ticket-processor-service") {
-                              sh "mvn clean fabric8:deploy -P openshift -Dfabric8.namespace=${APP_NAME_DEV} -Dopenshift.namespace=${APP_NAME_DEV}"
+                              sh "mvn clean fabric8:deploy -P openshift -Dfabric8.namespace=${APP_NAME_DEV} -Dopenshift.namespace=${APP_NAME_DEV} -Dproject.version=${TICKETING_SERVICE_VERSION}"
                           }
 
                           def ticketServiceDeploymentConfig = openshift.selector('dc','ticket-processor-service')
@@ -229,7 +229,7 @@ objects:
                           }
                           
                           dir("stock-processor-service") {
-                              sh "mvn clean fabric8:deploy -P openshift -Dfabric8.namespace=${APP_NAME_DEV} -Dopenshift.namespace=${APP_NAME_DEV}"
+                              sh "mvn clean fabric8:deploy -P openshift -Dfabric8.namespace=${APP_NAME_DEV} -Dopenshift.namespace=${APP_NAME_DEV} -Dproject.version=${STOCK_PROCESSOR_SERVICE_VERSION}"
                           }
                           
                           def stockProcessorServiceDeploymentConfig = openshift.selector('dc','stock-processor-service')
@@ -317,7 +317,7 @@ objects:
                           }
                           
                           dir("stock-query-service") {
-                              sh "mvn clean fabric8:deploy -P openshift -Dfabric8.namespace=${APP_NAME_DEV} -Dopenshift.namespace=${APP_NAME_DEV}"
+                              sh "mvn clean fabric8:deploy -P openshift -Dfabric8.namespace=${APP_NAME_DEV} -Dopenshift.namespace=${APP_NAME_DEV} -Dproject.version=${STOCK_QUERY_SERVICE_VERSION}"
                           }
 
                           def stockQueryDeploymentConfig = openshift.selector('dc','stock-query-service')
