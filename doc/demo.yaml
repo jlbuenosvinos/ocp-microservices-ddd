@@ -3,7 +3,7 @@ kind: Template
 metadata:
   name: sales-demo
   annotations:
-    openshift.io/display-name: "Sales Demo Application Jenkins Templates."
+    openshift.io/display-name: "Sales Demo Application Templates."
     description: "Sales Demo Application Jenkins Templates."
     iconClass: "icon-stackoverflow"
 parameters:
@@ -56,6 +56,9 @@ objects:
   spec:
     strategy:
       jenkinsPipelineStrategy:
+        env:
+          - name: TICKETING_SERVICE_VERSION
+            value: v1
         jenkinsfile: |-
           try {
             def appName=""
@@ -190,6 +193,9 @@ objects:
   spec:
     strategy:
       jenkinsPipelineStrategy:
+        env:
+          - name: STOCK_PROCESSOR_SERVICE_VERSION
+            value: v1
         jenkinsfile: |-
           try {
             def appName=""
@@ -271,6 +277,9 @@ objects:
   spec:
     strategy:
       jenkinsPipelineStrategy:
+        env:
+          - name: STOCK_QUERY_SERVICE_VERSION
+            value: v1
         jenkinsfile: |-
           try {
             def appName=""
