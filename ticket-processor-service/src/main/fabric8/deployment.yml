@@ -36,7 +36,7 @@ spec:
             - name: "TICKETING_TICKETS_SERVICE_MESH_ON"
               value: FALSE
             - name: "TICKETING_STOCK_PROCESSOR_SERVICE_URI"
-              value: "http://stock-processor-service:8080/api/ticket"
+              value: "http://${project.artifactId}-${project.version}:8080/api/ticket"
             - name: "TICKETING_EVENT_VERSION"
               value: "1.0"
             - name: "TICKETING_SERVICE_VERSION"
