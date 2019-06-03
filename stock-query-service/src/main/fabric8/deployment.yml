@@ -1,5 +1,5 @@
 metadata:
-  name: ${project.artifactId}
+  name: ${project.artifactId}-${project.version}
   labels:
     group: ${project.groupId}
     project: ${project.artifactId}
