@@ -1,0 +1,127 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: sales-demo-app-ticket-processor-update
+  annotations:
+    openshift.io/display-name: "Ticket Processor Sales Demo Application Templates."
+    description: "Ticket Processor Sales Demo Application Templates."
+    iconClass: "icon-stackoverflow"
+parameters:
+- name: OCP_DEVOPS_PROJECT_ID
+  description: OpenShift DevOps Project Identier
+  displayName: 
+  required: true
+  value: devops-tools
+- name: APP_NAME
+  description: The name assigned to all of the application objects defined in this template.
+  displayName: Application Name
+  required: true
+  value: sales-demo-app
+- name: APP_NAME_DEV
+  description: The name assigned to all of the application objects defined in this template.
+  displayName: DEV Application Name
+  required: true
+  value: sales-demo-app-dev
+- name: APP_NAME_PRE
+  description: The name assigned to all of the application objects defined in this template.
+  displayName: PRE Application Name
+  required: true
+  value: sales-demo-app-pre
+- name: APP_NAME_PRO
+  description: The name assigned to all of the application objects defined in this template.
+  displayName: PRO Application Name
+  required: true
+  value: sales-demo-app-pro
+- name: GIT_SOURCE_URL
+  description: The source URL for the application
+  displayName: Source URL
+  required: true
+  value: https://github.com/jlbuenosvinos/ocp-microservices-ddd.git
+- name: GIT_SOURCE_REF
+  description: The source Ref for the application
+  displayName: Source Ref
+  required: true
+  value: dev
+- description: A secret string used to configure the Generic webhook.
+  displayName: Generic Webhook Secret
+  from: '[a-zA-Z0-9]{40}'
+  generate: expression
+  name: GENERIC_WEBHOOK_SECRET
+  required: true
+objects:
+- apiVersion: "v1"
+  kind: "BuildConfig"
+  metadata:
+    name: "update-sales-deploy-ticket-processor-pipeline"
+  spec:
+    strategy:
+      jenkinsPipelineStrategy:
+        env:
+          - name: TICKETING_SERVICE_VERSION
+            value: v1
+        jenkinsfile: |-
+          try {
+            def appName=""
+            def projectName=""
+            node {
+              stage("INIT") {
+              }
+            }
+            node("maven") {
+              stage("CHECKOUT") {
+                  git url: "${GIT_SOURCE_URL}", branch: "${GIT_SOURCE_REF}"
+              }
+              stage("BUILD") {
+
+                  openshift.withCluster() {
+
+                    openshift.withCredentials() {
+
+                        openshift.withProject('${APP_NAME_DEV}') {
+
+                          def ticketProcessorSecret = openshift.selector('secret','ticket-processor-service-secret').exists()
+
+                          if (!ticketProcessorSecret) {
+                              dir("doc") {
+                                  openshift.raw('create','-f ticket-processor-service-secret.yaml')
+                                  echo "Secret has been created."
+                              }
+                          }
+                          else {
+                              echo "Secret already exists."
+                          }
+                          
+                          dir("ticket-processor-service") {
+                              sh "mvn clean fabric8:deploy -P openshift -Dfabric8.namespace=${APP_NAME_DEV} -Dopenshift.namespace=${APP_NAME_DEV} -Dproject.version=${TICKETING_SERVICE_VERSION}"
+                          }
+
+                          def ticketServiceDeploymentConfig = openshift.selector('dc','ticket-processor-service')
+                          ticketServiceDeploymentConfig.rollout().status()
+
+                        }
+                    }
+
+                  }
+              }
+            }
+            node {
+              stage("FINISH") {
+                  
+              }
+            }
+          } 
+          catch (err) {
+            echo "in catch block"
+            echo "Caught: ${err}"
+            currentBuild.result = 'FAILURE'
+            throw err
+          }
+        type: JenkinsPipeline
+    triggers:
+      - generic:
+          allowEnv: true
+          secret: ${GENERIC_WEBHOOK_SECRET}
+        type: Generic
+      - github:
+          secret: "${GENERIC_WEBHOOK_SECRET}"
+        type: GitHub
