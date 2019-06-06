@@ -95,7 +95,7 @@ objects:
                               sh "mvn clean fabric8:deploy -P openshift -Dfabric8.namespace=${APP_NAME_DEV} -Dopenshift.namespace=${APP_NAME_DEV} -Dproject.version=${TICKETING_SERVICE_VERSION}"
                           }
 
-                          def ticketServiceDeploymentConfig = openshift.selector('dc','ticket-processor-service')
+                          def ticketServiceDeploymentConfig = openshift.selector('dc','ticket-processor-service-${TICKETING_SERVICE_VERSION}')
                           ticketServiceDeploymentConfig.rollout().status()
 
                         }
@@ -232,14 +232,14 @@ objects:
                               sh "mvn clean fabric8:deploy -P openshift -Dfabric8.namespace=${APP_NAME_DEV} -Dopenshift.namespace=${APP_NAME_DEV} -Dproject.version=${STOCK_PROCESSOR_SERVICE_VERSION}"
                           }
                           
-                          def stockProcessorServiceDeploymentConfig = openshift.selector('dc','stock-processor-service')
+                          def stockProcessorServiceDeploymentConfig = openshift.selector('dc','stock-processor-service-${STOCK_PROCESSOR_SERVICE_VERSION}')
                           stockProcessorServiceDeploymentConfig.rollout().status()
 
-                          def scaleResult = openshift.raw('scale','dc/stock-processor-service --replicas=2')
+                          def scaleResult = openshift.raw('scale','dc/stock-processor-service-${STOCK_PROCESSOR_SERVICE_VERSION} --replicas=2')
                           echo "Project [stock-processor-service] has been scaled."
 
-                          def latestDeploymentVersion = openshift.selector('dc',"stock-processor-service").object().status.latestVersion
-                          def rc = openshift.selector('rc', "stock-processor-service-${latestDeploymentVersion}")
+                          def latestDeploymentVersion = openshift.selector('dc',"stock-processor-service-${STOCK_PROCESSOR_SERVICE_VERSION}").object().status.latestVersion
+                          def rc = openshift.selector('rc', "stock-processor-service-${STOCK_PROCESSOR_SERVICE_VERSION}-${latestDeploymentVersion}")
 
                           rc.untilEach(1){
                             def rcMap = it.object()
@@ -301,7 +301,7 @@ objects:
                         openshift.withProject('${APP_NAME_DEV}') {
 
                           def stockQueryServicePods=""
-                          def stockQueryService = openshift.selector('dc','stock-query-service').exists()
+                          def stockQueryService = openshift.selector('dc','stock-query-service-${STOCK_QUERY_SERVICE_VERSION}').exists()
                           def stockQuerySecret = openshift.selector('secret','stock-query-service-secret').exists()
 
                           echo "stockQueryService [${stockQueryService}]"
@@ -320,7 +320,7 @@ objects:
                               sh "mvn clean fabric8:deploy -P openshift -Dfabric8.namespace=${APP_NAME_DEV} -Dopenshift.namespace=${APP_NAME_DEV} -Dproject.version=${STOCK_QUERY_SERVICE_VERSION}"
                           }
 
-                          def stockQueryDeploymentConfig = openshift.selector('dc','stock-query-service')
+                          def stockQueryDeploymentConfig = openshift.selector('dc','stock-query-service-${STOCK_QUERY_SERVICE_VERSION}')
                           stockQueryDeploymentConfig.rollout().status()
 
                         }

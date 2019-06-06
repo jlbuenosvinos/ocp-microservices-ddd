@@ -378,6 +378,8 @@ https://store.ansible.com/redhat/tower_license/
 
 Create a postgresql storage using a 10GB of capacity.
 
+Create the new resource limit base on the automation-tools-custom-resource-limits.yaml
+
 Review the inventory to disable the certificate check
 
 ./setup_openshift.sh -e openshift_host=https://master.barcelona-e984.openshiftworkshop.com -e openshift_project=automation-tools -e openshift_user=opentlc-mgr -e openshift_password=r3dh4t1! -e admin_password=toweradminpwd -e secret_key=mysecret -e pg_username=postgresuser -e pg_password=postgrespwd -e rabbitmq_password=rabbitpwd -e rabbitmq_erlang_cookie=rabbiterlangpwd

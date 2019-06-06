@@ -5,7 +5,7 @@ metadata:
   labels:
     expose: "true"
     group: ${project.groupId}
-    project: ${project.artifactId}
+    project: ${project.artifactId}-${project.version}
     version: ${project.version}
     provider: fabric8
     monitorGroup: ctti
