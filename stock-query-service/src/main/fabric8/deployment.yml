@@ -6,8 +6,8 @@ metadata:
     version: ${project.version}
     provider: fabric8
 spec:
+  replicas: 2
   template:
-    replicas: 2
     spec:
       containers:
       -
