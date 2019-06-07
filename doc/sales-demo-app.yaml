@@ -235,17 +235,6 @@ objects:
                           def stockProcessorServiceDeploymentConfig = openshift.selector('dc','stock-processor-service-${STOCK_PROCESSOR_SERVICE_VERSION}')
                           stockProcessorServiceDeploymentConfig.rollout().status()
 
-                          def scaleResult = openshift.raw('scale','dc/stock-processor-service-${STOCK_PROCESSOR_SERVICE_VERSION} --replicas=2')
-                          echo "Project [stock-processor-service] has been scaled."
-
-                          def latestDeploymentVersion = openshift.selector('dc',"stock-processor-service-${STOCK_PROCESSOR_SERVICE_VERSION}").object().status.latestVersion
-                          def rc = openshift.selector('rc', "stock-processor-service-${STOCK_PROCESSOR_SERVICE_VERSION}-${latestDeploymentVersion}")
-
-                          rc.untilEach(1){
-                            def rcMap = it.object()
-                            return (rcMap.status.replicas.equals(rcMap.status.readyReplicas))
-                          }
-
                         }
                     }
 
