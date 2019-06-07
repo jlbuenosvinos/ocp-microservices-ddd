@@ -8,7 +8,7 @@
     <version>v1</version>
     <packaging>jar</packaging>
 
-    <name>ticket-processor-service-v1</name>
+    <name>ticket-processor-service</name>
     <description>ticket-processor-service</description>
 
     <parent>

@@ -11,8 +11,8 @@ spec:
               memory: 256Mi
           env:
             - name: "TICKETING_TICKET_PROCESSOR_SERVICE_URI"
-              value: "http://ticket-processor-service:8080"
+              value: "http://ticket-processor-service-v1:8080"
             - name: "TICKETING_TICKET_PROCESSOR_SERVICE_URI_HOST"
-              value: "ticket-processor-service"
+              value: "ticket-processor-service-v1"
             - name: "TICKETING_TICKET_PROCESSOR_SERVICE_URI_PORT"
               value: 8080
