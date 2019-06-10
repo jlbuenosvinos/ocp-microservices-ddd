@@ -35,9 +35,9 @@ spec:
             - name: "TICKETING_TICKETS_SERVICE_SALE_VITAMINE_ON"
               value: FALSE
             - name: "TICKETING_TICKETS_SERVICE_MESH_ON"
-              value: TRUE
+              value: FALSE
             - name: "TICKETING_STOCK_PROCESSOR_SERVICE_URI"
-              value: "http://stock-processor-service-v1:8080/api/ticket"
+              value: "http://stock-processor-service-${project.version}:8080/api/ticket"
             - name: "TICKETING_EVENT_VERSION"
               value: "1.0"
             - name: "TICKETING_SERVICE_VERSION"

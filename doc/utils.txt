@@ -1,3 +1,41 @@
+Lab creation:
+_____________
+
+oc new-project devops-tools --display-name='devops-tools' --description='devops-tools'
+
+oc new-project automation-tools --display-name='automation-tools' --description='automation-tools'
+
+oc adm policy add-cluster-role-to-user cluster-admin -z jenkins
+
+oc adm policy add-cluster-role-to-user cluster-admin -z opentlc-mgr
+
+oc project openshift
+
+oc import-image jenkins-2-rhel7 --from=registry.access.redhat.com/openshift3/jenkins-2-rhel7:v3.10.127 --confirm
+
+oc import-image jenkins-agent-maven-35-rhel7 --from=registry.access.redhat.com/openshift3/jenkins-agent-maven-35-rhel7:v3.10.127 --confirm
+
+oc import-image fuse7/fuse-java-openshift --from=registry.redhat.io/fuse7/fuse-java-openshift --confirm
+
+oc project devops-tools
+
+oc new-app --template=jenkins-ephemeral -p JENKINS_IMAGE_STREAM_TAG=jenkins-2-rhel7:latest -p MEMORY_LIMIT=1024Mi -p ENABLE_OAUTH=true
+
+oc project automation-tools
+
+oc create -f automation-tools-custom-resource-limits.yaml
+
+oc delete limits automation-tools-core-resource-limits
+
+./setup_openshift.sh -e openshift_host=https://master.bcn-ffce.openshiftworkshop.com -e openshift_project=automation-tools -e openshift_user=opentlc-mgr -e openshift_password=r3dh4t1! -e admin_password=admin1 -e secret_key=mysecret -e pg_username=postgresuser -e pg_password=postgrespwd -e rabbitmq_password=rabbitpwd -e rabbitmq_erlang_cookie=rabbiterlangpwd
+
+oc adm policy add-cluster-role-to-user cluster-admin -z jenkins
+
+
+End Lab creation
+________________
+
+
 oc delete bc sales-deploy-ticket-processor-pipeline
 oc delete bc sales-deploy-stock-processor-pipeline
 oc delete bc sales-deploy-stock-query-pipeline
@@ -382,5 +420,5 @@ Create the new resource limit base on the automation-tools-custom-resource-limit
 
 Review the inventory to disable the certificate check
 
-./setup_openshift.sh -e openshift_host=https://master.barcelona-e984.openshiftworkshop.com -e openshift_project=automation-tools -e openshift_user=opentlc-mgr -e openshift_password=r3dh4t1! -e admin_password=toweradminpwd -e secret_key=mysecret -e pg_username=postgresuser -e pg_password=postgrespwd -e rabbitmq_password=rabbitpwd -e rabbitmq_erlang_cookie=rabbiterlangpwd
+./setup_openshift.sh -e openshift_host=https://master.bcn-ffce.openshiftworkshop.com -e openshift_project=automation-tools -e openshift_user=opentlc-mgr -e openshift_password=r3dh4t1! -e admin_password=admin1 -e secret_key=mysecret -e pg_username=postgresuser -e pg_password=postgrespwd -e rabbitmq_password=rabbitpwd -e rabbitmq_erlang_cookie=rabbiterlangpwd
 
