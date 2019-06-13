@@ -3,6 +3,7 @@ kind: Route
 metadata:
   name: ${project.artifactId}-${project.version}
   project: ${project.artifactId}-${project.version}
+  version: ${project.version}
 spec:
   port:
     targetPort: 8080
