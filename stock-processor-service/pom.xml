@@ -5,7 +5,7 @@
 
     <groupId>com.redhat.jbuenosv.ocpmicroservicesddd.sales</groupId>
     <artifactId>stock-processor-service</artifactId>
-    <version>v1</version>
+    <version>${STOCK_PROCESSOR_SERVICE_VERSION}</version>
     <packaging>jar</packaging>
 
     <name>stock-processor-service</name>
