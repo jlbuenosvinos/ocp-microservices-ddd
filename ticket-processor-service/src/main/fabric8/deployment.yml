@@ -33,7 +33,10 @@ spec:
             timeoutSeconds: 1
           env:
             - name: "TICKETING_TICKETS_SERVICE_SALE_VITAMINE_ON"
-              value: FALSE
+              valueFrom:
+                configMapKeyRef:
+                  name: ${project.artifactId}-${project.version}
+                  key: TICKETING_TICKETS_SERVICE_SALE_VITAMINE_ON
             - name: "TICKETING_TICKETS_SERVICE_MESH_ON"
               value: FALSE
             - name: "TICKETING_STOCK_PROCESSOR_SERVICE_URI"
