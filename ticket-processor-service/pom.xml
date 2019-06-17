@@ -6,7 +6,7 @@
     <groupId>com.redhat.jbuenosv.ocpmicroservicesddd.sales</groupId>
     <artifactId>ticket-processor-service</artifactId>
 
-    <!-- <version>v1</version> -->
+    <version>${TICKETING_SERVICE_VERSION}</version>
 
     <packaging>jar</packaging>
 
