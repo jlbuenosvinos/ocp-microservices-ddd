@@ -2,6 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: ${project.artifactId}-${project.version}
+  version: ${project.version}
 data:
   TICKETING_TICKETS_SERVICE_SALE_VITAMINE_ON: FALSE
   TICKETING_TICKETS_SERVICE_MESH_ON: FALSE
