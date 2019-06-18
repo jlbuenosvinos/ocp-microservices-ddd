@@ -9,7 +9,7 @@ metadata:
 parameters:
 - name: OCP_DEVOPS_PROJECT_ID
   description: OpenShift DevOps Project Identier
-  displayName: 
+  displayName:
   required: true
   value: devops-tools
 - name: APP_NAME
@@ -52,6 +52,66 @@ objects:
 - apiVersion: "v1"
   kind: "BuildConfig"
   metadata:
+    name: "sales-scale-service-pipeline"
+  spec:
+    strategy:
+      jenkinsPipelineStrategy:
+        jenkinsfile: |-
+          try {
+            node {
+              stage("INIT") {
+              }
+            }
+            node("maven") {
+
+              stage("SCALE-SERVICE") {
+
+                  openshift.withCluster() {
+
+                    openshift.withCredentials() {
+
+                        openshift.withProject('${APP_NAME_DEV}') {
+
+                          def stockProcessorServiceDeploymentConfig = openshift.selector('dc','${SERVICE_NAME}')
+                          def scaleResult = openshift.raw('scale','dc/${SERVICE_NAME} --replicas=${SERVICE_REPLICAS}')
+                          echo "Service [${SERVICE_NAME}] has been scaled to [${SERVICE_REPLICAS}] replicas."
+
+                          def latestDeploymentVersion = openshift.selector('dc',"${SERVICE_NAME}").object().status.latestVersion
+                          def rc = openshift.selector('rc', "${SERVICE_NAME}-${latestDeploymentVersion}")
+
+                          rc.untilEach(1) {
+                            def rcMap = it.object()
+                            return (rcMap.status.replicas.equals(rcMap.status.readyReplicas))
+                          }
+
+                        }
+                    }
+
+                  }
+              }
+            }
+
+            node {
+              stage("FINISH") {
+              }
+            }
+
+          }
+          catch (err) {
+            echo "in catch block"
+            echo "Caught: ${err}"
+            currentBuild.result = 'FAILURE'
+            throw err
+          }
+        type: JenkinsPipeline
+    triggers:
+      - generic:
+          allowEnv: true
+          secret: ${GENERIC_WEBHOOK_SECRET}
+        type: Generic
+- apiVersion: "v1"
+  kind: "BuildConfig"
+  metadata:
     name: "sales-deploy-ticket-processor-pipeline"
   spec:
     strategy:
@@ -71,7 +131,7 @@ objects:
               stage("CHECKOUT") {
                   git url: "${GIT_SOURCE_URL}", branch: "${GIT_SOURCE_REF}"
               }
-              stage("BUILD") {
+              stage("DEPLOY") {
 
                   openshift.withCluster() {
 
@@ -90,7 +150,7 @@ objects:
                           else {
                               echo "Secret already exists."
                           }
-                          
+
                           dir("ticket-processor-service") {
                               sh "mvn clean fabric8:deploy -P openshift -Dfabric8.namespace=${APP_NAME_DEV} -Dopenshift.namespace=${APP_NAME_DEV} -Dproject.version=${TICKETING_SERVICE_VERSION}"
                           }
@@ -106,10 +166,10 @@ objects:
             }
             node {
               stage("FINISH") {
-                  
+
               }
             }
-          } 
+          }
           catch (err) {
             echo "in catch block"
             echo "Caught: ${err}"
@@ -144,14 +204,14 @@ objects:
               stage("CHECKOUT") {
                   git url: "${GIT_SOURCE_URL}", branch: "${GIT_SOURCE_REF}"
               }
-              stage("BUILD") {
+              stage("DEPLOY") {
 
                   openshift.withCluster() {
 
                     openshift.withCredentials() {
 
                         openshift.withProject('${APP_NAME_DEV}') {
-                          
+
                           dir("ticket-processor-endpoint") {
                               sh "mvn clean fabric8:deploy -P openshift -Dfabric8.namespace=${APP_NAME_DEV} -Dopenshift.namespace=${APP_NAME_DEV}"
                           }
@@ -167,10 +227,10 @@ objects:
             }
             node {
               stage("FINISH") {
-                  
+
               }
             }
-          } 
+          }
           catch (err) {
             echo "in catch block"
             echo "Caught: ${err}"
@@ -208,14 +268,14 @@ objects:
               stage("CHECKOUT") {
                   git url: "${GIT_SOURCE_URL}", branch: "${GIT_SOURCE_REF}"
               }
-              stage("BUILD") {
+              stage("DEPLOY") {
 
                   openshift.withCluster() {
 
                     openshift.withCredentials() {
 
                         openshift.withProject('${APP_NAME_DEV}') {
-                          
+
                           def stockProcessorSecret = openshift.selector('secret','stock-processor-service-secret').exists()
 
                           if (!stockProcessorSecret) {
@@ -227,11 +287,11 @@ objects:
                           else {
                               echo "Secret already exists."
                           }
-                          
+
                           dir("stock-processor-service") {
                               sh "mvn clean fabric8:deploy -P openshift -Dfabric8.namespace=${APP_NAME_DEV} -Dopenshift.namespace=${APP_NAME_DEV} -Dproject.version=${STOCK_PROCESSOR_SERVICE_VERSION}"
                           }
-                          
+
                           def stockProcessorServiceDeploymentConfig = openshift.selector('dc','stock-processor-service-${STOCK_PROCESSOR_SERVICE_VERSION}')
                           stockProcessorServiceDeploymentConfig.rollout().status()
 
@@ -243,10 +303,10 @@ objects:
             }
             node {
               stage("FINISH") {
-                  
+
               }
             }
-          } 
+          }
           catch (err) {
             echo "in catch block"
             echo "Caught: ${err}"
@@ -281,7 +341,7 @@ objects:
               stage("CHECKOUT") {
                   git url: "${GIT_SOURCE_URL}", branch: "${GIT_SOURCE_REF}"
               }
-              stage("BUILD") {
+              stage("DEPLOY") {
 
                   openshift.withCluster() {
 
@@ -304,7 +364,7 @@ objects:
                           else {
                               echo "Secret already exists."
                           }
-                          
+
                           dir("stock-query-service") {
                               sh "mvn clean fabric8:deploy -P openshift -Dfabric8.namespace=${APP_NAME_DEV} -Dopenshift.namespace=${APP_NAME_DEV} -Dproject.version=${STOCK_QUERY_SERVICE_VERSION}"
                           }
@@ -320,10 +380,10 @@ objects:
             }
             node {
               stage("FINISH") {
-                  
+
               }
             }
-          } 
+          }
           catch (err) {
             echo "in catch block"
             echo "Caught: ${err}"
@@ -396,13 +456,13 @@ objects:
               stage("FINISH") {
               }
             }
-          } 
+          }
           catch (err) {
             echo "in catch block"
             echo "Caught: ${err}"
             currentBuild.result = 'FAILURE'
             throw err
-          }          
+          }
         type: JenkinsPipeline
     triggers:
       - generic:
@@ -429,25 +489,25 @@ objects:
               stage("PREREQS") {
                   openshift.withCluster() {
                       openshift.withCredentials() {
-                      
+
                           openshift.withProject('openshift') {
                               def template
                               def templateSelector = openshift.selector( 'template', "amq-broker-71-statefulset-clustered")
                               def templateExists = templateSelector.exists()
-                              
+
                               if (!templateExists) {
                                   openshift.raw('create','-n openshift','-f https://raw.githubusercontent.com/jboss-container-images/jboss-amq-7-broker-openshift-image/71-1.0.TP/templates/amq-broker-71-statefulset-clustered.yaml')
                                   openshift.raw('replace','-n openshift','-f https://raw.githubusercontent.com/jboss-container-images/jboss-amq-7-broker-openshift-image/71-1.0.TP/templates/amq-broker-71-statefulset-clustered.yaml')
-                                  echo "Image [amq-broker-71-statefulset-clustered] has been created." 
-                              } 
+                                  echo "Image [amq-broker-71-statefulset-clustered] has been created."
+                              }
                               else {
-                                  echo "Image [amq-broker-71-statefulset-clustered] already exists." 
+                                  echo "Image [amq-broker-71-statefulset-clustered] already exists."
                                   template = templateSelector.object()
                               }
 
                           }
                           openshift.raw('policy','add-role-to-user view -z default')
-                          echo "view add-role-to-user to default has been set." 
+                          echo "view add-role-to-user to default has been set."
                       }
                   }
               }
@@ -456,7 +516,7 @@ objects:
               stage("FINISH") {
               }
             }
-          } 
+          }
           catch (err) {
             echo "in catch block"
             echo "Caught: ${err}"
@@ -491,13 +551,13 @@ objects:
                           openshift.withProject('${APP_NAME_DEV}') {
 
                             def salesStatefulSet = openshift.selector('statefulset','sales-event-store-amq').exists()
-                    
+
                             if (!salesStatefulSet) {
-                                  
+
                                   echo "Application [sales-event-store] has to be installed."
                                   def rawResult = openshift.raw('new-app','--template=amq-broker-71-statefulset-clustered -p APPLICATION_NAME=sales-event-store -p AMQ_NAME=sales-event-store -p AMQ_CLUSTERED=true -p AMQ_CLUSTER_USER=sales-event-store -p AMQ_CLUSTER_PASSWORD=sales-event-store -p AMQ_REPLICATED=true -p AMQ_REPLICAS=2')
                                   echo "Application [sales-event-store] pods has been prepared."
-                                  
+
                                   timeout(30) {
                                     waitUntil {
                                        openshift.selector('pod', [app: "sales-event-store-amq"]).count() > 1
@@ -513,13 +573,13 @@ objects:
 
                                   echo "Application [sales-event-store] has been created."
 
-                            } 
+                            }
                             else {
                               def numSalesAppPods = openshift.selector('pod', [app: "sales-event-store-amq"]).count()
                               echo "Application [sales-event-store] already exists with [${numSalesAppPods}] running pods."
                             }
 
-                            
+
                           }
                       }
                   }
@@ -530,7 +590,7 @@ objects:
                     openshift.withCredentials() {
 
                         openshift.withProject('${APP_NAME_DEV}') {
-                    
+
                           def salesDataStore = openshift.selector('dc','sales-data-store').exists()
                           if (!salesDataStore) {
 
@@ -540,7 +600,7 @@ objects:
 
                               salesDataStore = openshift.selector('dc','sales-data-store')
                               salesDataStore.rollout().status()
-                              
+
                               echo "Application [sales-data-store] has to be updated."
                               rawResult = openshift.raw("set","env dc/sales-data-store STOCK_CACHE_START=EAGER STOCK_CACHE_SECURITY_AUTHORIZATION_ENABLED=true  STOCK_CACHE_SECURITY_AUTHORIZATION_ROLES=sales-data-store,___schema_manager,___script_manager HOTROD_AUTHENTICATION=true  CONTAINER_SECURITY_ROLE_MAPPER=identity-role-mapper CONTAINER_SECURITY_ROLES=sales-data-store\\=ALL  ADMIN_GROUP=REST,___schema_manager,sales-data-store")
 
@@ -556,14 +616,14 @@ objects:
                         }
                     }
                 }
-              } // end 
+              } // end
 
             }
             node {
               stage("FINISH") {
               }
             }
-          } 
+          }
           catch (err) {
             echo "in catch block"
             echo "Caught: ${err}"
