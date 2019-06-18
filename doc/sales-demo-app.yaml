@@ -72,12 +72,12 @@ objects:
 
                         openshift.withProject('${APP_NAME_DEV}') {
 
-                          def stockProcessorServiceDeploymentConfig = openshift.selector('dc','${SERVICE_NAME}')
-                          def scaleResult = openshift.raw('scale','dc/${SERVICE_NAME} --replicas=${SERVICE_REPLICAS}')
+                          def stockProcessorServiceDeploymentConfig = openshift.selector('dc','${SERVICE_NAME}-${SERVICE_VERSION}')
+                          def scaleResult = openshift.raw('scale','dc/${SERVICE_NAME}-${SERVICE_VERSION} --replicas=${SERVICE_REPLICAS}')
                           echo "Service [${SERVICE_NAME}] has been scaled to [${SERVICE_REPLICAS}] replicas."
 
-                          def latestDeploymentVersion = openshift.selector('dc',"${SERVICE_NAME}").object().status.latestVersion
-                          def rc = openshift.selector('rc', "${SERVICE_NAME}-${latestDeploymentVersion}")
+                          def latestDeploymentVersion = openshift.selector('dc',"${SERVICE_NAME}-${SERVICE_VERSION}").object().status.latestVersion
+                          def rc = openshift.selector('rc', "${SERVICE_NAME}-${SERVICE_VERSION}-${latestDeploymentVersion}")
 
                           rc.untilEach(1) {
                             def rcMap = it.object()
