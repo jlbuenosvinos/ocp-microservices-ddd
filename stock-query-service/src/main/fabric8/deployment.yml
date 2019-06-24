@@ -33,25 +33,52 @@ spec:
           timeoutSeconds: 1
         env:
           - name: "STOCK_DATAGRID_BROKER_URI"
-            value: "sales-data-store-hotrod"
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}-${project.version}
+                key: STOCK_DATAGRID_BROKER_URI
           - name: "STOCK_DATAGRID_BROKER_URI_PORT"
-            value: "11333"
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}-${project.version}
+                key: STOCK_DATAGRID_BROKER_URI_PORT
           - name: "STOCK_DATAGRID_BROKER_USERNAME"
-            value: "sales-data-store"
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}-${project.version}
+                key: STOCK_DATAGRID_BROKER_USERNAME
           - name: "STOCK_DATAGRID_BROKER_PASSWORD"
             valueFrom:
               secretKeyRef:
                 name: stock-query-service-secret
                 key: STOCK_DATAGRID_BROKER_PASSWORD
           - name: "STOCK_SERVICE_VERSION"
-            value: "${project.version}"
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}-${project.version}
+                key: STOCK_SERVICE_VERSION
           - name: "STOCK_METRICS_ENABLED"
-            value: TRUE
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}-${project.version}
+                key: STOCK_METRICS_ENABLED
           - name: "STOCK_METRICS_WEB_EXPOSURE_INCLUDE"
-            value: "*"
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}-${project.version}
+                key: STOCK_METRICS_WEB_EXPOSURE_INCLUDE
           - name: "STOCK_METRICS_PROMETHEUS_ENABLED"
-            value: TRUE
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}-${project.version}
+                key: STOCK_METRICS_PROMETHEUS_ENABLED
           - name: "STOCK_METRICS_PROMETHEUS_EXPORT_ENABLED"
-            value: TRUE
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}-${project.version}
+                key: STOCK_METRICS_PROMETHEUS_EXPORT_ENABLED
           - name: "STOCK_METRICS_ARTIFACTID_NAME"
-            value: "${project.artifactId}"
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}-${project.version}
+                key: STOCK_METRICS_ARTIFACTID_NAME
