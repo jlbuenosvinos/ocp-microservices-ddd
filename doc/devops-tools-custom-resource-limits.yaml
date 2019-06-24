@@ -15,9 +15,9 @@ spec:
       max:
         cpu: "4" 
         memory: "8Gi" 
-#     min:
-#       cpu: "1" 
-#       memory: "512Mi" 
+      min:
+        cpu: "1" 
+        memory: "512Mi" 
 #      default:
 #        cpu: "1" 
 #        memory: "512Mi" 
