@@ -71,7 +71,7 @@ spec:
             valueFrom:
               configMapKeyRef:
                 name: ${project.artifactId}-${project.version}
-                key:
+                key: STOCK_DATAGRID_BROKER_URI
           - name: "STOCK_DATAGRID_BROKER_URI_PORT"
             valueFrom:
               configMapKeyRef:
