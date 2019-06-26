@@ -112,6 +112,66 @@ objects:
 - apiVersion: "v1"
   kind: "BuildConfig"
   metadata:
+    name: "sales-scale-pipeline"
+  spec:
+    strategy:
+      jenkinsPipelineStrategy:
+        jenkinsfile: |-
+          try {
+            node {
+              stage("INIT") {
+              }
+            }
+            node("maven") {
+
+              stage("SCALE") {
+
+                  openshift.withCluster() {
+
+                    openshift.withCredentials() {
+
+                        openshift.withProject('${APP_NAME_DEV}') {
+
+                          def stockProcessorServiceDeploymentConfig = openshift.selector('dc','${SERVICE_NAME}')
+                          def scaleResult = openshift.raw('scale','dc/${SERVICE_NAME} --replicas=${SERVICE_REPLICAS}')
+                          echo "Service [${SERVICE_NAME}] has been scaled to [${SERVICE_REPLICAS}] replicas."
+
+                          def latestDeploymentVersion = openshift.selector('dc',"${SERVICE_NAME}").object().status.latestVersion
+                          def rc = openshift.selector('rc', "${SERVICE_NAME}-${latestDeploymentVersion}")
+
+                          rc.untilEach(1) {
+                            def rcMap = it.object()
+                            return (rcMap.status.replicas.equals(rcMap.status.readyReplicas))
+                          }
+
+                        }
+                    }
+
+                  }
+              }
+            }
+
+            node {
+              stage("FINISH") {
+              }
+            }
+
+          }
+          catch (err) {
+            echo "in catch block"
+            echo "Caught: ${err}"
+            currentBuild.result = 'FAILURE'
+            throw err
+          }
+        type: JenkinsPipeline
+    triggers:
+      - generic:
+          allowEnv: true
+          secret: ${GENERIC_WEBHOOK_SECRET}
+        type: Generic
+- apiVersion: "v1"
+  kind: "BuildConfig"
+  metadata:
     name: "sales-deploy-ticket-processor-pipeline"
   spec:
     strategy:

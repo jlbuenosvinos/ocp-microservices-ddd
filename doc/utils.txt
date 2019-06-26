@@ -29,7 +29,9 @@ oc delete limits automation-tools-core-resource-limits
 
 #Create a postgresql storage using a 10GB of capacity.
 
-./setup_openshift.sh -e openshift_host=https://master.bcn-ffce.openshiftworkshop.com -e openshift_project=automation-tools -e openshift_user=opentlc-mgr -e openshift_password=r3dh4t1! -e admin_password=admin1 -e secret_key=mysecret -e pg_username=postgresuser -e pg_password=postgrespwd -e rabbitmq_password=rabbitpwd -e rabbitmq_erlang_cookie=rabbiterlangpwd
+./setup_openshift.sh -e openshift_host=https://master.bcn-db21.openshiftworkshop.com -e openshift_project=automation-tools -e openshift_user=opentlc-mgr -e openshift_password=r3dh4t1! -e admin_password=admin1 -e secret_key=mysecret -e pg_username=postgresuser -e pg_password=postgrespwd -e rabbitmq_password=rabbitpwd -e rabbitmq_erlang_cookie=rabbiterlangpwd
+
+./setup_openshift.sh -e openshift_host=https://api.cluster-fad9.sandbox460.opentlc.com:6443 -e openshift_project=automation-tools -e openshift_user=kubeadmin -e openshift_password=6w39X-f48wF-IemGe-w685U -e admin_password=admin1 -e secret_key=mysecret -e pg_username=postgresuser -e pg_password=postgrespwd -e rabbitmq_password=rabbitpwd -e rabbitmq_erlang_cookie=rabbiterlangpwd
 
 oc adm policy add-cluster-role-to-user cluster-admin -z jenkins
 
