@@ -112,7 +112,7 @@ objects:
 - apiVersion: "v1"
   kind: "BuildConfig"
   metadata:
-    name: "sales-scale-pipeline"
+    name: "sales-scale-infra-pipeline"
   spec:
     strategy:
       jenkinsPipelineStrategy:
