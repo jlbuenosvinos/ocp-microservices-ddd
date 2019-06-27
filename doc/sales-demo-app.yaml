@@ -112,6 +112,66 @@ objects:
 - apiVersion: "v1"
   kind: "BuildConfig"
   metadata:
+    name: "sales-autoscale-service-pipeline"
+  spec:
+    strategy:
+      jenkinsPipelineStrategy:
+        jenkinsfile: |-
+          try {
+            node {
+              stage("INIT") {
+              }
+            }
+            node("maven") {
+
+              stage("SET-AUTO-SCALE-SERVICE") {
+
+                  openshift.withCluster() {
+
+                    openshift.withCredentials() {
+
+                        openshift.withProject('${APP_NAME_DEV}') {
+
+                          def stockProcessorServiceDeploymentConfig = openshift.selector('dc','${SERVICE_NAME}-${SERVICE_VERSION}')
+                          def scaleResult = openshift.raw('autoscale','dc/${SERVICE_NAME}-${SERVICE_VERSION} --min ${SERVICE_REPLICAS_MIN} --max ${SERVICE_REPLICAS_MAX} --cpu-percent=${SERVICE_CPU}')
+                          echo "Service [${SERVICE_NAME}] has been autoscaled to [${SERVICE_REPLICAS_MIN},${SERVICE_REPLICAS_MAX}] replicas."
+
+                          def latestDeploymentVersion = openshift.selector('dc',"${SERVICE_NAME}-${SERVICE_VERSION}").object().status.latestVersion
+                          def rc = openshift.selector('rc', "${SERVICE_NAME}-${SERVICE_VERSION}-${latestDeploymentVersion}")
+
+                          rc.untilEach(1) {
+                            def rcMap = it.object()
+                            return (rcMap.status.replicas.equals(rcMap.status.readyReplicas))
+                          }
+
+                        }
+                    }
+
+                  }
+              }
+            }
+
+            node {
+              stage("FINISH") {
+              }
+            }
+
+          }
+          catch (err) {
+            echo "in catch block"
+            echo "Caught: ${err}"
+            currentBuild.result = 'FAILURE'
+            throw err
+          }
+        type: JenkinsPipeline
+    triggers:
+      - generic:
+          allowEnv: true
+          secret: ${GENERIC_WEBHOOK_SECRET}
+        type: Generic
+- apiVersion: "v1"
+  kind: "BuildConfig"
+  metadata:
     name: "sales-scale-infra-pipeline"
   spec:
     strategy:
