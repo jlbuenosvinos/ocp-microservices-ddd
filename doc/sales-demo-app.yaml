@@ -132,6 +132,11 @@ objects:
 
                         openshift.withProject('${APP_NAME_DEV}') {
 
+                          def autoScaler = openshift.selector('hpa','${SERVICE_NAME}-${SERVICE_VERSION}').exists()
+                          if (autoScaler) {
+                            openshift.raw('delete','hpa ${SERVICE_NAME}-${SERVICE_VERSION}')
+                          }
+
                           def stockProcessorServiceDeploymentConfig = openshift.selector('dc','${SERVICE_NAME}-${SERVICE_VERSION}')
                           def scaleResult = openshift.raw('autoscale','dc/${SERVICE_NAME}-${SERVICE_VERSION} --min ${SERVICE_REPLICAS_MIN} --max ${SERVICE_REPLICAS_MAX} --cpu-percent=${SERVICE_CPU}')
                           echo "Service [${SERVICE_NAME}] has been autoscaled to [${SERVICE_REPLICAS_MIN},${SERVICE_REPLICAS_MAX}] replicas."
@@ -728,6 +733,20 @@ objects:
                               salesDataStore.rollout().status()
 
                               echo "Application [sales-data-store] has been updated."
+
+                              salesDataStore = openshift.selector('dc','sales-data-store')
+                              
+                              def scaleResult = openshift.raw('scale','dc/sales-data-store --replicas=2')
+                              echo "Service [sales-data-store] has been scaled."
+
+                              def latestDeploymentVersion = openshift.selector('dc',"sales-data-store").object().status.latestVersion
+                              def rc = openshift.selector('rc', "sales-data-store-${latestDeploymentVersion}")
+
+                              rc.untilEach(1) {
+                                def rcMap = it.object()
+                                return (rcMap.status.replicas.equals(rcMap.status.readyReplicas))
+                              }
+
                           }
                           else {
                               def numSalesDataStorePods = openshift.selector('pod', [application: "sales-data-store"]).count()
