@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: List
+items:
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    name: stock-query-service
+  spec:
+    tags:
+    - from:
+        kind: ImageStreamImage
+        name: stock-query-service@sha256:a9a9bd4d95af761cf99753426f2040e5a94f406f0068b9b202d277e2cd3ae70e
+        namespace: sales-demo-app-dev
+      name: latest

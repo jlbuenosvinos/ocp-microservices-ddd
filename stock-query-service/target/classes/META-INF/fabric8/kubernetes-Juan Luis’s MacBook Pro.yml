@@ -1,0 +1,150 @@
+---
+apiVersion: v1
+kind: List
+items:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      fabric8.io/git-commit: 4956a10b3eee4934ea43f996156fb0e606d357a8
+      fabric8.io/git-branch: dev
+      fabric8.io/git-url: https://github.com/jlbuenosvinos/ocp-microservices-ddd.git
+      fabric8.io/scm-url: https://github.com/openshiftio/stock-query-service
+      fabric8.io/scm-tag: booster-parent-23
+      prometheus.io/port: "9779"
+      prometheus.io/scrape: "true"
+    labels:
+      expose: "true"
+      group: com.redhat.jbuenosv.ocpmicroservicesddd.sales
+      project: stock-query-service
+      version: 0.0.1-SNAPSHOT
+      provider: fabric8
+      app: stock-query-service
+    name: stock-query-service
+  spec:
+    ports:
+    - name: web
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      app: stock-query-service
+      provider: fabric8
+      group: com.redhat.jbuenosv.ocpmicroservicesddd.sales
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      fabric8.io/git-commit: 4956a10b3eee4934ea43f996156fb0e606d357a8
+      fabric8.io/git-branch: dev
+      fabric8.io/git-url: https://github.com/jlbuenosvinos/ocp-microservices-ddd.git
+      fabric8.io/scm-url: https://github.com/openshiftio/stock-query-service
+      fabric8.io/scm-tag: booster-parent-23
+    labels:
+      group: com.redhat.jbuenosv.ocpmicroservicesddd.sales
+      project: stock-query-service
+      version: 0.0.1-SNAPSHOT
+      provider: fabric8
+      app: stock-query-service
+    name: stock-query-service
+  spec:
+    replicas: 1
+    revisionHistoryLimit: 2
+    selector:
+      matchLabels:
+        app: stock-query-service
+        provider: fabric8
+        group: com.redhat.jbuenosv.ocpmicroservicesddd.sales
+    template:
+      metadata:
+        annotations:
+          fabric8.io/git-commit: 4956a10b3eee4934ea43f996156fb0e606d357a8
+          fabric8.io/git-branch: dev
+          fabric8.io/scm-tag: booster-parent-23
+          fabric8.io/git-url: https://github.com/jlbuenosvinos/ocp-microservices-ddd.git
+          fabric8.io/scm-url: https://github.com/openshiftio/stock-query-service
+        labels:
+          app: stock-query-service
+          provider: fabric8
+          version: 0.0.1-SNAPSHOT
+          group: com.redhat.jbuenosv.ocpmicroservicesddd.sales
+      spec:
+        containers:
+        - env:
+          - name: STOCK_DATAGRID_BROKER_URI
+            value: sales-data-store-hotrod
+          - name: STOCK_DATAGRID_BROKER_URI_PORT
+            value: "11333"
+          - name: STOCK_DATAGRID_BROKER_USERNAME
+            value: sales-data-store
+          - name: STOCK_DATAGRID_BROKER_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: STOCK_DATAGRID_BROKER_PASSWORD
+                name: stock-query-service-secret
+          - name: STOCK_SERVICE_VERSION
+            value: 0.0.1-SNAPSHOT
+          - name: STOCK_METRICS_ENABLED
+            value: "true"
+          - name: STOCK_METRICS_WEB_EXPOSURE_INCLUDE
+            value: '*'
+          - name: STOCK_METRICS_PROMETHEUS_ENABLED
+            value: "true"
+          - name: STOCK_METRICS_PROMETHEUS_EXPORT_ENABLED
+            value: "true"
+          - name: STOCK_METRICS_ARTIFACTID_NAME
+            value: stock-query-service
+          - name: KUBERNETES_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          image: stock-query-service:latest
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /api/health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 120
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: spring-boot
+          ports:
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+          - containerPort: 9779
+            name: prometheus
+            protocol: TCP
+          - containerPort: 8778
+            name: jolokia
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /api/health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 120
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          securityContext:
+            privileged: false
+- apiVersion: v1
+  kind: Route
+  metadata:
+    labels:
+      app: stock-query-service
+      provider: fabric8
+      version: 0.0.1-SNAPSHOT
+      group: com.redhat.jbuenosv.ocpmicroservicesddd.sales
+    name: stock-query-service
+  spec:
+    port:
+      targetPort: 8080
+    to:
+      kind: Service
+      name: stock-query-service

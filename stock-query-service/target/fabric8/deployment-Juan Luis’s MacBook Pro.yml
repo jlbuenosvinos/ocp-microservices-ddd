@@ -1,0 +1,56 @@
+metadata:
+  name: stock-query-service
+  labels:
+    group: com.redhat.jbuenosv.ocpmicroservicesddd.sales
+    project: stock-query-service
+    version: 0.0.1-SNAPSHOT
+    provider: fabric8
+spec:
+  template:
+    spec:
+      containers:
+      -
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /api/health
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 120
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /api/health
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 120
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        env:
+          - name: "STOCK_DATAGRID_BROKER_URI"
+            value: "sales-data-store-hotrod"
+          - name: "STOCK_DATAGRID_BROKER_URI_PORT"
+            value: "11333"
+          - name: "STOCK_DATAGRID_BROKER_USERNAME"
+            value: "sales-data-store"
+          - name: "STOCK_DATAGRID_BROKER_PASSWORD"
+            valueFrom:
+              secretKeyRef:
+                name: stock-query-service-secret
+                key: STOCK_DATAGRID_BROKER_PASSWORD
+          - name: "STOCK_SERVICE_VERSION"
+            value: "0.0.1-SNAPSHOT"
+          - name: "STOCK_METRICS_ENABLED"
+            value: TRUE
+          - name: "STOCK_METRICS_WEB_EXPOSURE_INCLUDE"
+            value: "*"
+          - name: "STOCK_METRICS_PROMETHEUS_ENABLED"
+            value: TRUE
+          - name: "STOCK_METRICS_PROMETHEUS_EXPORT_ENABLED"
+            value: TRUE
+          - name: "STOCK_METRICS_ARTIFACTID_NAME"
+            value: "stock-query-service"

@@ -1,0 +1,19 @@
+null
+[
+  "opentlc-mgr"
+]
+[
+  "system:serviceaccount:automation-tools:jenkins"
+]
+[
+  "system:serviceaccount:automation-tools:opentlc-mgr"
+]
+[
+  "system:serviceaccount:devops-tools:jenkins"
+]
+[
+  "system:serviceaccount:istio-system:opentlc-mgr"
+]
+[
+  "system:admin"
+]

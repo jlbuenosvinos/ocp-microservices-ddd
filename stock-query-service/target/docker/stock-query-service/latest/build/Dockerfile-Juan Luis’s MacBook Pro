@@ -1,0 +1,5 @@
+FROM registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:1.2
+ENV JAVA_APP_DIR=/deployments
+LABEL org.label-schema.description=stock-query-service org.label-schema.version=0.0.1-SNAPSHOT org.label-schema.schema-version=1.0 org.label-schema.build-date=2019-05-24T07:26:55.706 org.label-schema.name=stock-query-service org.label-schema.vcs-ref=4956a10b3eee4934ea43f996156fb0e606d357a8 org.label-schema.url=https://github.com/openshiftio/stock-query-service org.label-schema.vcs-url=https://github.com/jlbuenosvinos/ocp-microservices-ddd.git
+EXPOSE 8080 8778 9779
+COPY maven /deployments/

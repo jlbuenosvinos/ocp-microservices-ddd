@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: List
+items:
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    name: stock-processor-service
+  spec:
+    tags:
+    - from:
+        kind: ImageStreamImage
+        name: stock-processor-service@sha256:81191f19e8b1c12241bd8a40636fb14ee7d0752040e65399a6eb23c605b4a323
+        namespace: sales-demo-app-dev
+      name: latest

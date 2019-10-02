@@ -1,0 +1,31 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    fabric8.io/git-commit: 4956a10b3eee4934ea43f996156fb0e606d357a8
+    fabric8.io/git-branch: dev
+    fabric8.io/git-url: https://github.com/jlbuenosvinos/ocp-microservices-ddd.git
+    fabric8.io/scm-url: https://github.com/openshiftio/stock-processor-service
+    fabric8.io/scm-tag: booster-parent-23
+    prometheus.io/port: "9779"
+    prometheus.io/scrape: "true"
+  labels:
+    expose: "true"
+    group: com.redhat.jbuenosv.ocpmicroservicesddd.sales
+    project: stock-processor-service
+    version: 0.0.1-SNAPSHOT
+    provider: fabric8
+    monitorGroup: ctti
+    app: stock-processor-service
+  name: stock-processor-service
+spec:
+  ports:
+  - name: web
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: stock-processor-service
+    provider: fabric8
+    group: com.redhat.jbuenosv.ocpmicroservicesddd.sales
