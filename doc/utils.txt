@@ -224,6 +224,62 @@ End Lab creation
 ________________
 
 
+Lab creation:
+_____________
+
+oc new-project devops-tools --display-name='devops-tools' --description='devops-tools'
+
+oc new-project automation-tools --display-name='automation-tools' --description='automation-tools'
+
+oc adm policy add-cluster-role-to-user cluster-admin -z jenkins
+
+oc adm policy add-cluster-role-to-user cluster-admin -z opentlc-mgr
+
+oc project openshift
+
+oc import-image jenkins-2-rhel7 --from=registry.access.redhat.com/openshift3/jenkins-2-rhel7:v3.10.127 --confirm
+
+oc import-image jenkins-agent-maven-35-rhel7 --from=registry.access.redhat.com/openshift3/jenkins-agent-maven-35-rhel7:v3.10.127 --confirm
+
+oc import-image fuse7/fuse-java-openshift --from=registry.redhat.io/fuse7/fuse-java-openshift --confirm
+
+oc project devops-tools
+
+oc new-app --template=jenkins-ephemeral -p JENKINS_IMAGE_STREAM_TAG=jenkins-2-rhel7:latest -p MEMORY_LIMIT=1024Mi -p ENABLE_OAUTH=true
+
+oc project automation-tools
+
+oc create -f automation-tools-custom-resource-limits.yaml
+
+oc delete limits automation-tools-core-resource-limits
+
+#Create a postgresql storage using a 10GB of capacity.
+
+./setup_openshift.sh -e openshift_host=https://master.bcn-db21.openshiftworkshop.com -e openshift_project=automation-tools -e openshift_user=opentlc-mgr -e openshift_password=r3dh4t1! -e admin_password=admin1 -e secret_key=mysecret -e pg_username=postgresuser -e pg_password=postgrespwd -e rabbitmq_password=rabbitpwd -e rabbitmq_erlang_cookie=rabbiterlangpwd
+
+./setup_openshift.sh -e openshift_host=https://api.cluster-fad9.sandbox460.opentlc.com:6443 -e openshift_project=automation-tools -e openshift_user=kubeadmin -e openshift_password=6w39X-f48wF-IemGe-w685U -e admin_password=admin1 -e secret_key=mysecret -e pg_username=postgresuser -e pg_password=postgrespwd -e rabbitmq_password=rabbitpwd -e rabbitmq_erlang_cookie=rabbiterlangpwd
+
+oc adm policy add-cluster-role-to-user cluster-admin -z jenkins
+
+
+Grafana setup
+-------------
+
+
+./setup-grafana.sh -n monitor -a -e -p sales-demo-monitoring
+
+oc adm policy add-cluster-role-to-user cluster-reader grafana
+
+check the sales-demo-monitoring Prometheus service to be added to the Grafana Web Console
+
+oc policy add-role-to-user view system:serviceaccount:grafana:grafana -n openshift-monitoring
+
+
+
+End Lab creation
+________________
+
+
 oc delete bc sales-deploy-ticket-processor-pipeline
 oc delete bc sales-deploy-stock-processor-pipeline
 oc delete bc sales-deploy-stock-query-pipeline

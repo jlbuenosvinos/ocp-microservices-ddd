@@ -14,7 +14,7 @@
         <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>2.18.1</maven-surefire-plugin.version>
         <fabric8.version>3.0.11.fuse-000065-redhat-3</fabric8.version>
-        <fabric8.maven.plugin.version>3.5.33.fuse-000067-redhat-1</fabric8.maven.plugin.version>
+        <fabric8.maven.plugin.version>4.1.0</fabric8.maven.plugin.version>
         <bom.version>7.0.0.fuse-000027-redhat-1</bom.version>
     </properties>
 

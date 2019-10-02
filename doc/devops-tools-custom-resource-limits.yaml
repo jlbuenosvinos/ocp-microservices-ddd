@@ -4,6 +4,7 @@ metadata:
   name: "devops-tools-custom-resource-limits" 
 spec:
   limits:
+<<<<<<< HEAD
     - type: "Pod"
       max:
         cpu: "1" 
@@ -11,3 +12,27 @@ spec:
       min:
         cpu: "1" 
         memory: "500Mi" 
+=======
+#    - type: "Pod"
+#      max:
+#        cpu: "2" 
+#        memory: "1Gi" 
+#      min:
+#        cpu: "200m" 
+#        memory: "6Mi" 
+    - type: "Container"
+      max:
+        cpu: "4" 
+        memory: "8Gi" 
+      min:
+        cpu: "1" 
+        memory: "512Mi" 
+#      default:
+#        cpu: "1" 
+#        memory: "512Mi" 
+#      defaultRequest:
+#        cpu: "1" 
+#        memory: "512Mi" 
+#      maxLimitRequestRatio:
+#        cpu: "10"
+>>>>>>> 8221f6e05d4a4f9729446917d76f276562e51717

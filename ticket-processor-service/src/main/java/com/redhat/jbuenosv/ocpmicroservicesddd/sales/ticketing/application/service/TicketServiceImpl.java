@@ -77,6 +77,7 @@ class TicketServiceImpl implements TicketService {
         int numTickets = order.getItems().size();
         TicketGeneratedEvent ticketEvent = null;
         List<TicketGeneratedEvent> ticketEvents = new ArrayList<TicketGeneratedEvent>();
+        Integer newUnits = 0;
 
         for(int i = 0 ; i < numTickets ; i++) {
             ticketEvent = new TicketGeneratedEvent();
@@ -89,11 +90,16 @@ class TicketServiceImpl implements TicketService {
             ticketItem.setId(order.getItems().get(i).getId());
 
             if (order.getItems().get(i).getType() == OrderLineType.RETURN) {
-                ticketItem.setUnits(order.getItems().get(i).getUnits());
+                // ticketItem.setUnits(order.getItems().get(i).getUnits());
+                newUnits = order.getItems().get(i).getUnits();
             }
             else {
-                ticketItem.setUnits(order.getItems().get(i).getUnits() * -1);
+                //ticketItem.setUnits(order.getItems().get(i).getUnits() * -1);
+                newUnits = order.getItems().get(i).getUnits() * -1;
+                if (config.isSaleViatamine()) newUnits = newUnits * 2;
             }
+
+            ticketItem.setUnits(newUnits);
 
             ticket.setItem(ticketItem);
             ticketEvent.setTicket(ticket);

@@ -1,11 +1,12 @@
 metadata:
-  name: ${project.artifactId}
+  name: ${project.artifactId}-${project.version}
   labels:
     group: ${project.groupId}
-    project: ${project.artifactId}
+    project: ${project.artifactId}-${project.version}
     version: ${project.version}
     provider: fabric8
 spec:
+  replicas: 2
   template:
     spec:
       containers:
@@ -16,7 +17,7 @@ spec:
             path: /api/health
             port: 8080
             scheme: HTTP
-          initialDelaySeconds: 125
+          initialDelaySeconds: 30
           periodSeconds: 10
           successThreshold: 1
           timeoutSeconds: 1
@@ -26,44 +27,88 @@ spec:
             path: /api/health
             port: 8080
             scheme: HTTP
-          initialDelaySeconds: 120
+          initialDelaySeconds: 35
           periodSeconds: 10
           successThreshold: 1
           timeoutSeconds: 1
         env:
           - name: "TICKETING_TICKETS_DESTINATION_NAME"
-            value: "sales.ticketing.tickets.destination"
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}-${project.version}
+                key: TICKETING_TICKETS_DESTINATION_NAME
           - name: "TICKETING_TICKETS_BROKER_URI"
-            value: "tcp://sales-event-store-amq-tcp:61616?jms.redeliveryPolicy.maximumRedeliveries=10"
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}-${project.version}
+                key: TICKETING_TICKETS_BROKER_URI
           - name: "TICKETING_TICKETS_BROKER_USERNAME"
-            value: "sales-event-store"
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}-${project.version}
+                key: TICKETING_TICKETS_BROKER_USERNAME
+          - name: "STOCK_SERVICE_VERSION"
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}-${project.version}
+                key: STOCK_SERVICE_VERSION
           - name: "TICKETING_TICKETS_BROKER_PASSWORD"
             valueFrom:
               secretKeyRef:
                 name: ticket-processor-service-secret
                 key: TICKETING_TICKETS_BROKER_PASSWORD
           - name: "TICKETING_STOCK_SUBSCRIBER_CLIENT_ID"
-            value: "sales.stock.subscriber"
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}-${project.version}
+                key: TICKETING_STOCK_SUBSCRIBER_CLIENT_ID
           - name: "STOCK_EVENT_VERSION"
-            value: "1.0"
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}-${project.version}
+                key: STOCK_EVENT_VERSION
           - name: "STOCK_DATAGRID_BROKER_URI"
-            value: "sales-data-store-hotrod"
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}-${project.version}
+                key: STOCK_DATAGRID_BROKER_URI
           - name: "STOCK_DATAGRID_BROKER_URI_PORT"
-            value: "11333"
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}-${project.version}
+                key: STOCK_DATAGRID_BROKER_URI_PORT
           - name: "STOCK_DATAGRID_BROKER_USERNAME"
-            value: "sales-data-store"
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}-${project.version}
+                key: STOCK_DATAGRID_BROKER_USERNAME
           - name: "STOCK_DATAGRID_BROKER_PASSWORD"
             valueFrom:
               secretKeyRef:
                 name: stock-processor-service-secret
                 key: STOCK_DATAGRID_BROKER_PASSWORD
           - name: "STOCK_METRICS_ENABLED"
-            value: TRUE
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}-${project.version}
+                key: STOCK_METRICS_ENABLED
           - name: "STOCK_METRICS_WEB_EXPOSURE_INCLUDE"
-            value: "*"
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}-${project.version}
+                key: STOCK_METRICS_WEB_EXPOSURE_INCLUDE
           - name: "STOCK_METRICS_PROMETHEUS_ENABLED"
-            value: TRUE
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}-${project.version}
+                key: STOCK_METRICS_PROMETHEUS_ENABLED
           - name: "STOCK_METRICS_PROMETHEUS_EXPORT_ENABLED"
-            value: TRUE
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}-${project.version}
+                key: STOCK_METRICS_PROMETHEUS_EXPORT_ENABLED
           - name: "STOCK_METRICS_ARTIFACTID_NAME"
-            value: "stock-processor-service"
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}-${project.version}
+                key: STOCK_METRICS_ARTIFACTID_NAME
