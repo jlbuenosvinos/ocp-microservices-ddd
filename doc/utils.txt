@@ -1,3 +1,229 @@
+
+
+Edit the limits using the command: oc edit template project-request -n openshift-config
+
+
+
+# Please edit the object below. Lines beginning with a '#' will be ignored,
+# and an empty file will abort the edit. If an error occurs while saving this file will be
+# reopened with the relevant failures.
+#
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  creationTimestamp: "2019-10-01T11:07:38Z"
+  name: project-request
+  namespace: openshift-config
+  resourceVersion: "578106"
+  selfLink: /apis/template.openshift.io/v1/namespaces/openshift-config/templates/project-request
+  uid: adc7302b-e43b-11e9-9d77-0a580a820023
+objects:
+- apiVersion: v1
+  kind: LimitRange
+  metadata:
+    name: ${PROJECT_NAME}-core-resource-limits
+    namespace: ${PROJECT_NAME}
+  spec:
+    limits:
+    - max:
+        cpu: 4
+        memory: 4Gi
+      type: Container
+    - max:
+        cpu: 4
+        memory: 4Gi
+      type: Pod
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    name: allow-from-all-namespaces
+  spec:
+    ingress:
+    - from:
+      - namespaceSelector: {}
+    podSelector: {}
+
+
+
+RHDSP:
+______
+
+OCP 3
+
+Master / Web Console
+https://master.YOURCITY-GUID.open.redhat.com
+
+Registry Console 
+https://registry-console-default.apps.YOURCITY-GUID.open.redhat.com
+
+Bastion Server 
+bastion.YOURCITY.open.redhat.com
+
+
+SSH Access to Master and Nodes
+You have full admin and SSH access to this cluster and can modify the cluster as your workshop requires it.
+
+
+You can download the SSH key for the workshops from the below link. In order to access this link you will need to login the URL with your OPENTLC credentials:
+
+
+https://www.opentlc.com/keys/ocpkey.pem
+
+# From your local host, SSH as ec2-user into the bastion server
+
+
+ssh -i /path/ocpkey.pem \
+
+       ec2-user@bastion.YOURCITY-NNNN.open.redhat.com
+
+
+# Become root on the bastion server
+
+sudo -i
+
+# List OpenShift nodes
+
+oc get nodes
+
+# SSH into master server from the bastion server
+
+ssh master1.YOURCITY-NNNN.internal
+
+
+# Become root on master
+
+# Note: you still have to do this as it logs you in as ec2-user even if you
+
+# SSH in as root
+
+sudo -i
+
+
+
+
+Lab creation:
+_____________
+
+oc new-project tst --display-name='tst' --description='tst'
+
+oc new-project devops-tools --display-name='devops-tools' --description='devops-tools'
+
+oc new-project automation-tools --display-name='automation-tools' --description='automation-tools'
+
+oc project devops-tools
+
+oc adm policy add-cluster-role-to-user cluster-admin -z jenkins
+
+oc adm policy add-cluster-role-to-user cluster-admin -z opentlc-mgr
+
+oc project automation-tools
+
+oc adm policy add-cluster-role-to-user cluster-admin -z opentlc-mgr
+
+oc project openshift
+
+oc import-image jenkins-2-rhel7 --from=registry.access.redhat.com/openshift3/jenkins-2-rhel7:v3.10.127 --confirm
+
+oc import-image jenkins-agent-maven-35-rhel7 --from=registry.access.redhat.com/openshift3/jenkins-agent-maven-35-rhel7:v3.10.127 --confirm
+
+oc import-image fuse7/fuse-java-openshift --from=registry.redhat.io/fuse7/fuse-java-openshift --confirm
+
+oc create -f https://raw.githubusercontent.com/jboss-container-images/jboss-datagrid-7-openshift-image/7.3-v1.2https://raw.githubusercontent.com/jboss-container-images/jboss-datagrid-7-openshift-image/7.3-v1.2/templates/datagrid73-basic.json
+
+oc create -f datagrid72-basic.json
+
+oc project devops-tools
+
+oc new-app --template=jenkins-ephemeral -p JENKINS_IMAGE_STREAM_TAG=jenkins-2-rhel7:latest -p MEMORY_LIMIT=1024Mi -p ENABLE_OAUTH=true
+
+# for OCP 4
+oc new-app --template=jenkins-ephemeral -p JENKINS_IMAGE_STREAM_TAG=jenkins:latest -p MEMORY_LIMIT=1024Mi -p ENABLE_OAUTH=true
+
+# !!!!!!!! Modify the agent image jenkins-agent-maven-35-rhel7:v3.10.127 in the Jenkins configuration
+
+oc project automation-tools
+
+oc create -f automation-tools-custom-resource-limits.yaml
+
+oc delete limits automation-tools-core-resource-limits
+
+#Create a new gp3 storage class setting up the inmediate claim policy
+
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: gp3
+  selfLink: /apis/storage.k8s.io/v1/storageclasses/gp3
+  uid: 53f897ee-e508-11e9-9446-023d38b1ea3e
+  resourceVersion: '568939'
+  creationTimestamp: '2019-10-02T11:32:34Z'
+  annotations:
+    storageclass.kubernetes.io/is-default-class: 'true'
+  ownerReferences:
+    - apiVersion: v1
+      kind: clusteroperator
+      name: storage
+      uid: d49bc56d-e438-11e9-9d21-027afd16e5e8
+provisioner: kubernetes.io/aws-ebs
+parameters:
+  encrypted: 'true'
+  type: gp2
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
+
+
+oc project devops-tools
+
+oc create -f sales-demo-app.yaml
+
+oc new-app --template=sales-demo-app
+
+
+
+
+
+
+
+#Create a postgresql storage using a 10GB of capacity.
+
+./setup_openshift.sh -e openshift_host=https://master.kutxa-286e.open.redhat.com -e openshift_project=automation-tools -e openshift_user=opentlc-mgr -e openshift_password=r3dh4t1! -e admin_password=admin1 -e secret_key=mysecret -e pg_username=postgresuser -e pg_password=postgrespwd -e rabbitmq_password=rabbitpwd -e rabbitmq_erlang_cookie=rabbiterlangpwd
+
+
+./setup_openshift.sh -e openshift_host=https://master.bcn-db21.openshiftworkshop.com -e openshift_project=automation-tools -e openshift_user=opentlc-mgr -e openshift_password=r3dh4t1! -e admin_password=admin1 -e secret_key=mysecret -e pg_username=postgresuser -e pg_password=postgrespwd -e rabbitmq_password=rabbitpwd -e rabbitmq_erlang_cookie=rabbiterlangpwd
+
+
+./setup_openshift.sh -e openshift_host=https://api.cluster-lisbon-20a1.lisbon-20a1.open.redhat.com:6443 -e openshift_project=automation-tools -e openshift_user=opentlc-mgr -e openshift_password=r3dh4t1! -e admin_password=admin1 -e secret_key=mysecret -e pg_username=postgresuser -e pg_password=postgrespwd -e rabbitmq_password=rabbitpwd -e rabbitmq_erlang_cookie=rabbiterlangpwd
+
+
+./setup_openshift.sh -e openshift_host=https://master.bcn-733a.openshiftworkshop.com -e openshift_project=automation-tools -e openshift_user=opentlc-mgr -e openshift_password=r3dh4t1! -e admin_password=admin1 -e secret_key=mysecret -e pg_username=postgresuser -e pg_password=postgrespwd -e rabbitmq_password=rabbitpwd -e rabbitmq_erlang_cookie=rabbiterlangpwd
+
+
+./setup_openshift.sh -r -e openshift_host=https://master.bcn-733a.openshiftworkshop.com -e openshift_project=automation-tools -e openshift_user=opentlc-mgr -e openshift_password=r3dh4t1! -e admin_password=admin1 -e secret_key=mysecret -e pg_username=postgresuser -e pg_password=postgrespwd -e rabbitmq_password=rabbitpwd -e rabbitmq_erlang_cookie=rabbiterlangpwd -e restore_backup_file=./tower-openshift-backup-latest.tar.gz
+
+
+./setup_openshift.sh -r -e openshift_host=https://master.kutxa-286e.open.redhat.com -e openshift_project=automation-tools -e openshift_user=opentlc-mgr -e openshift_password=r3dh4t1! -e admin_password=admin1 -e secret_key=mysecret -e pg_username=postgresuser -e pg_password=postgrespwd -e rabbitmq_password=rabbitpwd -e rabbitmq_erlang_cookie=rabbiterlangpwd -e restore_backup_file=./tower-openshift-backup-latest.tar.gz
+
+oc adm policy add-cluster-role-to-user cluster-admin -z jenkins
+
+
+Grafana setup
+-------------
+
+
+./setup-grafana.sh -n monitor -a -e -p sales-demo-monitoring
+
+oc adm policy add-cluster-role-to-user cluster-reader grafana
+
+check the sales-demo-monitoring Prometheus service to be added to the Grafana Web Console
+
+oc policy add-role-to-user view system:serviceaccount:grafana:grafana -n openshift-monitoring
+
+
+
+End Lab creation
+________________
+
+
 oc delete bc sales-deploy-ticket-processor-pipeline
 oc delete bc sales-deploy-stock-processor-pipeline
 oc delete bc sales-deploy-stock-query-pipeline
@@ -49,21 +275,17 @@ oc new-app --template=jenkins-ephemeral -p JENKINS_IMAGE_STREAM_TAG=jenkins-2-ce
 
 oc get is
 
-oc import-image jenkins-2-rhel7 --from=registry.access.redhat.com/openshift3/jenkins-2-rhel7 --confirm
-
-oc import-image jenkins-2-rhel7 --from=registry.access.redhat.com/openshift3/jenkins-2-rhel7:v3.11.88-2 --confirm
-
-oc import-image jenkins-2-rhel7 --from=registry.access.redhat.com/openshift3/jenkins-2-rhel7:v3.11.82-3 --confirm
-
-oc import-image jenkins-2-rhel7 --from=registry.access.redhat.com/openshift3/jenkins-2-rhel7:v3.11.82-3 --confirm
-
 oc import-image jenkins-2-rhel7 --from=registry.access.redhat.com/openshift3/jenkins-2-rhel7:v3.10.127 --confirm
+
 oc import-image jenkins-agent-maven-35-rhel7 --from=registry.access.redhat.com/openshift3/jenkins-agent-maven-35-rhel7:v3.10.127 --confirm
+
 oc new-app --template=jenkins-ephemeral -p JENKINS_IMAGE_STREAM_TAG=jenkins-2-rhel7:latest -p MEMORY_LIMIT=512Mi -p ENABLE_OAUTH=true
 
 oc adm policy add-cluster-role-to-user cluster-admin -z jenkins
 
 oc adm policy add-cluster-role-to-user cluster-admin -z admin
+
+oc adm policy add-cluster-role-to-user cluster-admin -z jbuenosv-redhat.com
 
 oc import-image fuse7/fuse-java-openshift --from=registry.redhat.io/fuse7/fuse-java-openshift --confirm
 
@@ -287,7 +509,6 @@ oc apply -f install/cluster-operator -n ocp-microservices-ddd
 oc apply -f examples/templates/cluster-operator -n ocp-microservices-ddd
 
 
-
 MS deployment
 _____________
 
@@ -315,4 +536,96 @@ mvn clean fabric8:deploy -Popenshift
 
 oc scale dc/stock-processor-service --replicas=2
 
+
+Istio Installation
+__________________
+
+Minishift Istio addon: https://github.com/minishift/minishift-addons/tree/master/add-ons/istio
+
+Istio tutorials: https://github.com/redhat-developer-demos/istio-tutorial
+
+https://github.com/istio/istio/releases/tag/0.7.1
+
+minishift env setup
+
+eval $(minishift oc-env)
+eval $(minishift docker-env)
+
+oc adm policy add-scc-to-user anyuid -z istio-ingress-service-account -n istio-system
+
+oc adm policy add-scc-to-user anyuid -z default -n istio-system
+
+oc adm policy add-scc-to-user anyuid -z prometheus -n istio-system
+
+oc create -f install/kubernetes/istio.yaml
+
+oc project istio-system
+
+oc apply -f install/kubernetes/addons/prometheus.yaml
+
+oc apply -f install/kubernetes/addons/grafana.yaml
+
+oc apply -f install/kubernetes/addons/servicegraph.yaml
+
+oc process -f  https://raw.githubusercontent.com/jaegertracing/jaeger-openshift/master/all-in-one/jaeger-all-in-one-template.yml | oc create -f -
+
+oc expose svc servicegraph
+
+oc expose svc grafana
+
+oc expose svc prometheus
+
+oc expose svc istio-ingress
+
+
+oc new-project tutorial
+
+oc adm policy add-scc-to-user privileged -z default -n tutorial
+
+
+export ISTIO_HOME=/Users/jlbuenosvinos/OneDrive/RedHat/Doc/OpenShift/GIT/ocp-microservices-ddd/doc/istio-0.7.1
+export PATH=$ISTIO_HOME/bin:$PATH
+
+
+#!/bin/bash
+while true
+do curl customer-tutorial.$(minishift ip).nip.io
+sleep .1
+done
+
+
+istioctl create -f route-rule-recommendation-v1.yml -n tutorial
+
+
+
+
+Istio 1.1.1
+___________
+
+export ISTIO_HOME=/Users/jlbuenosvinos/OneDrive/RedHat/Doc/OpenShift/GIT/ocp-microservices-ddd/doc/istio-1.1.1
+export PATH=$ISTIO_HOME/bin:$PATH
+
+oc adm policy add-scc-to-user privileged -z default -n ctti-app-dev
+
+oc adm policy add-scc-to-user privileged -z default -n sales-demo-app-dev
+
+oc adm policy add-scc-to-user privileged -z default -n sales-demo-app-pre
+
+oc adm policy add-scc-to-user privileged -z default -n sales-demo-app-pro
+
+https://github.com/redhat-developer-demos/istio-tutorial/blob/master/documentation/modules/ROOT/pages/1setup.adoc
+
+
+Ansible Tower installation
+__________________________
+
+https://store.ansible.com/redhat/tower_license/
+
+Create a postgresql storage using a 10GB of capacity.
+
+Create the new resource limit base on the automation-tools-custom-resource-limits.yaml
+
+Review the inventory to disable the certificate check
+
+./setup_openshift.sh -e openshift_host=https://master.bcn-ffce.openshiftworkshop.com -e openshift_project=automation-tools -e openshift_user=opentlc-mgr -e openshift_password=r3dh4t1! -e admin_password=admin1 -e secret_key=mysecret -e pg_username=postgresuser -e pg_password=postgrespwd -e rabbitmq_password=rabbitpwd -e rabbitmq_erlang_cookie=rabbiterlangpwd
 
