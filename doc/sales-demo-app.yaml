@@ -283,8 +283,6 @@ objects:
                           def ticketServiceDeploymentConfig = openshift.selector('dc','ticket-processor-service-${TICKETING_SERVICE_VERSION}')
                           ticketServiceDeploymentConfig.rollout().status()
 
-                          openshift.raw('expose','service ticket-processor-service-${TICKETING_SERVICE_VERSION}')
-
                         }
                     }
 
@@ -345,8 +343,6 @@ objects:
 
                           def ticketServiceDeploymentConfig = openshift.selector('dc','ticket-processor-endpoint')
                           ticketServiceDeploymentConfig.rollout().status()
-
-                          openshift.raw('expose','service ticket-processor-endpoint')
 
                         }
                     }
@@ -424,8 +420,6 @@ objects:
                           def stockProcessorServiceDeploymentConfig = openshift.selector('dc','stock-processor-service-${STOCK_PROCESSOR_SERVICE_VERSION}')
                           stockProcessorServiceDeploymentConfig.rollout().status()
 
-                          openshift.raw('expose','service stock-processor-service-${STOCK_PROCESSOR_SERVICE_VERSION}')
-
                         }
                     }
 
@@ -502,8 +496,6 @@ objects:
 
                           def stockQueryDeploymentConfig = openshift.selector('dc','stock-query-service-${STOCK_QUERY_SERVICE_VERSION}')
                           stockQueryDeploymentConfig.rollout().status()
-
-                          openshift.raw('expose','service stock-query-service-${STOCK_QUERY_SERVICE_VERSION})
 
                         }
                     }
