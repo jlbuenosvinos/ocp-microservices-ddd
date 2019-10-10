@@ -189,19 +189,15 @@ oc new-app --template=sales-demo-app
 ./setup_openshift.sh -e openshift_host=https://master.kutxa-286e.open.redhat.com -e openshift_project=automation-tools -e openshift_user=opentlc-mgr -e openshift_password=r3dh4t1! -e admin_password=admin1 -e secret_key=mysecret -e pg_username=postgresuser -e pg_password=postgrespwd -e rabbitmq_password=rabbitpwd -e rabbitmq_erlang_cookie=rabbiterlangpwd
 
 
-./setup_openshift.sh -e openshift_host=https://master.bcn-db21.openshiftworkshop.com -e openshift_project=automation-tools -e openshift_user=opentlc-mgr -e openshift_password=r3dh4t1! -e admin_password=admin1 -e secret_key=mysecret -e pg_username=postgresuser -e pg_password=postgrespwd -e rabbitmq_password=rabbitpwd -e rabbitmq_erlang_cookie=rabbiterlangpwd
-
-
 ./setup_openshift.sh -e openshift_host=https://api.cluster-lisbon-20a1.lisbon-20a1.open.redhat.com:6443 -e openshift_project=automation-tools -e openshift_user=opentlc-mgr -e openshift_password=r3dh4t1! -e admin_password=admin1 -e secret_key=mysecret -e pg_username=postgresuser -e pg_password=postgrespwd -e rabbitmq_password=rabbitpwd -e rabbitmq_erlang_cookie=rabbiterlangpwd
 
 
-./setup_openshift.sh -e openshift_host=https://master.bcn-733a.openshiftworkshop.com -e openshift_project=automation-tools -e openshift_user=opentlc-mgr -e openshift_password=r3dh4t1! -e admin_password=admin1 -e secret_key=mysecret -e pg_username=postgresuser -e pg_password=postgrespwd -e rabbitmq_password=rabbitpwd -e rabbitmq_erlang_cookie=rabbiterlangpwd
-
-
-./setup_openshift.sh -r -e openshift_host=https://master.bcn-733a.openshiftworkshop.com -e openshift_project=automation-tools -e openshift_user=opentlc-mgr -e openshift_password=r3dh4t1! -e admin_password=admin1 -e secret_key=mysecret -e pg_username=postgresuser -e pg_password=postgrespwd -e rabbitmq_password=rabbitpwd -e rabbitmq_erlang_cookie=rabbiterlangpwd -e restore_backup_file=./tower-openshift-backup-latest.tar.gz
 
 
 ./setup_openshift.sh -r -e openshift_host=https://master.kutxa-286e.open.redhat.com -e openshift_project=automation-tools -e openshift_user=opentlc-mgr -e openshift_password=r3dh4t1! -e admin_password=admin1 -e secret_key=mysecret -e pg_username=postgresuser -e pg_password=postgrespwd -e rabbitmq_password=rabbitpwd -e rabbitmq_erlang_cookie=rabbiterlangpwd -e restore_backup_file=./tower-openshift-backup-latest.tar.gz
+
+
+./setup_openshift.sh -r -e openshift_host=https://master.lisbon-968c.open.redhat.com:443 -e openshift_project=automation-tools -e openshift_user=opentlc-mgr -e openshift_password=r3dh4t1! -e admin_password=admin1 -e secret_key=mysecret -e pg_username=postgresuser -e pg_password=postgrespwd -e rabbitmq_password=rabbitpwd -e rabbitmq_erlang_cookie=rabbiterlangpwd -e restore_backup_file=./tower-openshift-backup-latest.tar.gz
 
 oc adm policy add-cluster-role-to-user cluster-admin -z jenkins
 
