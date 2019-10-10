@@ -1,5 +1,0 @@
-FROM fabric8/s2i-java:2.3
-ENV JAVA_APP_DIR=/deployments
-LABEL org.label-schema.description="" org.label-schema.version=0.0.1-SNAPSHOT org.label-schema.schema-version=1.0 org.label-schema.build-date=2019-05-28T09:33:24.489 org.label-schema.name=stock-query-endpoint org.label-schema.vcs-ref=9040d903cb2ddfed80c0338b2346fea103711d74 org.label-schema.vcs-url=https://github.com/jlbuenosvinos/ocp-microservices-ddd.git
-EXPOSE 8080 8778 9779
-COPY maven /deployments/
