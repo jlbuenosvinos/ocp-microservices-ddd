@@ -9,9 +9,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class CommonConfig {
 
-    @Value("${ticketing.ticket.processor.service.uri}")
-    String ticketingTicketProcessorUri;
-
     @Value("${ticketing.ticket.processor.service.uri.host}")
     String ticketingTicketProcessorUriHost;
 
@@ -26,7 +23,4 @@ public class CommonConfig {
         return ticketingTicketProcessorUriPort;
     }
 
-    public String getTicketingTicketProcessorUri() {
-        return ticketingTicketProcessorUri;
-    }
 }
