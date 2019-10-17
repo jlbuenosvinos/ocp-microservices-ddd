@@ -140,6 +140,7 @@ oc new-app --template=jenkins-ephemeral -p JENKINS_IMAGE_STREAM_TAG=jenkins-2-rh
 oc new-app --template=jenkins-ephemeral -p JENKINS_IMAGE_STREAM_TAG=jenkins:latest -p MEMORY_LIMIT=1024Mi -p ENABLE_OAUTH=true
 
 # !!!!!!!! Modify the agent image jenkins-agent-maven-35-rhel7:v3.10.127 in the Jenkins configuration
+image-registry.openshift-image-registry.svc:5000/openshift/jenkins-agent-maven-35-rhel7
 
 oc project automation-tools
 
@@ -186,18 +187,27 @@ oc new-app --template=sales-demo-app
 
 #Create a postgresql storage using a 10GB of capacity.
 
-./setup_openshift.sh -e openshift_host=https://master.kutxa-286e.open.redhat.com -e openshift_project=automation-tools -e openshift_user=opentlc-mgr -e openshift_password=r3dh4t1! -e admin_password=admin1 -e secret_key=mysecret -e pg_username=postgresuser -e pg_password=postgrespwd -e rabbitmq_password=rabbitpwd -e rabbitmq_erlang_cookie=rabbiterlangpwd
+
+
+
+./setup_openshift.sh -e openshift_host=https://master.lisbon-3f01.open.redhat.com -e openshift_project=automation-tools -e openshift_user=opentlc-mgr -e openshift_password=r3dh4t1! -e admin_password=admin1 -e secret_key=mysecret -e pg_username=postgresuser -e pg_password=postgrespwd -e rabbitmq_password=rabbitpwd -e rabbitmq_erlang_cookie=rabbiterlangpwd
 
 
 ./setup_openshift.sh -e openshift_host=https://api.cluster-lisbon-20a1.lisbon-20a1.open.redhat.com:6443 -e openshift_project=automation-tools -e openshift_user=opentlc-mgr -e openshift_password=r3dh4t1! -e admin_password=admin1 -e secret_key=mysecret -e pg_username=postgresuser -e pg_password=postgrespwd -e rabbitmq_password=rabbitpwd -e rabbitmq_erlang_cookie=rabbiterlangpwd
 
 
 
-
-./setup_openshift.sh -r -e openshift_host=https://master.kutxa-286e.open.redhat.com -e openshift_project=automation-tools -e openshift_user=opentlc-mgr -e openshift_password=r3dh4t1! -e admin_password=admin1 -e secret_key=mysecret -e pg_username=postgresuser -e pg_password=postgrespwd -e rabbitmq_password=rabbitpwd -e rabbitmq_erlang_cookie=rabbiterlangpwd -e restore_backup_file=./tower-openshift-backup-latest.tar.gz
-
-
 ./setup_openshift.sh -r -e openshift_host=https://master.lisbon-968c.open.redhat.com:443 -e openshift_project=automation-tools -e openshift_user=opentlc-mgr -e openshift_password=r3dh4t1! -e admin_password=admin1 -e secret_key=mysecret -e pg_username=postgresuser -e pg_password=postgrespwd -e rabbitmq_password=rabbitpwd -e rabbitmq_erlang_cookie=rabbiterlangpwd -e restore_backup_file=./tower-openshift-backup-latest.tar.gz
+
+
+
+./setup_openshift.sh -r -e openshift_host=https://master.lisbon-3f01.open.redhat.com -e openshift_project=automation-tools -e openshift_user=opentlc-mgr -e openshift_password=r3dh4t1! -e admin_password=admin1 -e secret_key=mysecret -e pg_username=postgresuser -e pg_password=postgrespwd -e rabbitmq_password=rabbitpwd -e rabbitmq_erlang_cookie=rabbiterlangpwd -e restore_backup_file=./tower-openshift-backup-latest.tar.gz
+
+
+./setup_openshift.sh -b -e openshift_host=https://master.lisbon-3f01.open.redhat.com -e openshift_project=automation-tools -e openshift_user=opentlc-mgr -e openshift_password=r3dh4t1! -e admin_password=admin1 -e secret_key=mysecret -e pg_username=postgresuser -e pg_password=postgrespwd -e rabbitmq_password=rabbitpwd -e rabbitmq_erlang_cookie=rabbiterlangpwd
+
+
+
 
 oc adm policy add-cluster-role-to-user cluster-admin -z jenkins
 
@@ -376,6 +386,23 @@ oc start-build sales-deploy-stock-query-pipeline -n cicd-ocpadmin --env=STOCKEC_
 oc start-build sales-deploy-stock-processor-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=vt8_ZHhj1RrMOGJTXevgjvQQCwvOCqRiD6VfKgVYVpM
 
 
+
+411  oc start-build sales-deploy-stock-query-pipeline -e STOCK_QUERY_SERVICE_VERSION=v1
+  412  oc start-build sales-deploy-stock-query-pipeline -e STOCK_QUERY_SERVICE_VERSION=v1
+  413  oc project devops-tools
+  414  oc start-build sales-deploy-stock-query-pipeline -e STOCK_QUERY_SERVICE_VERSION=v1
+  415  oc start-build sales-deploy-ticket-processor-pipeline -e TICKETING_SERVICE_VERSION=v1
+  416  oc start-build sales-deploy-stock-processor-pipeline -e STOCK_PROCESSOR_SERVICE_VERSION=v1
+  417  oc project devops-tools
+  418  oc project devops-tools
+  419  oc start-build sales-deploy-stock-query-pipeline -e STOCK_QUERY_SERVICE_VERSION=v1
+  420  oc start-build sales-deploy-ticket-processor-pipeline -e TICKETING_SERVICE_VERSION=v1
+  421  oc start-build sales-deploy-stock-processor-pipeline -e STOCK_PROCESSOR_SERVICE_VERSION=v1
+  422  oc project devops-tools
+  423  oc start-build sales-deploy-ticket-processor-pipeline -e TICKETING_SERVICE_VERSION=v2
+  424  oc start-build sales-deploy-ticket-processor-pipeline -e TICKETING_SERVICE_VERSION=v2
+
+  
 
 oc login https://192.168.99.100:8443 --token=vt8_ZHhj1RrMOGJTXevgjvQQCwvOCqRiD6VfKgVYVpM
 
