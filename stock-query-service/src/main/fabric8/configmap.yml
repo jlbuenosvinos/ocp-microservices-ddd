@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: ${project.artifactId}-${project.version}
+  name: ${project.artifactId}
   version: ${project.version}
 data:
   STOCK_DATAGRID_BROKER_URI: "sales-data-store-hotrod"

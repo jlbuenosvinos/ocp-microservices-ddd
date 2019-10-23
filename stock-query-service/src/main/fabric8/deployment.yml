@@ -1,13 +1,16 @@
 metadata:
-  name: ${project.artifactId}-${project.version}
+  name: ${project.artifactId}
   labels:
     group: ${project.groupId}
-    project: ${project.artifactId}-${project.version}
+    project: ${project.artifactId}
     version: ${project.version}
     provider: fabric8
 spec:
   replicas: 2
   template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "true"
     spec:
       containers:
       -
