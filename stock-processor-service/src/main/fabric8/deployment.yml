@@ -8,6 +8,9 @@ metadata:
 spec:
   replicas: 2
   template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "true"
     spec:
       containers:
       -

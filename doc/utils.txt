@@ -3,7 +3,6 @@
 Edit the limits using the command: oc edit template project-request -n openshift-config
 
 
-
 # Please edit the object below. Lines beginning with a '#' will be ignored,
 # and an empty file will abort the edit. If an error occurs while saving this file will be
 # reopened with the relevant failures.
@@ -190,10 +189,14 @@ oc new-app --template=sales-demo-app
 
 
 
-./setup_openshift.sh -e openshift_host=https://master.lisbon-3f01.open.redhat.com -e openshift_project=automation-tools -e openshift_user=opentlc-mgr -e openshift_password=r3dh4t1! -e admin_password=admin1 -e secret_key=mysecret -e pg_username=postgresuser -e pg_password=postgrespwd -e rabbitmq_password=rabbitpwd -e rabbitmq_erlang_cookie=rabbiterlangpwd
+./setup_openshift.sh -e openshift_host=https://master.andorra-ca92.open.redhat.com:443 -e openshift_project=automation-tools -e openshift_user=opentlc-mgr -e openshift_password=r3dh4t1! -e admin_password=admin1 -e secret_key=mysecret -e pg_username=postgresuser -e pg_password=postgrespwd -e rabbitmq_password=rabbitpwd -e rabbitmq_erlang_cookie=rabbiterlangpwd
 
 
-./setup_openshift.sh -e openshift_host=https://api.cluster-lisbon-20a1.lisbon-20a1.open.redhat.com:6443 -e openshift_project=automation-tools -e openshift_user=opentlc-mgr -e openshift_password=r3dh4t1! -e admin_password=admin1 -e secret_key=mysecret -e pg_username=postgresuser -e pg_password=postgrespwd -e rabbitmq_password=rabbitpwd -e rabbitmq_erlang_cookie=rabbiterlangpwd
+
+./setup_openshift.sh -r -e openshift_host=https://master.andorra-ca92.open.redhat.com:443 -e openshift_project=automation-tools -e openshift_user=opentlc-mgr -e openshift_password=r3dh4t1! -e admin_password=admin1 -e secret_key=mysecret -e pg_username=postgresuser -e pg_password=postgrespwd -e rabbitmq_password=rabbitpwd -e rabbitmq_erlang_cookie=rabbiterlangpwd -e restore_backup_file=./tower-openshift-backup-latest.tar.gz
+
+
+./setup_openshift.sh -e openshift_host=https://api.cluster-andorra-59d4.andorra-59d4.example.opentlc.com:6443 -e openshift_project=automation-tools -e openshift_user=opentlc-mgr -e openshift_password=r3dh4t1! -e admin_password=admin1 -e secret_key=mysecret -e pg_username=postgresuser -e pg_password=postgrespwd -e rabbitmq_password=rabbitpwd -e rabbitmq_erlang_cookie=rabbiterlangpwd
 
 
 
@@ -387,20 +390,20 @@ oc start-build sales-deploy-stock-processor-pipeline -n cicd-ocpadmin --env=SEC_
 
 
 
-411  oc start-build sales-deploy-stock-query-pipeline -e STOCK_QUERY_SERVICE_VERSION=v1
-  412  oc start-build sales-deploy-stock-query-pipeline -e STOCK_QUERY_SERVICE_VERSION=v1
-  413  oc project devops-tools
-  414  oc start-build sales-deploy-stock-query-pipeline -e STOCK_QUERY_SERVICE_VERSION=v1
-  415  oc start-build sales-deploy-ticket-processor-pipeline -e TICKETING_SERVICE_VERSION=v1
-  416  oc start-build sales-deploy-stock-processor-pipeline -e STOCK_PROCESSOR_SERVICE_VERSION=v1
-  417  oc project devops-tools
-  418  oc project devops-tools
-  419  oc start-build sales-deploy-stock-query-pipeline -e STOCK_QUERY_SERVICE_VERSION=v1
-  420  oc start-build sales-deploy-ticket-processor-pipeline -e TICKETING_SERVICE_VERSION=v1
-  421  oc start-build sales-deploy-stock-processor-pipeline -e STOCK_PROCESSOR_SERVICE_VERSION=v1
-  422  oc project devops-tools
-  423  oc start-build sales-deploy-ticket-processor-pipeline -e TICKETING_SERVICE_VERSION=v2
-  424  oc start-build sales-deploy-ticket-processor-pipeline -e TICKETING_SERVICE_VERSION=v2
+oc start-build sales-deploy-stock-query-pipeline -e STOCK_QUERY_SERVICE_VERSION=v1
+oc start-build sales-deploy-stock-query-pipeline -e STOCK_QUERY_SERVICE_VERSION=v1
+oc project devops-tools
+oc start-build sales-deploy-stock-query-pipeline -e STOCK_QUERY_SERVICE_VERSION=v1
+oc start-build sales-deploy-ticket-processor-pipeline -e TICKETING_SERVICE_VERSION=v1
+oc start-build sales-deploy-stock-processor-pipeline -e STOCK_PROCESSOR_SERVICE_VERSION=v1
+oc project devops-tools
+oc project devops-tools
+oc start-build sales-deploy-stock-query-pipeline -e STOCK_QUERY_SERVICE_VERSION=v1
+oc start-build sales-deploy-ticket-processor-pipeline -e TICKETING_SERVICE_VERSION=v1
+oc start-build sales-deploy-stock-processor-pipeline -e STOCK_PROCESSOR_SERVICE_VERSION=v1
+oc project devops-tools
+oc start-build sales-deploy-ticket-processor-pipeline -e TICKETING_SERVICE_VERSION=v2
+oc start-build sales-deploy-ticket-processor-pipeline -e TICKETING_SERVICE_VERSION=v2
 
   
 
