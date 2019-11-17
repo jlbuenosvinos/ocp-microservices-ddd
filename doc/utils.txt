@@ -109,15 +109,7 @@ oc new-project devops-tools --display-name='devops-tools' --description='devops-
 
 oc new-project automation-tools --display-name='automation-tools' --description='automation-tools'
 
-oc project devops-tools
 
-oc adm policy add-cluster-role-to-user cluster-admin -z jenkins
-
-oc adm policy add-cluster-role-to-user cluster-admin -z opentlc-mgr
-
-oc project automation-tools
-
-oc adm policy add-cluster-role-to-user cluster-admin -z opentlc-mgr
 
 oc project openshift
 
@@ -133,13 +125,22 @@ oc create -f datagrid72-basic.json
 
 oc project devops-tools
 
-oc new-app --template=jenkins-ephemeral -p JENKINS_IMAGE_STREAM_TAG=jenkins-2-rhel7:latest -p MEMORY_LIMIT=1024Mi -p ENABLE_OAUTH=true
-
 # for OCP 4
 oc new-app --template=jenkins-ephemeral -p JENKINS_IMAGE_STREAM_TAG=jenkins:latest -p MEMORY_LIMIT=1024Mi -p ENABLE_OAUTH=true
 
 # !!!!!!!! Modify the agent image jenkins-agent-maven-35-rhel7:v3.10.127 in the Jenkins configuration
 image-registry.openshift-image-registry.svc:5000/openshift/jenkins-agent-maven-35-rhel7
+
+
+oc project devops-tools
+
+oc adm policy add-cluster-role-to-user cluster-admin -z jenkins
+
+oc adm policy add-cluster-role-to-user cluster-admin -z opentlc-mgr
+
+oc project automation-tools
+
+oc adm policy add-cluster-role-to-user cluster-admin -z opentlc-mgr
 
 oc project automation-tools
 
@@ -179,40 +180,22 @@ oc create -f sales-demo-app.yaml
 oc new-app --template=sales-demo-app
 
 
-
-
-
-
-
 #Create a postgresql storage using a 10GB of capacity.
-
-
 
 
 ./setup_openshift.sh -e openshift_host=https://master.andorra-ca92.open.redhat.com:443 -e openshift_project=automation-tools -e openshift_user=opentlc-mgr -e openshift_password=r3dh4t1! -e admin_password=admin1 -e secret_key=mysecret -e pg_username=postgresuser -e pg_password=postgrespwd -e rabbitmq_password=rabbitpwd -e rabbitmq_erlang_cookie=rabbiterlangpwd
 
-
-
 ./setup_openshift.sh -r -e openshift_host=https://master.andorra-ca92.open.redhat.com:443 -e openshift_project=automation-tools -e openshift_user=opentlc-mgr -e openshift_password=r3dh4t1! -e admin_password=admin1 -e secret_key=mysecret -e pg_username=postgresuser -e pg_password=postgrespwd -e rabbitmq_password=rabbitpwd -e rabbitmq_erlang_cookie=rabbiterlangpwd -e restore_backup_file=./tower-openshift-backup-latest.tar.gz
-
 
 ./setup_openshift.sh -e openshift_host=https://api.cluster-andorra-59d4.andorra-59d4.example.opentlc.com:6443 -e openshift_project=automation-tools -e openshift_user=opentlc-mgr -e openshift_password=r3dh4t1! -e admin_password=admin1 -e secret_key=mysecret -e pg_username=postgresuser -e pg_password=postgrespwd -e rabbitmq_password=rabbitpwd -e rabbitmq_erlang_cookie=rabbiterlangpwd
 
-
-
 ./setup_openshift.sh -r -e openshift_host=https://master.lisbon-968c.open.redhat.com:443 -e openshift_project=automation-tools -e openshift_user=opentlc-mgr -e openshift_password=r3dh4t1! -e admin_password=admin1 -e secret_key=mysecret -e pg_username=postgresuser -e pg_password=postgrespwd -e rabbitmq_password=rabbitpwd -e rabbitmq_erlang_cookie=rabbiterlangpwd -e restore_backup_file=./tower-openshift-backup-latest.tar.gz
-
 
 
 ./setup_openshift.sh -r -e openshift_host=https://master.lisbon-3f01.open.redhat.com -e openshift_project=automation-tools -e openshift_user=opentlc-mgr -e openshift_password=r3dh4t1! -e admin_password=admin1 -e secret_key=mysecret -e pg_username=postgresuser -e pg_password=postgrespwd -e rabbitmq_password=rabbitpwd -e rabbitmq_erlang_cookie=rabbiterlangpwd -e restore_backup_file=./tower-openshift-backup-latest.tar.gz
 
 
 ./setup_openshift.sh -b -e openshift_host=https://master.lisbon-3f01.open.redhat.com -e openshift_project=automation-tools -e openshift_user=opentlc-mgr -e openshift_password=r3dh4t1! -e admin_password=admin1 -e secret_key=mysecret -e pg_username=postgresuser -e pg_password=postgrespwd -e rabbitmq_password=rabbitpwd -e rabbitmq_erlang_cookie=rabbiterlangpwd
-
-
-
-
-oc adm policy add-cluster-role-to-user cluster-admin -z jenkins
 
 
 Grafana setup
