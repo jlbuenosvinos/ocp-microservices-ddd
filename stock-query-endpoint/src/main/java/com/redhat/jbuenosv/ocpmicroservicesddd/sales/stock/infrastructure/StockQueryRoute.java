@@ -40,26 +40,26 @@ public class StockQueryRoute extends RouteBuilder {
                 .apiProperty("Stock Query API", "Stock Query API").apiProperty("api.version", "1.0.0");
 
         rest()
-                .get("/health")
+                .get("health")
                 .description("Stock Query API health check.")
                 .to("http4://" + config.getSalesStockQueryUriHost() +  ":" +  config.getSalesStockQueryUriPort()  + "/api/health?bridgeEndpoint=true");
 
         rest()
-                .get("/api/stock/{storeid}")
+                .get("/stock/{storeid}")
                     .description("Gets the stock by store identifier.")
                     .produces("application/json")
                     .type(String.class)
                     .to("direct:stock-query-service-store");
 
         rest()
-                .get("/api/stock/{storeid}/{productid}")
+                .get("/stock/{storeid}/{productid}")
                     .description("Gets the stock by store identifier and product identifier.")
                     .produces("application/json")
                     .type(String.class)
                     .to("direct:stock-query-service-store-product");
 
         rest()
-                .delete("/api/stock")
+                .delete("/stock")
                     .description("Removes the global stock.")
                     .to("direct:stock-query-service-delete");
 

@@ -51,6 +51,13 @@ public class OrderRoute extends RouteBuilder {
                 .setHeader(Exchange.HTTP_METHOD,constant(org.apache.camel.component.http4.HttpMethods.POST))
                 .to("http4://" + config.getTicketingTicketProcessorUriHost() +  ":" +  config.getTicketingTicketProcessorUriPort()  + "/api/order?bridgeEndpoint=true");
 
+        rest()
+                .post("/health")
+                .to("direct:health-service");
+
+        from("direct:health-service")
+                .to("http4://" + config.getTicketingTicketProcessorUriHost() +  ":" +  config.getTicketingTicketProcessorUriPort()  + "/api/health?bridgeEndpoint=true");
+
     }
 
 }

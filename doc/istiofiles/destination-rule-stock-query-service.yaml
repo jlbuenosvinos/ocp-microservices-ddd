@@ -3,9 +3,9 @@ kind: DestinationRule
 metadata:
   name: stock-query-service
 spec:
-  host: stock-query-service
+  host: 172.30.111.88
   subsets:
-  - name: stock-query-service-v1
-    labels:
+  - labels:
       version: v1
-  
+    name: stock-query-service-v1
+    
