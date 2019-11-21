@@ -3,7 +3,7 @@ kind: DestinationRule
 metadata:
   name: stock-query-service
 spec:
-  host: 172.30.111.88
+  host: sales-demo-app-dev.apps.cluster-bcn-3467.bcn-3467.example.opentlc.com
   subsets:
   - labels:
       version: v1

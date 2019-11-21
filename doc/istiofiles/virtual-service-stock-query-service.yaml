@@ -4,11 +4,13 @@ metadata:
   name: stock-query-service
 spec:
   hosts:
-  - 172.30.111.88
+  - "*"
+  gateways:
+  - sales-demo-app-gateway
   http:
   - route:
     - destination:
-        host: 172.30.111.88
+        host: "*"
         subset: stock-query-service-v1
       weight: 100
       

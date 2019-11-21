@@ -30,9 +30,10 @@ public class StockQueryRoute extends RouteBuilder {
                 .to("log:Unable to parse the JSON Payload.")
                 .setHeader(Exchange.HTTP_RESPONSE_CODE, constant(400));
 
-        onException(Exception.class)
+        /*onException(Exception.class)
                 .handled(true)
                 .setHeader(Exchange.HTTP_RESPONSE_CODE, constant(500));
+        */
 
         restConfiguration()
                 .component("servlet")
