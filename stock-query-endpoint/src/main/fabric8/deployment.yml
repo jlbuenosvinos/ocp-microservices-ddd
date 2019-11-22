@@ -14,6 +14,6 @@ spec:
               memory: 256Mi
           env:
             - name: "SALES_STOCK_QUERY_SERVICE_URI_HOST"
-              value: "stock-query-service"
+              value: "stock-query-service-v1"
             - name: "SALES_STOCK_QUERY_SERVICE_URI_PORT"
               value: 8080

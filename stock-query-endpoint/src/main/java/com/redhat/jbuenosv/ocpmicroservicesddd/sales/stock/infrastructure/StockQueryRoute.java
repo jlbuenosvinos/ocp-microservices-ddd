@@ -30,10 +30,9 @@ public class StockQueryRoute extends RouteBuilder {
                 .to("log:Unable to parse the JSON Payload.")
                 .setHeader(Exchange.HTTP_RESPONSE_CODE, constant(400));
 
-        /*onException(Exception.class)
+        onException(Exception.class)
                 .handled(true)
                 .setHeader(Exchange.HTTP_RESPONSE_CODE, constant(500));
-        */
 
         restConfiguration()
                 .component("servlet")
@@ -46,35 +45,35 @@ public class StockQueryRoute extends RouteBuilder {
                 .to("http4://" + config.getSalesStockQueryUriHost() +  ":" +  config.getSalesStockQueryUriPort()  + "/api/health?bridgeEndpoint=true");
 
         rest()
-                .get("/stock/{storeid}")
+                .get("/api/stock/{storeid}")
                     .description("Gets the stock by store identifier.")
                     .produces("application/json")
                     .type(String.class)
                     .to("direct:stock-query-service-store");
 
         rest()
-                .get("/stock/{storeid}/{productid}")
+                .get("/api/stock/{storeid}/{productid}")
                     .description("Gets the stock by store identifier and product identifier.")
                     .produces("application/json")
                     .type(String.class)
                     .to("direct:stock-query-service-store-product");
 
         rest()
-                .delete("/stock")
+                .delete("/api/stock")
                     .description("Removes the global stock.")
                     .to("direct:stock-query-service-delete");
 
         from("direct:stock-query-service-store")
                 .setHeader(Exchange.HTTP_METHOD,constant(org.apache.camel.component.http4.HttpMethods.GET))
-                .toD("http4://" + config.getSalesStockQueryUriHost() +  ":" +  config.getSalesStockQueryUriPort()  + "?/api/bridgeEndpoint=true");
+                .toD("http4://" + config.getSalesStockQueryUriHost() +  ":" +  config.getSalesStockQueryUriPort()  + "/?bridgeEndpoint=true");
 
         from("direct:stock-query-service-store-product")
                 .setHeader(Exchange.HTTP_METHOD,constant(org.apache.camel.component.http4.HttpMethods.GET))
-                .toD("http4://" + config.getSalesStockQueryUriHost() +  ":" +  config.getSalesStockQueryUriPort()  + "?/api/bridgeEndpoint=true");
+                .toD("http4://" + config.getSalesStockQueryUriHost() +  ":" +  config.getSalesStockQueryUriPort()  + "?bridgeEndpoint=true");
 
         from("direct:stock-query-service-delete")
                 .setHeader(Exchange.HTTP_METHOD,constant(org.apache.camel.component.http4.HttpMethods.DELETE))
-                .to("http4://" + config.getSalesStockQueryUriHost() +  ":" +  config.getSalesStockQueryUriPort()  + "/api/stock?bridgeEndpoint=true");
+                .to("http4://" + config.getSalesStockQueryUriHost() +  ":" +  config.getSalesStockQueryUriPort()  + "?bridgeEndpoint=true");
 
     }
 
