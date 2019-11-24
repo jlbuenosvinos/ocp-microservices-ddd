@@ -8,9 +8,11 @@ spec:
   gateways:
   - sales-demo-app-gateway
   http:
-  - route:
+  - match:
+    - uri:
+        prefix: /api/stock
+    route:
     - destination:
-        host: "sales-demo-app-dev-sales-demo-app-dev.svc.cluster.local"
-        subset: stock-query-service-v11
-      weight: 100
-      
+        host: stock-query-service
+        port:
+          number: 8080
