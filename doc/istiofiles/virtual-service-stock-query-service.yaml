@@ -10,7 +10,7 @@ spec:
   http:
   - route:
     - destination:
-        host: "*"
-        subset: stock-query-service-v1
+        host: "sales-demo-app-dev-sales-demo-app-dev.svc.cluster.local"
+        subset: stock-query-service-v11
       weight: 100
       
