@@ -4,11 +4,12 @@ metadata:
   name: ${project.artifactId}
   labels:
     app: ${project.artifactId}
-    expose: "true"
-    group: ${project.groupId}
-    project: ${project.artifactId}-${project.version}
+    service: ${project.artifactId}
+    # expose: "true"
+    #group: ${project.groupId}
+    # project: ${project.artifactId}-${project.version}
     version: ${project.version}
-    provider: fabric8
+    # provider: fabric8
 spec:
   ports:
     - name: web
