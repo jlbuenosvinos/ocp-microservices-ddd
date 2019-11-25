@@ -6,8 +6,6 @@ metadata:
     app: ${project.artifactId}
     service: ${project.artifactId}
     # expose: "true"
-    #group: ${project.groupId}
-    # project: ${project.artifactId}-${project.version}
     version: ${project.version}
     # provider: fabric8
 spec:
