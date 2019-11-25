@@ -5,9 +5,7 @@ metadata:
   labels:
     app: ${project.artifactId}
     service: ${project.artifactId}
-    # expose: "true"
     version: ${project.version}
-    # provider: fabric8
 spec:
   ports:
     - name: web

@@ -5,7 +5,6 @@ metadata:
   labels:
     app: ${project.artifactId}
     service: ${project.artifactId}
-    # expose: "true"
     version: v0
 spec:
   ports:
