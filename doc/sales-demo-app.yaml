@@ -458,6 +458,7 @@ objects:
           try {
             def appName=""
             def projectName=""
+            def appVersion=${STOCK_QUERY_SERVICE_VERSION}
             node {
               stage("INIT") {
               }
@@ -475,7 +476,14 @@ objects:
                         openshift.withProject('${APP_NAME_DEV}') {
 
                           def stockQueryServicePods=""
-                          def stockQueryService = openshift.selector('dc','stock-query-service-${STOCK_QUERY_SERVICE_VERSION}').exists()
+                          
+                          if (appVersion!="") {
+                            def stockQueryService = openshift.selector('dc','stock-query-service-${STOCK_QUERY_SERVICE_VERSION}').exists()
+                          }
+                          else {
+                            def stockQueryService = openshift.selector('dc','stock-query-service).exists()
+                          }
+
                           def stockQuerySecret = openshift.selector('secret','stock-query-service-secret').exists()
 
                           echo "stockQueryService [${stockQueryService}]"
@@ -491,10 +499,23 @@ objects:
                           }
 
                           dir("stock-query-service") {
-                              sh "mvn fabric8:deploy -P openshift -Dfabric8.namespace=${APP_NAME_DEV} -Dopenshift.namespace=${APP_NAME_DEV} -Dproject.version=${STOCK_QUERY_SERVICE_VERSION}"
+
+                              if (appVersion!="") {
+                                sh "mvn fabric8:deploy -P openshift -Dfabric8.namespace=${APP_NAME_DEV} -Dfabric8.resourceDir=src/main/fabric8/versioned -Dopenshift.namespace=${APP_NAME_DEV} -Dproject.version=${STOCK_QUERY_SERVICE_VERSION}"  
+                              }
+                              else {
+                                sh "mvn fabric8:deploy -P openshift -Dfabric8.namespace=${APP_NAME_DEV} -Dfabric8.resourceDir=src/main/fabric8/default -Dopenshift.namespace=${APP_NAME_DEV}
+                              }
+
                           }
 
-                          def stockQueryDeploymentConfig = openshift.selector('dc','stock-query-service-${STOCK_QUERY_SERVICE_VERSION}')
+                          if (appVersion!="") {
+                            def stockQueryDeploymentConfig = openshift.selector('dc','stock-query-service-${STOCK_QUERY_SERVICE_VERSION}')
+                          }
+                          else {
+                            def stockQueryDeploymentConfig = openshift.selector('dc','stock-query-service')
+                          }
+                          
                           stockQueryDeploymentConfig.rollout().status()
 
                         }

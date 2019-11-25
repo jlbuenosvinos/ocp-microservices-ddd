@@ -1,0 +1,88 @@
+metadata:
+  name: ${project.artifactId}
+  labels:
+    # group: ${project.groupId}
+    # project: ${project.artifactId}-${project.version}
+    version: ${project.version}
+    #provider: fabric8
+    app: ${project.artifactId}
+spec:
+  replicas: 2
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "true"
+    spec:
+      containers:
+      -
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /api/health
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /api/health
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 35
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        env:
+          - name: "STOCK_DATAGRID_BROKER_URI"
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}
+                key: STOCK_DATAGRID_BROKER_URI
+          - name: "STOCK_DATAGRID_BROKER_URI_PORT"
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}
+                key: STOCK_DATAGRID_BROKER_URI_PORT
+          - name: "STOCK_DATAGRID_BROKER_USERNAME"
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}
+                key: STOCK_DATAGRID_BROKER_USERNAME
+          - name: "STOCK_DATAGRID_BROKER_PASSWORD"
+            valueFrom:
+              secretKeyRef:
+                name: stock-query-service-secret
+                key: STOCK_DATAGRID_BROKER_PASSWORD
+          - name: "STOCK_SERVICE_VERSION"
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}
+                key: STOCK_SERVICE_VERSION
+          - name: "STOCK_METRICS_ENABLED"
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}
+                key: STOCK_METRICS_ENABLED
+          - name: "STOCK_METRICS_WEB_EXPOSURE_INCLUDE"
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}
+                key: STOCK_METRICS_WEB_EXPOSURE_INCLUDE
+          - name: "STOCK_METRICS_PROMETHEUS_ENABLED"
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}
+                key: STOCK_METRICS_PROMETHEUS_ENABLED
+          - name: "STOCK_METRICS_PROMETHEUS_EXPORT_ENABLED"
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}
+                key: STOCK_METRICS_PROMETHEUS_EXPORT_ENABLED
+          - name: "STOCK_METRICS_ARTIFACTID_NAME"
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}
+                key: STOCK_METRICS_ARTIFACTID_NAME
