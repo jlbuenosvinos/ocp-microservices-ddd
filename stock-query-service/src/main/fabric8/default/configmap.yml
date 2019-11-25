@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ${project.artifactId}
+  version: ${project.version}
+data:
+  STOCK_DATAGRID_BROKER_URI: "sales-data-store-hotrod"
+  STOCK_DATAGRID_BROKER_URI_PORT: "11333"
+  STOCK_DATAGRID_BROKER_USERNAME: "sales-data-store"
+  STOCK_SERVICE_VERSION: "${project.version}"
+  STOCK_METRICS_ENABLED: TRUE
+  STOCK_METRICS_WEB_EXPOSURE_INCLUDE: "*"
+  STOCK_METRICS_PROMETHEUS_ENABLED: TRUE
+  STOCK_METRICS_PROMETHEUS_EXPORT_ENABLED: TRUE
+  STOCK_METRICS_ARTIFACTID_NAME: "${project.artifactId}"
