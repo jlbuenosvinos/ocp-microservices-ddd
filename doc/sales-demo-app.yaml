@@ -486,12 +486,28 @@ objects:
                               echo "Secret already exists."
                           }
 
-                          dir("stock-query-service") {
+                          if (env.STOCK_QUERY_SERVICE_VERSION!="v0") {
+                            def stockQueryServiceConfigMap = openshift.selector('cm','stock-query-service-${STOCK_QUERY_SERVICE_VERSION}')
+                            if (!stockQueryServiceConfigMap) {
+                              openshift.raw('create','configmap stock-query-service-${STOCK_QUERY_SERVICE_VERSION} --from-literal=STOCK_DATAGRID_BROKER_URI=sales-data-store-hotrod --from-literal=STOCK_DATAGRID_BROKER_URI_PORT=11333 --from-literal=STOCK_DATAGRID_BROKER_USERNAME=sales-data-store --from-literal=STOCK_SERVICE_VERSION=v1 --from-literal=STOCK_METRICS_ENABLED=TRUE --from-literal=STOCK_METRICS_WEB_EXPOSURE_INCLUDE=* --from-literal=STOCK_METRICS_PROMETHEUS_ENABLED=TRUE --from-literal=STOCK_METRICS_PROMETHEUS_EXPORT_ENABLED=TRUE --from-literal=STOCK_METRICS_ARTIFACTID_NAME=stock-query-service')
+                            }
+                            dir("stock-query-service") {
                               sh "mvn fabric8:deploy -P openshift -Dfabric8.namespace=${APP_NAME_DEV} -Dfabric8.resourceDir=./src/main/fabric8/versioned -Dopenshift.namespace=${APP_NAME_DEV} -Dproject.version=${STOCK_QUERY_SERVICE_VERSION}"
+                            }
+                            def stockQueryServiceDeploymentConfig = openshift.selector('dc','stock-query-service-${STOCK_QUERY_SERVICE_VERSION}')
+                            stockQueryServiceDeploymentConfig.rollout().status()
                           }
-
-                          def stockQueryServiceDeploymentConfig = openshift.selector('dc','stock-query-service-${STOCK_QUERY_SERVICE_VERSION}')
-                          stockQueryServiceDeploymentConfig.rollout().status()
+                          else {
+                            def stockQueryServiceConfigMap = openshift.selector('cm','stock-query-service')
+                            if (!stockQueryServiceConfigMap) {
+                              openshift.raw('create','configmap stock-query-service --from-literal=STOCK_DATAGRID_BROKER_URI=sales-data-store-hotrod --from-literal=STOCK_DATAGRID_BROKER_URI_PORT=11333 --from-literal=STOCK_DATAGRID_BROKER_USERNAME=sales-data-store --from-literal=STOCK_SERVICE_VERSION=v1 --from-literal=STOCK_METRICS_ENABLED=TRUE --from-literal=STOCK_METRICS_WEB_EXPOSURE_INCLUDE=* --from-literal=STOCK_METRICS_PROMETHEUS_ENABLED=TRUE --from-literal=STOCK_METRICS_PROMETHEUS_EXPORT_ENABLED=TRUE --from-literal=STOCK_METRICS_ARTIFACTID_NAME=stock-query-service')
+                            }
+                            dir("stock-query-service") {
+                              sh "mvn fabric8:deploy -P openshift -Dfabric8.namespace=${APP_NAME_DEV} -Dfabric8.resourceDir=./src/main/fabric8/default -Dopenshift.namespace=${APP_NAME_DEV} -Dproject.version=v0"
+                            }
+                            def stockQueryServiceDeploymentConfig = openshift.selector('dc','stock-query-service')
+                            stockQueryServiceDeploymentConfig.rollout().status()
+                          }
 
                         }
                     }
