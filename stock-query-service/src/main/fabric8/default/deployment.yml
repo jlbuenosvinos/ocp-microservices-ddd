@@ -2,7 +2,6 @@ metadata:
   name: ${project.artifactId}
   labels:
     version: v0
-    #provider: fabric8
     app: ${project.artifactId}
 spec:
   replicas: 2
