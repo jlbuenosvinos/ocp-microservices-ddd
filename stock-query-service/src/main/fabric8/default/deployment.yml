@@ -1,9 +1,7 @@
 metadata:
   name: ${project.artifactId}
   labels:
-    # group: ${project.groupId}
-    # project: ${project.artifactId}-${project.version}
-    version: ${project.version}
+    version: v0
     #provider: fabric8
     app: ${project.artifactId}
 spec:
@@ -39,17 +37,17 @@ spec:
           - name: "STOCK_DATAGRID_BROKER_URI"
             valueFrom:
               configMapKeyRef:
-                name: ${project.artifactId}
+                name: ${project.artifactId}-v0
                 key: STOCK_DATAGRID_BROKER_URI
           - name: "STOCK_DATAGRID_BROKER_URI_PORT"
             valueFrom:
               configMapKeyRef:
-                name: ${project.artifactId}
+                name: ${project.artifactId}-v0
                 key: STOCK_DATAGRID_BROKER_URI_PORT
           - name: "STOCK_DATAGRID_BROKER_USERNAME"
             valueFrom:
               configMapKeyRef:
-                name: ${project.artifactId}
+                name: ${project.artifactId}-v0
                 key: STOCK_DATAGRID_BROKER_USERNAME
           - name: "STOCK_DATAGRID_BROKER_PASSWORD"
             valueFrom:
@@ -59,30 +57,30 @@ spec:
           - name: "STOCK_SERVICE_VERSION"
             valueFrom:
               configMapKeyRef:
-                name: ${project.artifactId}
+                name: ${project.artifactId}-v0
                 key: STOCK_SERVICE_VERSION
           - name: "STOCK_METRICS_ENABLED"
             valueFrom:
               configMapKeyRef:
-                name: ${project.artifactId}
+                name: ${project.artifactId}-v0
                 key: STOCK_METRICS_ENABLED
           - name: "STOCK_METRICS_WEB_EXPOSURE_INCLUDE"
             valueFrom:
               configMapKeyRef:
-                name: ${project.artifactId}
+                name: ${project.artifactId}-v0
                 key: STOCK_METRICS_WEB_EXPOSURE_INCLUDE
           - name: "STOCK_METRICS_PROMETHEUS_ENABLED"
             valueFrom:
               configMapKeyRef:
-                name: ${project.artifactId}
+                name: ${project.artifactId}-v0
                 key: STOCK_METRICS_PROMETHEUS_ENABLED
           - name: "STOCK_METRICS_PROMETHEUS_EXPORT_ENABLED"
             valueFrom:
               configMapKeyRef:
-                name: ${project.artifactId}
+                name: ${project.artifactId}-v0
                 key: STOCK_METRICS_PROMETHEUS_EXPORT_ENABLED
           - name: "STOCK_METRICS_ARTIFACTID_NAME"
             valueFrom:
               configMapKeyRef:
-                name: ${project.artifactId}
+                name: ${project.artifactId}-v0
                 key: STOCK_METRICS_ARTIFACTID_NAME

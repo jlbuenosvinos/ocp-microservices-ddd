@@ -487,7 +487,7 @@ objects:
                           }
 
                           dir("stock-query-service") {
-                              sh "mvn fabric8:deploy -P openshift -Dfabric8.namespace=${APP_NAME_DEV} -Dfabric8.resourceDir=/src/main/fabric8/versioned -Dopenshift.namespace=${APP_NAME_DEV} -Dproject.version=${STOCK_QUERY_SERVICE_VERSION}"
+                              sh "mvn fabric8:deploy -P openshift -Dfabric8.namespace=${APP_NAME_DEV} -Dfabric8.resourceDir=./src/main/fabric8/versioned -Dopenshift.namespace=${APP_NAME_DEV} -Dproject.version=${STOCK_QUERY_SERVICE_VERSION}"
                           }
 
                           def stockQueryServiceDeploymentConfig = openshift.selector('dc','stock-query-service-${STOCK_QUERY_SERVICE_VERSION}')

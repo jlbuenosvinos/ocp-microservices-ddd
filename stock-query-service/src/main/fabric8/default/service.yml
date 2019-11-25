@@ -8,7 +8,7 @@ metadata:
     # expose: "true"
     #group: ${project.groupId}
     # project: ${project.artifactId}-${project.version}
-    version: ${project.version}
+    version: v0
     # provider: fabric8
 spec:
   ports:
