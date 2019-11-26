@@ -1,10 +1,8 @@
 metadata:
-  name: ${project.artifactId}-${project.version}
+  name: ${project.artifactId}
   labels:
-    group: ${project.groupId}
-    project: ${project.artifactId}-${project.version}
-    version: ${project.version}
-    provider: fabric8
+    app: ${project.artifactId}
+    version: v0
 spec:
   replicas: 2
   template:
@@ -38,47 +36,47 @@ spec:
             - name: "TICKETING_TICKETS_SERVICE_SALE_VITAMINE_ON"
               valueFrom:
                 configMapKeyRef:
-                  name: ${project.artifactId}-${project.version}
+                  name: ${project.artifactId}
                   key: TICKETING_TICKETS_SERVICE_SALE_VITAMINE_ON
             - name: "TICKETING_TICKETS_SERVICE_MESH_ON"
               valueFrom:
                 configMapKeyRef:
-                  name: ${project.artifactId}-${project.version}
+                  name: ${project.artifactId}
                   key: TICKETING_TICKETS_SERVICE_MESH_ON
             - name: "TICKETING_STOCK_PROCESSOR_SERVICE_URI"
               valueFrom:
                 configMapKeyRef:
-                  name: ${project.artifactId}-${project.version}
+                  name: ${project.artifactId}
                   key: TICKETING_STOCK_PROCESSOR_SERVICE_URI
             - name: "TICKETING_EVENT_VERSION"
               valueFrom:
                 configMapKeyRef:
-                  name: ${project.artifactId}-${project.version}
+                  name: ${project.artifactId}
                   key: TICKETING_EVENT_VERSION
             - name: "TICKETING_SERVICE_VERSION"
               valueFrom:
                 configMapKeyRef:
-                  name: ${project.artifactId}-${project.version}
+                  name: ${project.artifactId}
                   key: TICKETING_SERVICE_VERSION
             - name: "TICKETING_TICKETS_DESTINATION_NAME"
               valueFrom:
                 configMapKeyRef:
-                  name: ${project.artifactId}-${project.version}
+                  name: ${project.artifactId}
                   key: TICKETING_TICKETS_DESTINATION_NAME
             - name: "TICKETING_TICKETS_BROKER_URI"
               valueFrom:
                 configMapKeyRef:
-                  name: ${project.artifactId}-${project.version}
+                  name: ${project.artifactId}
                   key: TICKETING_TICKETS_BROKER_URI
             - name: "TICKETING_TICKETS_BROKER_USERNAME"
               valueFrom:
                 configMapKeyRef:
-                  name: ${project.artifactId}-${project.version}
+                  name: ${project.artifactId}
                   key: TICKETING_TICKETS_BROKER_USERNAME
             - name: "TICKETING_TICKETS_STORE_AMQ_ENABLED"
               valueFrom:
                 configMapKeyRef:
-                  name: ${project.artifactId}-${project.version}
+                  name: ${project.artifactId}
                   key: TICKETING_TICKETS_STORE_AMQ_ENABLED
             - name: "TICKETING_TICKETS_BROKER_PASSWORD"
               valueFrom:
@@ -88,25 +86,25 @@ spec:
             - name: "TICKETING_METRICS_ENABLED"
               valueFrom:
                 configMapKeyRef:
-                  name: ${project.artifactId}-${project.version}
+                  name: ${project.artifactId}
                   key: TICKETING_METRICS_ENABLED
             - name: "TICKETING_METRICS_WEB_EXPOSURE_INCLUDE"
               valueFrom:
                 configMapKeyRef:
-                  name: ${project.artifactId}-${project.version}
+                  name: ${project.artifactId}
                   key: TICKETING_METRICS_WEB_EXPOSURE_INCLUDE
             - name: "TICKETING_METRICS_PROMETHEUS_ENABLED"
               valueFrom:
                 configMapKeyRef:
-                  name: ${project.artifactId}-${project.version}
+                  name: ${project.artifactId}
                   key: TICKETING_METRICS_PROMETHEUS_ENABLED
             - name: "TICKETING_METRICS_PROMETHEUS_EXPORT_ENABLED"
               valueFrom:
                 configMapKeyRef:
-                  name: ${project.artifactId}-${project.version}
+                  name: ${project.artifactId}
                   key: TICKETING_METRICS_PROMETHEUS_EXPORT_ENABLED
             - name: "TICKETING_METRICS_ARTIFACTID_NAME"
               valueFrom:
                 configMapKeyRef:
-                  name: ${project.artifactId}-${project.version}
+                  name: ${project.artifactId}
                   key: TICKETING_METRICS_ARTIFACTID_NAME

@@ -3,15 +3,14 @@ kind: Service
 metadata:
   name: ${project.artifactId}-${project.version}
   labels:
-    expose: "true"
-    group: ${project.groupId}
-    project: ${project.artifactId}-${project.version}
+    app: ${project.artifactId}
+    service: ${project.artifactId}
     version: ${project.version}
-    provider: fabric8
 spec:
   ports:
     - name: web
       port: 8080
       protocol: TCP
       targetPort: 8080
-type: ClusterIP
+  selector:
+    app: ${project.artifactId}
