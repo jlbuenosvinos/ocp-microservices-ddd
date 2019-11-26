@@ -276,12 +276,42 @@ objects:
                               echo "Secret already exists."
                           }
 
-                          dir("ticket-processor-service") {
-                              sh "mvn fabric8:deploy -P openshift -Dfabric8.namespace=${APP_NAME_DEV} -Dopenshift.namespace=${APP_NAME_DEV} -Dproject.version=${TICKETING_SERVICE_VERSION}"
-                          }
+                          if (env.TICKETING_SERVICE_VERSION!="v0") {
 
-                          def ticketServiceDeploymentConfig = openshift.selector('dc','ticket-processor-service-${TICKETING_SERVICE_VERSION}')
-                          ticketServiceDeploymentConfig.rollout().status()
+                            def ticketProcessorConfigMap = openshift.selector('cm','ticket-processor-service-${TICKETING_SERVICE_VERSION}')
+                            if (!ticketProcessorConfigMap) {
+                              openshift.raw('create','configmap ticket-processor-service-${TICKETING_SERVICE_VERSION} --from-literal=TICKETING_TICKETS_SERVICE_SALE_VITAMINE_ON=FALSE --from-literal=TICKETING_TICKETS_SERVICE_MESH_ON=FALSE --from-literal=TICKETING_STOCK_PROCESSOR_SERVICE_URI=http://stock-processor-service-${project.version}:8080/api/ticket --from-literal=TICKETING_EVENT_VERSION=1.0 --from-literal=TICKETING_SERVICE_VERSION=${TICKETING_SERVICE_VERSION} --from-literal=TICKETING_TICKETS_DESTINATION_NAME=sales.ticketing.tickets.destination --from-literal=TICKETING_TICKETS_BROKER_URI=tcp://sales-event-store-amq-tcp:61616?jms.redeliveryPolicy.maximumRedeliveries=10 --from-literal=TICKETING_TICKETS_BROKER_USERNAME=sales-event-store --from-literal=TICKETING_TICKETS_STORE_AMQ_ENABLED=TRUE --from-literal=TICKETING_METRICS_ENABLED=TRUE --from-literal=TICKETING_METRICS_WEB_EXPOSURE_INCLUDE=* --from-literal=TICKETING_METRICS_PROMETHEUS_ENABLED=TRUE --from-literal=TICKETING_METRICS_PROMETHEUS_EXPORT_ENABLED=TRUE --from-literal=TICKETING_METRICS_ARTIFACTID_NAME=ticket-processor-service')
+                            }
+                            else {
+                              echo "ConfigMap already exists."   
+                            }
+
+                            dir("ticket-processor-service") {
+                                sh "mvn fabric8:deploy -P openshift -Dfabric8.namespace=${APP_NAME_DEV} -Dfabric8.resourceDir=./src/main/fabric8/versioned -Dopenshift.namespace=${APP_NAME_DEV} -Dproject.version=${TICKETING_SERVICE_VERSION}"
+                            }
+
+                            def ticketServiceDeploymentConfig = openshift.selector('dc','ticket-processor-service-${TICKETING_SERVICE_VERSION}')
+                            ticketServiceDeploymentConfig.rollout().status()
+
+                          }
+                          else {
+
+                            def ticketProcessorConfigMap = openshift.selector('cm','ticket-processor-service')
+                            if (!ticketProcessorConfigMap) {
+                              openshift.raw('create','configmap ticket-processor-service --from-literal=TICKETING_TICKETS_SERVICE_SALE_VITAMINE_ON=FALSE --from-literal=TICKETING_TICKETS_SERVICE_MESH_ON=FALSE --from-literal=TICKETING_STOCK_PROCESSOR_SERVICE_URI=http://stock-processor-service-${project.version}:8080/api/ticket --from-literal=TICKETING_EVENT_VERSION=1.0 --from-literal=TICKETING_SERVICE_VERSION=v0 --from-literal=TICKETING_TICKETS_DESTINATION_NAME=sales.ticketing.tickets.destination --from-literal=TICKETING_TICKETS_BROKER_URI=tcp://sales-event-store-amq-tcp:61616?jms.redeliveryPolicy.maximumRedeliveries=10 --from-literal=TICKETING_TICKETS_BROKER_USERNAME=sales-event-store --from-literal=TICKETING_TICKETS_STORE_AMQ_ENABLED=TRUE --from-literal=TICKETING_METRICS_ENABLED=TRUE --from-literal=TICKETING_METRICS_WEB_EXPOSURE_INCLUDE=* --from-literal=TICKETING_METRICS_PROMETHEUS_ENABLED=TRUE --from-literal=TICKETING_METRICS_PROMETHEUS_EXPORT_ENABLED=TRUE --from-literal=TICKETING_METRICS_ARTIFACTID_NAME=ticket-processor-service')
+                            }
+                            else {
+                              echo "ConfigMap already exists."   
+                            }
+
+                            dir("ticket-processor-service") {
+                                sh "mvn fabric8:deploy -P openshift -Dfabric8.namespace=${APP_NAME_DEV} -Dfabric8.resourceDir=./src/main/fabric8/default -Dopenshift.namespace=${APP_NAME_DEV} -Dproject.version=v0"
+                            }
+
+                            def ticketServiceDeploymentConfig = openshift.selector('dc','ticket-processor-service')
+                            ticketServiceDeploymentConfig.rollout().status()
+
+                          }
 
                         }
                     }
@@ -489,7 +519,10 @@ objects:
                           if (env.STOCK_QUERY_SERVICE_VERSION!="v0") {
                             def stockQueryServiceConfigMap = openshift.selector('cm','stock-query-service-${STOCK_QUERY_SERVICE_VERSION}')
                             if (!stockQueryServiceConfigMap) {
-                              openshift.raw('create','configmap stock-query-service-${STOCK_QUERY_SERVICE_VERSION} --from-literal=STOCK_DATAGRID_BROKER_URI=sales-data-store-hotrod --from-literal=STOCK_DATAGRID_BROKER_URI_PORT=11333 --from-literal=STOCK_DATAGRID_BROKER_USERNAME=sales-data-store --from-literal=STOCK_SERVICE_VERSION=v1 --from-literal=STOCK_METRICS_ENABLED=TRUE --from-literal=STOCK_METRICS_WEB_EXPOSURE_INCLUDE=* --from-literal=STOCK_METRICS_PROMETHEUS_ENABLED=TRUE --from-literal=STOCK_METRICS_PROMETHEUS_EXPORT_ENABLED=TRUE --from-literal=STOCK_METRICS_ARTIFACTID_NAME=stock-query-service')
+                              openshift.raw('create','configmap stock-query-service-${STOCK_QUERY_SERVICE_VERSION} --from-literal=STOCK_DATAGRID_BROKER_URI=sales-data-store-hotrod --from-literal=STOCK_DATAGRID_BROKER_URI_PORT=11333 --from-literal=STOCK_DATAGRID_BROKER_USERNAME=sales-data-store --from-literal=STOCK_SERVICE_VERSION=${STOCK_QUERY_SERVICE_VERSION} --from-literal=STOCK_METRICS_ENABLED=TRUE --from-literal=STOCK_METRICS_WEB_EXPOSURE_INCLUDE=* --from-literal=STOCK_METRICS_PROMETHEUS_ENABLED=TRUE --from-literal=STOCK_METRICS_PROMETHEUS_EXPORT_ENABLED=TRUE --from-literal=STOCK_METRICS_ARTIFACTID_NAME=stock-query-service')
+                            }
+                            else {
+                              echo "ConfigMap already exists."   
                             }
                             dir("stock-query-service") {
                               sh "mvn fabric8:deploy -P openshift -Dfabric8.namespace=${APP_NAME_DEV} -Dfabric8.resourceDir=./src/main/fabric8/versioned -Dopenshift.namespace=${APP_NAME_DEV} -Dproject.version=${STOCK_QUERY_SERVICE_VERSION}"
@@ -500,7 +533,7 @@ objects:
                           else {
                             def stockQueryServiceConfigMap = openshift.selector('cm','stock-query-service')
                             if (!stockQueryServiceConfigMap) {
-                              openshift.raw('create','configmap stock-query-service --from-literal=STOCK_DATAGRID_BROKER_URI=sales-data-store-hotrod --from-literal=STOCK_DATAGRID_BROKER_URI_PORT=11333 --from-literal=STOCK_DATAGRID_BROKER_USERNAME=sales-data-store --from-literal=STOCK_SERVICE_VERSION=v1 --from-literal=STOCK_METRICS_ENABLED=TRUE --from-literal=STOCK_METRICS_WEB_EXPOSURE_INCLUDE=* --from-literal=STOCK_METRICS_PROMETHEUS_ENABLED=TRUE --from-literal=STOCK_METRICS_PROMETHEUS_EXPORT_ENABLED=TRUE --from-literal=STOCK_METRICS_ARTIFACTID_NAME=stock-query-service')
+                              openshift.raw('create','configmap stock-query-service --from-literal=STOCK_DATAGRID_BROKER_URI=sales-data-store-hotrod --from-literal=STOCK_DATAGRID_BROKER_URI_PORT=11333 --from-literal=STOCK_DATAGRID_BROKER_USERNAME=sales-data-store --from-literal=STOCK_SERVICE_VERSION=v0 --from-literal=STOCK_METRICS_ENABLED=TRUE --from-literal=STOCK_METRICS_WEB_EXPOSURE_INCLUDE=* --from-literal=STOCK_METRICS_PROMETHEUS_ENABLED=TRUE --from-literal=STOCK_METRICS_PROMETHEUS_EXPORT_ENABLED=TRUE --from-literal=STOCK_METRICS_ARTIFACTID_NAME=stock-query-service')
                             }
                             dir("stock-query-service") {
                               sh "mvn fabric8:deploy -P openshift -Dfabric8.namespace=${APP_NAME_DEV} -Dfabric8.resourceDir=./src/main/fabric8/default -Dopenshift.namespace=${APP_NAME_DEV} -Dproject.version=v0"
