@@ -1,10 +1,8 @@
 metadata:
-  name: ${project.artifactId}-${project.version}
+  name: ${project.artifactId}
   labels:
-    group: ${project.groupId}
-    project: ${project.artifactId}-${project.version}
-    version: ${project.version}
-    provider: fabric8
+    app: ${project.artifactId}
+    version: v0
 spec:
   replicas: 2
   template:
@@ -38,22 +36,22 @@ spec:
           - name: "TICKETING_TICKETS_DESTINATION_NAME"
             valueFrom:
               configMapKeyRef:
-                name: ${project.artifactId}-${project.version}
+                name: ${project.artifactId}
                 key: TICKETING_TICKETS_DESTINATION_NAME
           - name: "TICKETING_TICKETS_BROKER_URI"
             valueFrom:
               configMapKeyRef:
-                name: ${project.artifactId}-${project.version}
+                name: ${project.artifactId}
                 key: TICKETING_TICKETS_BROKER_URI
           - name: "TICKETING_TICKETS_BROKER_USERNAME"
             valueFrom:
               configMapKeyRef:
-                name: ${project.artifactId}-${project.version}
+                name: ${project.artifactId}
                 key: TICKETING_TICKETS_BROKER_USERNAME
           - name: "STOCK_SERVICE_VERSION"
             valueFrom:
               configMapKeyRef:
-                name: ${project.artifactId}-${project.version}
+                name: ${project.artifactId}
                 key: STOCK_SERVICE_VERSION
           - name: "TICKETING_TICKETS_BROKER_PASSWORD"
             valueFrom:
@@ -63,27 +61,27 @@ spec:
           - name: "TICKETING_STOCK_SUBSCRIBER_CLIENT_ID"
             valueFrom:
               configMapKeyRef:
-                name: ${project.artifactId}-${project.version}
+                name: ${project.artifactId}
                 key: TICKETING_STOCK_SUBSCRIBER_CLIENT_ID
           - name: "STOCK_EVENT_VERSION"
             valueFrom:
               configMapKeyRef:
-                name: ${project.artifactId}-${project.version}
+                name: ${project.artifactId}
                 key: STOCK_EVENT_VERSION
           - name: "STOCK_DATAGRID_BROKER_URI"
             valueFrom:
               configMapKeyRef:
-                name: ${project.artifactId}-${project.version}
+                name: ${project.artifactId}
                 key: STOCK_DATAGRID_BROKER_URI
           - name: "STOCK_DATAGRID_BROKER_URI_PORT"
             valueFrom:
               configMapKeyRef:
-                name: ${project.artifactId}-${project.version}
+                name: ${project.artifactId}
                 key: STOCK_DATAGRID_BROKER_URI_PORT
           - name: "STOCK_DATAGRID_BROKER_USERNAME"
             valueFrom:
               configMapKeyRef:
-                name: ${project.artifactId}-${project.version}
+                name: ${project.artifactId}
                 key: STOCK_DATAGRID_BROKER_USERNAME
           - name: "STOCK_DATAGRID_BROKER_PASSWORD"
             valueFrom:
@@ -93,25 +91,25 @@ spec:
           - name: "STOCK_METRICS_ENABLED"
             valueFrom:
               configMapKeyRef:
-                name: ${project.artifactId}-${project.version}
+                name: ${project.artifactId}
                 key: STOCK_METRICS_ENABLED
           - name: "STOCK_METRICS_WEB_EXPOSURE_INCLUDE"
             valueFrom:
               configMapKeyRef:
-                name: ${project.artifactId}-${project.version}
+                name: ${project.artifactId}
                 key: STOCK_METRICS_WEB_EXPOSURE_INCLUDE
           - name: "STOCK_METRICS_PROMETHEUS_ENABLED"
             valueFrom:
               configMapKeyRef:
-                name: ${project.artifactId}-${project.version}
+                name: ${project.artifactId}
                 key: STOCK_METRICS_PROMETHEUS_ENABLED
           - name: "STOCK_METRICS_PROMETHEUS_EXPORT_ENABLED"
             valueFrom:
               configMapKeyRef:
-                name: ${project.artifactId}-${project.version}
+                name: ${project.artifactId}
                 key: STOCK_METRICS_PROMETHEUS_EXPORT_ENABLED
           - name: "STOCK_METRICS_ARTIFACTID_NAME"
             valueFrom:
               configMapKeyRef:
-                name: ${project.artifactId}-${project.version}
+                name: ${project.artifactId}
                 key: STOCK_METRICS_ARTIFACTID_NAME

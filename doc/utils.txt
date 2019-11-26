@@ -271,15 +271,12 @@ oc policy add-role-to-user view system:serviceaccount:grafana:grafana -n openshi
 End Lab creation
 ________________
 
-
 oc delete bc sales-deploy-ticket-processor-pipeline
 oc delete bc sales-deploy-stock-processor-pipeline
 oc delete bc sales-deploy-stock-query-pipeline
 oc delete bc sales-infra-pipeline
 oc delete bc sales-init-pipeline
 oc delete bc sales-prereqs-pipeline
-
-oc start-build sales-init-pipeline -n cicd-ocpadmin
 
 https://github.com/openshift/library
 

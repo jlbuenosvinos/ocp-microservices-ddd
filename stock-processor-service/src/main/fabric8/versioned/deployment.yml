@@ -1,0 +1,115 @@
+metadata:
+  name: ${project.artifactId}-${project.version}
+  labels:
+    version: ${project.version}
+    app: ${project.artifactId}
+spec:
+  replicas: 2
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "true"
+    spec:
+      containers:
+      -
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /api/health
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /api/health
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 35
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        env:
+          - name: "TICKETING_TICKETS_DESTINATION_NAME"
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}-${project.version}
+                key: TICKETING_TICKETS_DESTINATION_NAME
+          - name: "TICKETING_TICKETS_BROKER_URI"
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}-${project.version}
+                key: TICKETING_TICKETS_BROKER_URI
+          - name: "TICKETING_TICKETS_BROKER_USERNAME"
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}-${project.version}
+                key: TICKETING_TICKETS_BROKER_USERNAME
+          - name: "STOCK_SERVICE_VERSION"
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}-${project.version}
+                key: STOCK_SERVICE_VERSION
+          - name: "TICKETING_TICKETS_BROKER_PASSWORD"
+            valueFrom:
+              secretKeyRef:
+                name: ticket-processor-service-secret
+                key: TICKETING_TICKETS_BROKER_PASSWORD
+          - name: "TICKETING_STOCK_SUBSCRIBER_CLIENT_ID"
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}-${project.version}
+                key: TICKETING_STOCK_SUBSCRIBER_CLIENT_ID
+          - name: "STOCK_EVENT_VERSION"
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}-${project.version}
+                key: STOCK_EVENT_VERSION
+          - name: "STOCK_DATAGRID_BROKER_URI"
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}-${project.version}
+                key: STOCK_DATAGRID_BROKER_URI
+          - name: "STOCK_DATAGRID_BROKER_URI_PORT"
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}-${project.version}
+                key: STOCK_DATAGRID_BROKER_URI_PORT
+          - name: "STOCK_DATAGRID_BROKER_USERNAME"
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}-${project.version}
+                key: STOCK_DATAGRID_BROKER_USERNAME
+          - name: "STOCK_DATAGRID_BROKER_PASSWORD"
+            valueFrom:
+              secretKeyRef:
+                name: stock-processor-service-secret
+                key: STOCK_DATAGRID_BROKER_PASSWORD
+          - name: "STOCK_METRICS_ENABLED"
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}-${project.version}
+                key: STOCK_METRICS_ENABLED
+          - name: "STOCK_METRICS_WEB_EXPOSURE_INCLUDE"
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}-${project.version}
+                key: STOCK_METRICS_WEB_EXPOSURE_INCLUDE
+          - name: "STOCK_METRICS_PROMETHEUS_ENABLED"
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}-${project.version}
+                key: STOCK_METRICS_PROMETHEUS_ENABLED
+          - name: "STOCK_METRICS_PROMETHEUS_EXPORT_ENABLED"
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}-${project.version}
+                key: STOCK_METRICS_PROMETHEUS_EXPORT_ENABLED
+          - name: "STOCK_METRICS_ARTIFACTID_NAME"
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}-${project.version}
+                key: STOCK_METRICS_ARTIFACTID_NAME
