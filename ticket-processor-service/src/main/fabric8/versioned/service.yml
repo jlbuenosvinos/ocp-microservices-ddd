@@ -8,7 +8,7 @@ metadata:
     version: ${project.version}
 spec:
   ports:
-    - name: web
+    - name: http
       port: 8080
       protocol: TCP
       targetPort: 8080
