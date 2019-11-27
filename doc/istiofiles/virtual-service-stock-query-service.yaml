@@ -10,9 +10,10 @@ spec:
   http:
   - match:
     - uri:
-        prefix: /api/stock
+        prefix: /api
     route:
     - destination:
         host: stock-query-service
+        subset: stock-query-service-v1
         port:
           number: 8080
