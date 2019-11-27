@@ -9,3 +9,7 @@ spec:
     labels:
       app: stock-query-service
       version: v1
+  - name: stock-query-service-v2
+    labels:
+      app: stock-query-service
+      version: v2
