@@ -5,6 +5,7 @@ metadata:
 spec:
   host: stock-query-service
   subsets:
-  - name: v1
+  - name: stock-query-service-v1
     labels:
+      app: stock-query-service
       version: v1
