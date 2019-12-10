@@ -1,0 +1,24 @@
+metadata:
+  name: ${project.artifactId}
+  labels:
+    version: ${project.artifactId}
+    app: ${project.artifactId}
+spec:
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "true"
+    spec:
+      containers:
+        - resources:
+            requests:
+              cpu: "0.2"
+              memory: 256Mi
+            limits:
+              cpu: "1.0"
+              memory: 256Mi
+          env:
+            - name: "SALES_STOCK_QUERY_SERVICE_URI_HOST"
+              value: "stock-query-service"
+            - name: "SALES_STOCK_QUERY_SERVICE_URI_PORT"
+              value: 8080

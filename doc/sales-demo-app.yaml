@@ -367,12 +367,100 @@ objects:
 
                         openshift.withProject('${APP_NAME_DEV}') {
 
-                          dir("ticket-processor-endpoint") {
-                              sh "mvn fabric8:deploy -P openshift -Dfabric8.namespace=${APP_NAME_DEV} -Dopenshift.namespace=${APP_NAME_DEV}"
+                          
+                          if (env.TICKET_PROCESSOR_ENDPOINT_VERSION!="v0") {
+                            
+                            dir("ticket-processor-endpoint") {
+                              sh "mvn fabric8:deploy -P openshift -Dfabric8.openshift.generateRoute=false -Dfabric8.namespace=${APP_NAME_DEV} -Dfabric8.resourceDir=./src/main/fabric8/versioned -Dopenshift.namespace=${APP_NAME_DEV} -Dproject.version=${TICKET_PROCESSOR_ENDPOINT_VERSION}"
+                            }
+                            def ticketProcessorEndpointDeploymentConfig = openshift.selector('dc','ticket-processor-endpoint-${TICKET_PROCESSOR_ENDPOINT_VERSION}')
+                            ticketProcessorEndpointDeploymentConfig.rollout().status()
+                          
+                          }
+                          else {
+                            
+                            dir("ticket-processor-endpoint") {
+                              sh "mvn fabric8:deploy -P openshift -Dfabric8.openshift.generateRoute=false -Dfabric8.namespace=${APP_NAME_DEV} -Dfabric8.resourceDir=./src/main/fabric8/default -Dopenshift.namespace=${APP_NAME_DEV} -Dproject.version=v0"
+                            }
+                            def ticketProcessorEndpointDeploymentConfig = openshift.selector('dc','ticket-processor-endpoint')
+                            ticketProcessorEndpointDeploymentConfig.rollout().status()
+                          
                           }
 
-                          def ticketServiceDeploymentConfig = openshift.selector('dc','ticket-processor-endpoint')
-                          ticketServiceDeploymentConfig.rollout().status()
+
+                        }
+                    }
+
+                  }
+              }
+            }
+            node {
+              stage("FINISH") {
+
+              }
+            }
+          }
+          catch (err) {
+            echo "in catch block"
+            echo "Caught: ${err}"
+            currentBuild.result = 'FAILURE'
+            throw err
+          }
+        type: JenkinsPipeline
+    triggers:
+      - generic:
+          allowEnv: true
+          secret: ${GENERIC_WEBHOOK_SECRET}
+        type: Generic
+      - github:
+          secret: "${GENERIC_WEBHOOK_SECRET}"
+        type: GitHub
+
+- apiVersion: "v1"
+  kind: "BuildConfig"
+  metadata:
+    name: "sales-deploy-stock-query-endpoint-pipeline"
+  spec:
+    strategy:
+      jenkinsPipelineStrategy:
+        jenkinsfile: |-
+          try {
+            def appName=""
+            def projectName=""
+            node {
+              stage("INIT") {
+              }
+            }
+            node("maven") {
+              stage("CHECKOUT") {
+                  git url: "${GIT_SOURCE_URL}", branch: "${GIT_SOURCE_REF}"
+              }
+              stage("DEPLOY") {
+
+                  openshift.withCluster() {
+
+                    openshift.withCredentials() {
+
+                        openshift.withProject('${APP_NAME_DEV}') {
+
+                          if (env.STOCK_QUERY_ENDPOINT_VERSION!="v0") {
+                            
+                            dir("stock-query-endpoint") {
+                              sh "mvn fabric8:deploy -P openshift -Dfabric8.openshift.generateRoute=false -Dfabric8.namespace=${APP_NAME_DEV} -Dfabric8.resourceDir=./src/main/fabric8/versioned -Dopenshift.namespace=${APP_NAME_DEV} -Dproject.version=${STOCK_QUERY_ENDPOINT_VERSION}"
+                            }
+                            def stockQueryEndPointDeploymentConfig = openshift.selector('dc','stock-query-service-${STOCK_QUERY_ENDPOINT_VERSION}')
+                            stockQueryEndPointDeploymentConfig.rollout().status()
+                          
+                          }
+                          else {
+                            
+                            dir("stock-query-endpoint") {
+                              sh "mvn fabric8:deploy -P openshift -Dfabric8.openshift.generateRoute=false -Dfabric8.namespace=${APP_NAME_DEV} -Dfabric8.resourceDir=./src/main/fabric8/default -Dopenshift.namespace=${APP_NAME_DEV} -Dproject.version=v0"
+                            }
+                            def stockQueryEndPointDeploymentConfig = openshift.selector('dc','stock-query-service')
+                            stockQueryEndPointDeploymentConfig.rollout().status()
+                          
+                          }
 
                         }
                     }
