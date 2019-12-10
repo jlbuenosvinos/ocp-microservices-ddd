@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.redhat.jbuenosv.ocpmicroservicesddd.sales</groupId>
     <artifactId>stock-query-endpoint</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>v2</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -178,6 +178,7 @@
             </activation>
 
             <repositories>
+
                 <repository>
                     <id>maven.central</id>
                     <name>Maven Central</name>
@@ -190,6 +191,7 @@
                         <updatePolicy>never</updatePolicy>
                     </releases>
                 </repository>
+
                 <repository>
                     <id>redhat.ga</id>
                     <name>Red Hat General Availability Repository</name>
@@ -202,6 +204,7 @@
                         <updatePolicy>never</updatePolicy>
                     </releases>
                 </repository>
+
                 <repository>
                     <id>redhat.ea</id>
                     <name>Red Hat Early Access Repository</name>
@@ -214,6 +217,7 @@
                         <updatePolicy>never</updatePolicy>
                     </releases>
                 </repository>
+
             </repositories>
 
             <pluginRepositories>

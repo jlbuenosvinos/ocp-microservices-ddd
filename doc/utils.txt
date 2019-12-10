@@ -1,9 +1,63 @@
 
 
+
+oc create secret docker-registry dv-pull-secret --docker-server=registry.redhat.io --docker-username=jbuenosv@redhat.com --docker-password=nxe-8bv-72A-EHp --docker-email=jbuenosv@redhat.com
+
+
+oc create -f - <<INGRESS
+apiVersion: v1
+kind: Service
+metadata:
+  name: rdbms-springboot-ingress
+spec:
+  ports:
+  - name: teiid
+    port: 31000
+  type: LoadBalancer
+  selector:
+    app: rdbms-springboot
+  sessionAffinity: ClientIP
+INGRESS
+
+
+CREATE TABLE CUSTOMER
+(
+   ID bigint,
+   SSN char(25),
+   NAME varchar(64),
+   CONSTRAINT CUSTOMER_PK PRIMARY KEY(ID)
+);
+
+CREATE TABLE ADDRESS
+(
+   ID bigint,
+   STREET char(25),
+   ZIP char(10),
+   CUSTOMER_ID bigint,
+   CONSTRAINT ADDRESS_PK PRIMARY KEY(ID),
+   CONSTRAINT CUSTOMER_FK FOREIGN KEY (CUSTOMER_ID) REFERENCES CUSTOMER (ID)
+);
+
+INSERT INTO CUSTOMER (ID,SSN,NAME) VALUES (10, 'CST01002','Joseph Smith');
+INSERT INTO CUSTOMER (ID,SSN,NAME) VALUES (11, 'CST01003','Nicholas Ferguson');
+INSERT INTO CUSTOMER (ID,SSN,NAME) VALUES (12, 'CST01004','Jane Aire');
+INSERT INTO ADDRESS (ID, STREET, ZIP, CUSTOMER_ID) VALUES (10, 'Main St', '12345', 10);
+
+
+
+
+
+-Dfabric8.mode=kubernetes
+
+http://istio-ingressgateway-istio-system.apps.cluster-jbuenosv-ccf1.jbuenosv-ccf1.example.opentlc.com/api/order
+
+
+
 export GATEWAY_URL=$(oc -n istio-system get route istio-ingressgateway -o jsonpath='{.spec.host}')
 
 istio-ingressgateway-istio-system.apps.cluster-jbuenosv-ccf1.jbuenosv-ccf1.example.opentlc.com
 
+curl -o /dev/null -s -w "%{http_code}\n" http://$GATEWAY_URL/productpage
 
 
 Edit the limits using the command: oc edit template project-request -n openshift-config
@@ -133,6 +187,8 @@ oc project devops-tools
 
 # for OCP 4
 oc new-app --template=jenkins-ephemeral -p JENKINS_IMAGE_STREAM_TAG=jenkins:latest -p MEMORY_LIMIT=1024Mi -p ENABLE_OAUTH=true
+
+oc new-app --template=jenkins-persistent -p JENKINS_IMAGE_STREAM_TAG=jenkins:latest -p MEMORY_LIMIT=1024Mi -p ENABLE_OAUTH=true
 
 # !!!!!!!! Modify the agent image jenkins-agent-maven-35-rhel7:v3.10.127 in the Jenkins configuration
 image-registry.openshift-image-registry.svc:5000/openshift/jenkins-agent-maven-35-rhel7
@@ -529,6 +585,11 @@ _____
 export MAVEN_HOME=/Applications/Tools/apache-maven-3.5.0
 export PATH=$PATH:$MAVEN_HOME/bin/
 
+
+Tekton
+______
+
+export PATH=$PATH:/Applications/RedHat/tkn_0.5.1_Darwin_x86_64
 
 Project delete
 ________________
