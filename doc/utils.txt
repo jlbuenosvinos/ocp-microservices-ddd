@@ -1,6 +1,23 @@
 
 
 
+docker push default-route-openshift-image-registry.apps.cluster-bcn-2028.bcn-2028.example.opentlc.com/openshift/installer-artifacts:<tag>
+
+
+docker push default-route-openshift-image-registry.apps.cluster-bcn-2028.bcn-2028.example.opentlc.com/openshift/jboss-datagrid72-openshift:1.2
+
+
+podman push default-route-openshift-image-registry.apps.cluster-bcn-2028.bcn-2028.example.opentlc.com/openshift/redhat-openjdk18-openshift:latest
+
+
+
+
+podman image import openjdk18-openshift.tar default-route-openshift-image-registry.apps.ocp4.ocpdev.io/openshift/redhat-openjdk18-openshift:latest
+
+podman push default-route-openshift-image-registry.apps.ocp4.ocpdev.io/openshift/redhat-openjdk18-openshift:latest --tls-verify=false
+
+
+
 oc create secret docker-registry dv-pull-secret --docker-server=registry.redhat.io --docker-username=jbuenosv@redhat.com --docker-password=nxe-8bv-72A-EHp --docker-email=jbuenosv@redhat.com
 
 
@@ -50,6 +67,9 @@ INSERT INTO ADDRESS (ID, STREET, ZIP, CUSTOMER_ID) VALUES (10, 'Main St', '12345
 -Dfabric8.mode=kubernetes
 
 http://istio-ingressgateway-istio-system.apps.cluster-jbuenosv-ccf1.jbuenosv-ccf1.example.opentlc.com/api/order
+
+
+istio-ingressgateway-istio-system.apps.cluster-bcn-2028.bcn-2028.example.opentlc.com
 
 
 
@@ -441,6 +461,9 @@ oc start-build sales-deploy-stock-processor-pipeline -e STOCK_PROCESSOR_SERVICE_
 oc project devops-tools
 oc project devops-tools
 oc start-build sales-deploy-stock-query-pipeline -e STOCK_QUERY_SERVICE_VERSION=v1
+
+oc start-build sales-deploy-stock-query-endpoint-pipeline -e STOCK_QUERY_ENDPOINT_VERSION=v1
+
 oc start-build sales-deploy-ticket-processor-pipeline -e TICKETING_SERVICE_VERSION=v1
 oc start-build sales-deploy-stock-processor-pipeline -e STOCK_PROCESSOR_SERVICE_VERSION=v1
 oc project devops-tools

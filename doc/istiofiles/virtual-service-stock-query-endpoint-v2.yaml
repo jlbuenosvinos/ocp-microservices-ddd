@@ -1,0 +1,19 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: stock-query-endpoint
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - sales-demo-app-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /endpoint/api/stock
+    route:
+    - destination:
+        host: stock-query-endpoint
+        subset: stock-query-endpoint-v2
+        port:
+          number: 8080
