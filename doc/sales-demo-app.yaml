@@ -448,7 +448,7 @@ objects:
                             dir("stock-query-endpoint") {
                               sh "mvn fabric8:deploy -P openshift -Dfabric8.openshift.generateRoute=false -Dfabric8.namespace=${APP_NAME_DEV} -Dfabric8.resourceDir=./src/main/fabric8/versioned -Dopenshift.namespace=${APP_NAME_DEV} -Dproject.version=${STOCK_QUERY_ENDPOINT_VERSION}"
                             }
-                            def stockQueryEndPointDeploymentConfig = openshift.selector('dc','stock-query-service-${STOCK_QUERY_ENDPOINT_VERSION}')
+                            def stockQueryEndPointDeploymentConfig = openshift.selector('dc','stock-query-endpoint-${STOCK_QUERY_ENDPOINT_VERSION}')
                             stockQueryEndPointDeploymentConfig.rollout().status()
                           
                           }
@@ -457,7 +457,7 @@ objects:
                             dir("stock-query-endpoint") {
                               sh "mvn fabric8:deploy -P openshift -Dfabric8.openshift.generateRoute=false -Dfabric8.namespace=${APP_NAME_DEV} -Dfabric8.resourceDir=./src/main/fabric8/default -Dopenshift.namespace=${APP_NAME_DEV} -Dproject.version=v0"
                             }
-                            def stockQueryEndPointDeploymentConfig = openshift.selector('dc','stock-query-service')
+                            def stockQueryEndPointDeploymentConfig = openshift.selector('dc','stock-query-endpoint')
                             stockQueryEndPointDeploymentConfig.rollout().status()
                           
                           }
@@ -848,7 +848,7 @@ objects:
                             if (!salesStatefulSet) {
 
                                   echo "Application [sales-event-store] has to be installed."
-                                  def rawResult = openshift.raw('new-app','--template=amq-broker-71-statefulset-clustered -p APPLICATION_NAME=sales-event-store -p AMQ_NAME=sales-event-store -p AMQ_CLUSTERED=true -p AMQ_CLUSTER_USER=sales-event-store -p AMQ_CLUSTER_PASSWORD=sales-event-store -p AMQ_REPLICATED=true -p AMQ_REPLICAS=2')
+                                  def rawResult = openshift.raw('new-app','--template=amq-broker-71-statefulset-clustered -p VOLUME_CAPACITY=${SALES_EVENT_STORE_VOLUME_CAPACITY} -p APPLICATION_NAME=sales-event-store -p AMQ_NAME=sales-event-store -p AMQ_CLUSTERED=true -p AMQ_CLUSTER_USER=sales-event-store -p AMQ_CLUSTER_PASSWORD=sales-event-store -p AMQ_REPLICATED=true -p AMQ_REPLICAS=2')
                                   echo "Application [sales-event-store] pods has been prepared."
 
                                   timeout(30) {

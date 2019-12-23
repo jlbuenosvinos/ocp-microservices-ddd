@@ -1,15 +1,16 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
-  name: stock-query-endpoint
+  name: stock-query-service
 spec:
-  host: stock-query-endpoint
+  host: stock-query-service
   subsets:
-  - name: stock-query-endpoint-v1
+  - name: stock-query-service-v1
     labels:
-      app: stock-query-endpoint
+      app: stock-query-service
       version: v1
-  - name: stock-query-endpoint-v2
+  - name: stock-query-service-v2
     labels:
-      app: stock-query-endpoint
+      app: stock-query-service
       version: v2
+      

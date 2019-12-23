@@ -5,6 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.redhat.jbuenosv.ocpmicroservicesddd.sales</groupId>
     <artifactId>stock-query-endpoint</artifactId>
+
     <version>${STOCK_QUERY_ENDPOINT_VERSION}</version>
 
     <properties>
@@ -152,9 +153,15 @@
             </plugin>
 
             <plugin>
+                <groupId>org.jboss.redhat-fuse</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${bom.version}</version>
+            </plugin>
+
+            <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${spring-boot.version}</version>
+                <version>${bom.version}</version>
                 <executions>
                     <execution>
                         <goals>
@@ -265,9 +272,15 @@
             <build>
                 <plugins>
                     <plugin>
+                        <!--
                         <groupId>io.fabric8</groupId>
+                        -->
+                        <groupId>org.jboss.redhat-fuse</groupId>
                         <artifactId>fabric8-maven-plugin</artifactId>
+                        <!--
                         <version>${fabric8.maven.plugin.version}</version>
+                        -->
+                        <version>${bom.version}</version>
                         <executions>
                             <execution>
                                 <goals>

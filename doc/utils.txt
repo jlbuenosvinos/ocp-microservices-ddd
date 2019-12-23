@@ -17,6 +17,12 @@ podman image import openjdk18-openshift.tar default-route-openshift-image-regist
 podman push default-route-openshift-image-registry.apps.ocp4.ocpdev.io/openshift/redhat-openjdk18-openshift:latest --tls-verify=false
 
 
+podman image import datagrid72-openshift.tar default-route-openshift-image-registry.apps.ocp4.ocpdev.io/openshift/jboss-datagrid72-openshift:latest
+
+podman push default-route-openshift-image-registry.apps.ocp4.ocpdev.io/openshift/jboss-datagrid72-openshift:latest --tls-verify=false
+
+
+
 
 oc create secret docker-registry dv-pull-secret --docker-server=registry.redhat.io --docker-username=jbuenosv@redhat.com --docker-password=nxe-8bv-72A-EHp --docker-email=jbuenosv@redhat.com
 
@@ -435,44 +441,33 @@ oc login https://masterdns6fkvd2aq5m6cg.westeurope.cloudapp.azure.com:443 --toke
 
 Templates execution
 
-oc start-build sales-prereqs-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=RCf0OMDEJkNyx90RoErAdWqX3gOFz87a18WmXSagEVU --wait
-oc start-build sales-init-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=RCf0OMDEJkNyx90RoErAdWqX3gOFz87a18WmXSagEVU --wait
-oc start-build sales-infra-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=RCf0OMDEJkNyx90RoErAdWqX3gOFz87a18WmXSagEVU --wait
-oc start-build sales-deploy-ticket-processor-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=RW0cqv6L3VmIy1y5ojhlz0Aft_gGLcepevoYCcti_W54 --wait
-oc start-build sales-deploy-stock-query-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=W0cqv6L3VmIy1y5ojhlz0Aft_gGLcepevoYCcti_W54 --wait
-oc start-build sales-deploy-stock-processor-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=W0cqv6L3VmIy1y5ojhlz0Aft_gGLcepevoYCcti_W54 --wait
-
-
-oc start-build sales-prereqs-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=vt8_ZHhj1RrMOGJTXevgjvQQCwvOCqRiD6VfKgVYVpM
-oc start-build sales-init-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=vt8_ZHhj1RrMOGJTXevgjvQQCwvOCqRiD6VfKgVYVpM
-oc start-build sales-infra-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=vt8_ZHhj1RrMOGJTXevgjvQQCwvOCqRiD6VfKgVYVpM
-oc start-build sales-deploy-ticket-processor-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=vt8_ZHhj1RrMOGJTXevgjvQQCwvOCqRiD6VfKgVYVpM
-oc start-build sales-deploy-stock-query-pipeline -n cicd-ocpadmin --env=STOCKEC_TOKEN=vt8_ZHhj1RrMOGJTXevgjvQQCwvOCqRiD6VfKgVYVpM
-oc start-build sales-deploy-stock-processor-pipeline -n cicd-ocpadmin --env=SEC_TOKEN=vt8_ZHhj1RrMOGJTXevgjvQQCwvOCqRiD6VfKgVYVpM
-
-
-
-oc start-build sales-deploy-stock-query-pipeline -e STOCK_QUERY_SERVICE_VERSION=v1
-oc start-build sales-deploy-stock-query-pipeline -e STOCK_QUERY_SERVICE_VERSION=v1
-oc project devops-tools
-oc start-build sales-deploy-stock-query-pipeline -e STOCK_QUERY_SERVICE_VERSION=v1
-oc start-build sales-deploy-ticket-processor-pipeline -e TICKETING_SERVICE_VERSION=v1
-oc start-build sales-deploy-stock-processor-pipeline -e STOCK_PROCESSOR_SERVICE_VERSION=v1
-oc project devops-tools
-oc project devops-tools
-oc start-build sales-deploy-stock-query-pipeline -e STOCK_QUERY_SERVICE_VERSION=v1
+oc start-build sales-infra-pipeline -e SALES_EVENT_STORE_VOLUME_CAPACIT=20Gi
 
 oc start-build sales-deploy-stock-query-endpoint-pipeline -e STOCK_QUERY_ENDPOINT_VERSION=v1
+oc start-build sales-deploy-stock-query-endpoint-pipeline -e STOCK_QUERY_ENDPOINT_VERSION=v2
+
+oc start-build sales-deploy-stock-query-pipeline -e STOCK_QUERY_SERVICE_VERSION=v1
+oc start-build sales-deploy-stock-query-pipeline -e STOCK_QUERY_SERVICE_VERSION=v2
 
 oc start-build sales-deploy-ticket-processor-pipeline -e TICKETING_SERVICE_VERSION=v1
+oc start-build sales-deploy-ticket-processor-pipeline -e TICKETING_SERVICE_VERSION=v2
+
+oc start-build sales-deploy-stock-processor-pipeline -e STOCK_PROCESSOR_SERVICE_VERSION=v0
+oc start-build sales-deploy-stock-processor-pipeline -e STOCK_PROCESSOR_SERVICE_VERSION=v2
 oc start-build sales-deploy-stock-processor-pipeline -e STOCK_PROCESSOR_SERVICE_VERSION=v1
-oc project devops-tools
-oc start-build sales-deploy-ticket-processor-pipeline -e TICKETING_SERVICE_VERSION=v2
-oc start-build sales-deploy-ticket-processor-pipeline -e TICKETING_SERVICE_VERSION=v2
+
+
+
+
+
+
+
+
+
 
   
 
-oc login https://192.168.99.100:8443 --token=vt8_ZHhj1RrMOGJTXevgjvQQCwvOCqRiD6VfKgVYVpM
+
 
 
 Login
