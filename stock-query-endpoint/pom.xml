@@ -17,9 +17,22 @@
         <fabric8.version>3.0.11.fuse-000065-redhat-3</fabric8.version>
         <fabric8.maven.plugin.version>4.1.0</fabric8.maven.plugin.version>
         <bom.version>7.0.0.fuse-000027-redhat-1</bom.version>
+        <fuse.version>7.1.0.fuse-710019-redhat-00002</fuse.version>
     </properties>
 
     <dependencyManagement>
+
+        <dependencyManagement>
+            <dependencies>
+                <dependency>
+                    <groupId>org.jboss.redhat-fuse</groupId>
+                    <artifactId>fuse-springboot-bom</artifactId>
+                    <version>${bom.version}</version>
+                    <type>pom</type>
+                    <scope>import</scope>
+                </dependency>
+            </dependencies>
+        </dependencyManagement>
 
         <dependencies>
             <dependency>
@@ -30,6 +43,7 @@
                 <scope>import</scope>
             </dependency>
 
+            <!--
             <dependency>
                 <groupId>org.jboss.redhat-fuse</groupId>
                 <artifactId>fuse-eap-bom</artifactId>
@@ -37,7 +51,8 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
+            -->
+            
         </dependencies>
 
     </dependencyManagement>
