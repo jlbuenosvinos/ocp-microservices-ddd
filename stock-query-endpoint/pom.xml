@@ -22,7 +22,8 @@
 
     <dependencyManagement>
 
-            <dependencies>
+        <dependencies>
+
                 <dependency>
                     <groupId>org.jboss.redhat-fuse</groupId>
                     <artifactId>fuse-springboot-bom</artifactId>
@@ -30,9 +31,9 @@
                     <type>pom</type>
                     <scope>import</scope>
                 </dependency>
-            </dependencies>
 
-        <dependencies>
+
+
             <dependency>
                 <groupId>io.fabric8</groupId>
                 <artifactId>fabric8-project-bom-camel-spring-boot</artifactId>
@@ -50,8 +51,8 @@
                 <scope>import</scope>
             </dependency>
             -->
-
         </dependencies>
+
 
     </dependencyManagement>
 
