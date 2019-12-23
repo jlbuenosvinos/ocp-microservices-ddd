@@ -1,0 +1,21 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: ticket-processor-endpoint
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - sales-demo-app-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /endpoint/api/order
+    rewrite:
+      uri: "/api/order"
+    route:
+    - destination:
+        host: ticket-processor-endpoint
+        subset: ticket-processor-endpoint-v1
+        port:
+          number: 8080

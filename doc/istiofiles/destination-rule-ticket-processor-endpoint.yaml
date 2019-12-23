@@ -1,0 +1,15 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: ticket-processor-endpoint
+spec:
+  host: ticket-processor-endpoint
+  subsets:
+  - name: ticket-processor-endpoint-v1
+    labels:
+      app: ticket-processor-endpoint
+      version: v1
+  - name: ticket-processor-endpoint-v2
+    labels:
+      app: ticket-processor-endpoint
+      version: v2
