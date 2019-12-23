@@ -41,15 +41,6 @@
                 <scope>import</scope>
             </dependency>
 
-            <!--
-            <dependency>
-                <groupId>org.jboss.redhat-fuse</groupId>
-                <artifactId>fuse-eap-bom</artifactId>
-                <version>${bom.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            -->
         </dependencies>
 
 
@@ -168,13 +159,13 @@
             <plugin>
                 <groupId>org.jboss.redhat-fuse</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${bom.version}</version>
+                <version>${fuse.version}</version>
             </plugin>
 
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${bom.version}</version>
+                <version>${fuse.version}</version>
                 <executions>
                     <execution>
                         <goals>
@@ -285,14 +276,8 @@
             <build>
                 <plugins>
                     <plugin>
-                        <!--
-                        <groupId>io.fabric8</groupId>
-                        -->
                         <groupId>org.jboss.redhat-fuse</groupId>
                         <artifactId>fabric8-maven-plugin</artifactId>
-                        <!--
-                        <version>${fabric8.maven.plugin.version}</version>
-                        -->
                         <version>${fuse.version}</version>
                         <executions>
                             <execution>
