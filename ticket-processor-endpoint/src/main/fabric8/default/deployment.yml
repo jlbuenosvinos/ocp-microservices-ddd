@@ -1,3 +1,8 @@
+metadata:
+  name: ${project.artifactId}
+  labels:
+    version: ${project.artifactId}
+    app: ${project.artifactId}
 spec:
   template:
     metadata:
