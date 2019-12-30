@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.transaction.TransactionManager;
 
 import com.google.common.eventbus.Subscribe;
 
@@ -64,6 +65,10 @@ public class StockStore {
             logger.debug("stockKey [{}].",stockKey);
 
             try {
+
+                TransactionManager tm = cache.getTransactionManager();
+                tm.begin();
+
                 stockValue = (StockValue)cache.get(stockKey);
 
                 if (stockValue == null) {
@@ -80,6 +85,10 @@ public class StockStore {
                 }
 
                 cache.put(stockKey,newStockValue);
+                tm.commit();
+
+                logger.debug("The stock entry [{}] related transaction has been committed.",newStockValue.toString());
+
             }
             catch(Exception e) {
                 logger.error("Unable to update the stock [{}].",e.getMessage());

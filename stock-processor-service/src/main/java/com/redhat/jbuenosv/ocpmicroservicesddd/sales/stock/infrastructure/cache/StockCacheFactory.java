@@ -11,7 +11,9 @@ import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.infrastructure.util.F
 import org.infinispan.client.hotrod.RemoteCache;
 import org.infinispan.client.hotrod.RemoteCacheManager;
 import org.infinispan.client.hotrod.configuration.ConfigurationBuilder;
+import org.infinispan.client.hotrod.configuration.TransactionMode;
 import org.infinispan.client.hotrod.marshall.ProtoStreamMarshaller;
+import org.infinispan.client.hotrod.transaction.lookup.GenericTransactionManagerLookup;
 import org.infinispan.protostream.FileDescriptorSource;
 import org.infinispan.protostream.SerializationContext;
 import org.infinispan.query.remote.client.ProtobufMetadataManagerConstants;
@@ -59,6 +61,10 @@ public class StockCacheFactory implements CacheFactory {
                     .saslMechanism("DIGEST-MD5")
                     .callbackHandler(new StockSecurityCallbackHandler(config.getUserName(),config.getPassword(),"ApplicationRealm"))
                     .enable();
+
+            builder.transaction()
+                    .transactionManagerLookup(GenericTransactionManagerLookup.getInstance())
+                    .transactionMode(TransactionMode.NON_XA);
 
             logger.debug("Configuration security.");
 
