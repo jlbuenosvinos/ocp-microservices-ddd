@@ -149,31 +149,31 @@
         <dependency>
             <groupId>org.infinispan</groupId>
             <artifactId>infinispan-commons</artifactId>
-            <version>8.5.1.Final-redhat-1</version>
+            <version>9.4.15.Final-redhat-00001</version>
         </dependency>
 
         <dependency>
             <groupId>org.infinispan</groupId>
             <artifactId>infinispan-client-hotrod</artifactId>
-            <version>8.5.1.Final-redhat-1</version>
+            <version>9.4.15.Final-redhat-00001</version>
         </dependency>
 
         <dependency>
             <groupId>org.infinispan</groupId>
             <artifactId>infinispan-query-dsl</artifactId>
-            <version>8.5.1.Final-redhat-1</version>
+            <version>9.4.15.Final-redhat-00001</version>
         </dependency>
 
         <dependency>
             <groupId>org.infinispan</groupId>
             <artifactId>infinispan-remote-query-client</artifactId>
-            <version>8.5.1.Final-redhat-1</version>
+            <version>9.4.15.Final-redhat-00001</version>
         </dependency>
 
         <dependency>
             <groupId>org.infinispan</groupId>
             <artifactId>infinispan-clustered-lock</artifactId>
-            <version>8.5.1.Final-redhat-1</version>
+            <version>9.4.15.Final-redhat-00001</version>
         </dependency>
 
         <dependency>
