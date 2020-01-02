@@ -205,6 +205,8 @@ oc import-image jenkins-agent-maven-35-rhel7 --from=registry.access.redhat.com/o
 
 oc import-image fuse7/fuse-java-openshift --from=registry.redhat.io/fuse7/fuse-java-openshift --confirm
 
+oc import-image jboss-datagrid-7/datagrid73-openshift --from=registry.redhat.io/jboss-datagrid-7/datagrid73-openshift --confirm
+
 oc create -f https://raw.githubusercontent.com/jboss-container-images/jboss-datagrid-7-openshift-image/7.3-v1.2https://raw.githubusercontent.com/jboss-container-images/jboss-datagrid-7-openshift-image/7.3-v1.2/templates/datagrid73-basic.json
 
 oc create -f datagrid72-basic.json
@@ -441,7 +443,10 @@ oc login https://masterdns6fkvd2aq5m6cg.westeurope.cloudapp.azure.com:443 --toke
 
 Templates execution
 
-oc start-build sales-infra-pipeline -e SALES_EVENT_STORE_VOLUME_CAPACIT=20Gi
+oc start-build sales-infra-pipeline -e SALES_EVENT_STORE_VOLUME_CAPACITY=20Gi
+
+oc start-build sales-deploy-ticket-service-endpoint-pipeline -e TICKET_SERVICE_ENDPOINT_VERSION=v1
+
 
 oc start-build sales-deploy-stock-query-endpoint-pipeline -e STOCK_QUERY_ENDPOINT_VERSION=v1
 oc start-build sales-deploy-stock-query-endpoint-pipeline -e STOCK_QUERY_ENDPOINT_VERSION=v2
@@ -455,19 +460,6 @@ oc start-build sales-deploy-ticket-processor-pipeline -e TICKETING_SERVICE_VERSI
 oc start-build sales-deploy-stock-processor-pipeline -e STOCK_PROCESSOR_SERVICE_VERSION=v0
 oc start-build sales-deploy-stock-processor-pipeline -e STOCK_PROCESSOR_SERVICE_VERSION=v2
 oc start-build sales-deploy-stock-processor-pipeline -e STOCK_PROCESSOR_SERVICE_VERSION=v1
-
-
-
-
-
-
-
-
-
-
-  
-
-
 
 
 Login
