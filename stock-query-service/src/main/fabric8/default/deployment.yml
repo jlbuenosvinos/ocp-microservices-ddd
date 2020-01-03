@@ -13,8 +13,8 @@ spec:
       containers:
       - resources:
           limits:
-            cpu: "1"
-            memory: "2048Mi"
+            cpu: "2"
+            memory: "6Gi"
           requests:
             cpu: "500m"
             memory: "256Mi"
