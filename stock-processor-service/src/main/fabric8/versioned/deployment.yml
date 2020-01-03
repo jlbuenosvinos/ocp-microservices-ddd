@@ -11,7 +11,13 @@ spec:
         sidecar.istio.io/inject: "true"
     spec:
       containers:
-      -
+      - resources:
+          limits:
+            cpu: "1000m"
+            memory: "2048Mi"
+          requests:
+            cpu: "500m"
+            memory: "256Mi"
         livenessProbe:
           failureThreshold: 3
           httpGet:
