@@ -888,7 +888,7 @@ objects:
                           if (!salesDataStore) {
 
                               echo "Application [sales-data-store] has to be installed."
-                              def rawResult = openshift.raw('new-app','--template=datagrid72-basic -p USERNAME=sales-data-store -p PASSWORD=sales-data-store-Mypassword123_ -p APPLICATION_NAME=sales-data-store -p INFINISPAN_CONNECTORS=rest,hotrod,memcached -p CACHE_NAMES=STOCK -p HOTROD_AUTHENTICATION=true -p CONTAINER_SECURITY_ROLE_MAPPER=identity-role-mapper -p CONTAINER_SECURITY_ROLES=sales-data-store=ALL -p ADMIN_GROUP=REST,___schema_manager,sales-data-store -p MEMCACHED_CACHE=""')
+                              def rawResult = openshift.raw('new-app','--template=datagrid73-basic -p USERNAME=sales-data-store -p PASSWORD=sales-data-store-Mypassword123_ -p APPLICATION_NAME=sales-data-store -p INFINISPAN_CONNECTORS=rest,hotrod,memcached -p CACHE_NAMES=STOCK -p HOTROD_AUTHENTICATION=true -p CONTAINER_SECURITY_ROLE_MAPPER=identity-role-mapper -p CONTAINER_SECURITY_ROLES=sales-data-store=ALL -p ADMIN_GROUP=REST,___schema_manager,sales-data-store -p MEMCACHED_CACHE=""')
                               echo "Application [sales-data-store] pods has been prepared."
 
                               salesDataStore = openshift.selector('dc','sales-data-store')
