@@ -6,7 +6,7 @@ metadata:
 data:
   TICKETING_TICKETS_SERVICE_SALE_VITAMINE_ON: FALSE
   TICKETING_TICKETS_SERVICE_MESH_ON: FALSE
-  TICKETING_STOCK_PROCESSOR_SERVICE_URI: "http://stock-processor-service-${project.version}:8080/api/ticket"
+  TICKETING_STOCK_PROCESSOR_SERVICE_URI: "http://istio-ingressgateway/api/ticket"
   TICKETING_EVENT_VERSION: "1.0"
   TICKETING_SERVICE_VERSION: "${project.version}"
   TICKETING_TICKETS_DESTINATION_NAME: "sales.ticketing.tickets.destination"
