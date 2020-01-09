@@ -102,10 +102,14 @@ public class StockStore {
                 if (tm != null) {
                     try {
                         tm.rollback();
+                        logger.debug("The stock entry [{}] related transaction has been rolled back.",stockKey);
                     }
                     catch (SystemException ex) {
                         logger.error("Unable to rollback the transaction [{}]",ex.getMessage());
                     }
+                }
+                else {
+                    logger.error("The Transaction Manager is null.");
                 }
                 throw new StockApplicationException("Unable to update the stock.");
             }
