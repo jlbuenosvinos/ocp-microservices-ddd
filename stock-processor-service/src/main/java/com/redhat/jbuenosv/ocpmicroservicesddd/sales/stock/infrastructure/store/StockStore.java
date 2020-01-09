@@ -70,9 +70,8 @@ public class StockStore {
 
                 tm = cache.getTransactionManager();
 
-                logger.debug("TransactionManager status [{}].",tm.getStatus());
-
                 if (tm != null) {
+                    logger.debug("TransactionManager status [{}].",tm.getStatus());
                     tm.begin();
                     logger.debug("Transaction has been started.");
                 }

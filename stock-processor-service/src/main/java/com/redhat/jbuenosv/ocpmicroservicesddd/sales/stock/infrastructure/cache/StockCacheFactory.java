@@ -66,7 +66,7 @@ public class StockCacheFactory implements CacheFactory {
                     .transactionManagerLookup(GenericTransactionManagerLookup.getInstance())
                     .transactionMode(TransactionMode.NON_XA);
             */
-            
+
             logger.debug("Configuration security.");
 
             builder.marshaller(new ProtoStreamMarshaller());
