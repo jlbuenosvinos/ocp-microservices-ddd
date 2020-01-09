@@ -62,6 +62,7 @@ public class StockEventStore implements EventStore {
             logger.debug("stockKey [{}].",stockKey);
 
             try {
+
                 stockValue = (StockValue)cache.get(stockKey);
 
                 if (stockValue == null) {

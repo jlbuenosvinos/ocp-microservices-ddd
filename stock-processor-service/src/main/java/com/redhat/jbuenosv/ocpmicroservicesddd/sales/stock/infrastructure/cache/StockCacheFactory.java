@@ -61,12 +61,12 @@ public class StockCacheFactory implements CacheFactory {
                     .saslMechanism("DIGEST-MD5")
                     .callbackHandler(new StockSecurityCallbackHandler(config.getUserName(),config.getPassword(),"ApplicationRealm"))
                     .enable();
-
+            /*
             builder.transaction()
                     .transactionManagerLookup(GenericTransactionManagerLookup.getInstance())
-                    //.transactionMode(TransactionMode.NON_XA);
-                    .transactionMode(TransactionMode.NONE);
-
+                    .transactionMode(TransactionMode.NON_XA);
+            */
+            
             logger.debug("Configuration security.");
 
             builder.marshaller(new ProtoStreamMarshaller());
