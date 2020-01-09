@@ -72,7 +72,9 @@ public class StockStore {
 
                 logger.debug("TransactionManager status [{}].",tm.getStatus());
 
-                tm.begin();
+                if (tm != null) {
+                    tm.begin();
+                }
 
                 logger.debug("Transaction has been started.");
 
@@ -92,7 +94,10 @@ public class StockStore {
                 }
 
                 cache.put(stockKey,newStockValue);
-                tm.commit();
+
+                if (tm != null) {
+                    tm.commit();
+                }
 
                 logger.debug("The stock entry [{}] related transaction has been committed.",newStockValue.toString());
 
