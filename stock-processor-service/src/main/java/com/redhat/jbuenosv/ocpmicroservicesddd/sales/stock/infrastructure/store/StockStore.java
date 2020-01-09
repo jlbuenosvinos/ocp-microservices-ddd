@@ -74,9 +74,8 @@ public class StockStore {
 
                 if (tm != null) {
                     tm.begin();
+                    logger.debug("Transaction has been started.");
                 }
-
-                logger.debug("Transaction has been started.");
 
                 stockValue = (StockValue)cache.get(stockKey);
 
@@ -97,9 +96,8 @@ public class StockStore {
 
                 if (tm != null) {
                     tm.commit();
+                    logger.debug("The stock entry [{}] related transaction has been committed.",newStockValue.toString());
                 }
-
-                logger.debug("The stock entry [{}] related transaction has been committed.",newStockValue.toString());
 
             }
             catch(Exception e) {
