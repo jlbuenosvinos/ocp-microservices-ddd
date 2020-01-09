@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.transaction.SystemException;
 import javax.transaction.TransactionManager;
 
 import com.google.common.eventbus.Subscribe;
@@ -56,6 +57,7 @@ public class StockStore {
         StockValue newStockValue = new StockValue();
         StockEvent stockEvent = event;
         StockKey stockKey = new StockKey();
+        TransactionManager tm = null;
 
         if (cache != null) {
 
@@ -66,8 +68,13 @@ public class StockStore {
 
             try {
 
-                TransactionManager tm = cache.getTransactionManager();
+                tm = cache.getTransactionManager();
+
+                logger.debug("TransactionManager status [{}].",tm.getStatus());
+
                 tm.begin();
+
+                logger.debug("Transaction has been started.");
 
                 stockValue = (StockValue)cache.get(stockKey);
 
@@ -92,6 +99,14 @@ public class StockStore {
             }
             catch(Exception e) {
                 logger.error("Unable to update the stock [{}].",e.getMessage());
+                if (tm != null) {
+                    try {
+                        tm.rollback();
+                    }
+                    catch (SystemException ex) {
+                        logger.error("Unable to rollback the transaction [{}]",ex.getMessage());
+                    }
+                }
                 throw new StockApplicationException("Unable to update the stock.");
             }
 
