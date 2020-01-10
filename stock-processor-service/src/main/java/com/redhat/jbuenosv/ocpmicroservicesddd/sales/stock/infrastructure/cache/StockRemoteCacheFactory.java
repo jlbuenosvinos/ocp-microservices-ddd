@@ -83,8 +83,8 @@ public class StockRemoteCacheFactory implements CacheFactory {
                     "<infinispan>" +
                             "<cache-container>" +
                                 "<distributed-cache name=\"%1$s\">" +
-                                    "<transaction mode=\"NON_XA\" />" +
-                                    "<locking isolation=\"REPEATABLE_READ\" acquire-timeout=\"30000\" concurrency-level=\"1000\" striping=\"false\"/>" +
+                                    "<transaction mode=\"NON_XA\" locking=\"PESSIMISTIC\" />" +
+                                    // "<locking isolation=\"REPEATABLE_READ\" acquire-timeout=\"30000\" concurrency-level=\"1000\" striping=\"false\"/>" +
                                 "</distributed-cache>" +
                             "</cache-container>" +
                     "</infinispan>",
