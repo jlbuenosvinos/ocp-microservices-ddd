@@ -4,19 +4,28 @@ import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.application.configura
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.application.exception.StockApplicationException;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.domain.model.StockKey;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.domain.model.StockValue;
+import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.infrastructure.repository.StockKeyMarshaller;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.infrastructure.repository.StockSecurityCallbackHandler;
+import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.infrastructure.repository.StockValueMarshaller;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.infrastructure.util.FileUtils;
 import org.infinispan.client.hotrod.RemoteCache;
 import org.infinispan.client.hotrod.RemoteCacheManager;
 import org.infinispan.client.hotrod.configuration.ConfigurationBuilder;
+import org.infinispan.client.hotrod.configuration.TransactionMode;
 import org.infinispan.client.hotrod.marshall.ProtoStreamMarshaller;
+import org.infinispan.client.hotrod.transaction.lookup.GenericTransactionManagerLookup;
 import org.infinispan.commons.api.CacheContainerAdmin;
 import org.infinispan.commons.configuration.XMLStringConfiguration;
+import org.infinispan.protostream.FileDescriptorSource;
 import org.infinispan.protostream.SerializationContext;
+import org.infinispan.query.remote.client.ProtobufMetadataManagerConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by jlbuenosvinos.
@@ -41,7 +50,6 @@ public class StockRemoteCacheFactory implements CacheFactory {
         RemoteCache<StockKey, StockValue> cache;
         FileUtils fileUtils = new FileUtils();
         SerializationContext ctx = null;
-        RemoteCache<?, ?> createdCache = null;
 
         try {
 
@@ -59,12 +67,10 @@ public class StockRemoteCacheFactory implements CacheFactory {
 
             // RemoteTransactionManagerLookup.getInstance()
 
-            /*
             builder.transaction()
                     .transactionManagerLookup(GenericTransactionManagerLookup.getInstance())
                     .timeout(5, TimeUnit.SECONDS)
                     .transactionMode(TransactionMode.NON_XA);
-            */
 
             logger.debug("Configuration security.");
 
@@ -84,14 +90,9 @@ public class StockRemoteCacheFactory implements CacheFactory {
                     STOCK_CACHE_NAME
             ));
 
-            createdCache = cacheManager.administration()
+            cache = cacheManager.administration()
                     .withFlags(CacheContainerAdmin.AdminFlag.PERMANENT)
                     .getOrCreateCache(STOCK_CACHE_NAME, xml);
-
-            logger.debug("[{}] transactional cache has been created.",STOCK_CACHE_NAME);
-
-            /*
-            cache = ((RemoteCacheManager) cacheManager).getCache(STOCK_CACHE_NAME);
 
             if (cache != null) {
 
@@ -111,27 +112,25 @@ public class StockRemoteCacheFactory implements CacheFactory {
                 }
 
                 logger.debug("Protobuf schema have been registered.");
+                logger.debug("[{}] transactional cache has been created.",STOCK_CACHE_NAME);
 
             }
             else {
                 logger.error("Unable to get a reference to cache [{}]",STOCK_CACHE_NAME);
                 throw new StockApplicationException("Unable to get the ["  + STOCK_CACHE_NAME + "].");
             }
-            */
 
         }
-        /*
         catch(IOException e) {
             logger.error("Unable to register the Protobuf schema context due to [{}]",e.getMessage());
             throw new StockApplicationException("Unable to register the Protobuf schema context.");
         }
-        */
         catch(Exception e) {
             logger.error("Unable to get the [{}] reference due to [{}]",STOCK_CACHE_NAME,e.getMessage());
             throw new StockApplicationException("Unable to get the ["  + STOCK_CACHE_NAME + "] reference due to [" + e.getMessage() + "].");
         }
 
-        return createdCache;
+        return cache;
 
     }
 
