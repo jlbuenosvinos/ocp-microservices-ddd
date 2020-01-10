@@ -98,6 +98,8 @@ public class StockCacheFactory implements CacheFactory {
 
                 logger.debug("Protobuf schema have been registered.");
 
+                logger.debug("[{}] non-transactional cache has been created.",STOCK_CACHE_NAME);
+
             }
             else {
                 logger.error("Unable to get a reference to cache [{}]",STOCK_CACHE_NAME);

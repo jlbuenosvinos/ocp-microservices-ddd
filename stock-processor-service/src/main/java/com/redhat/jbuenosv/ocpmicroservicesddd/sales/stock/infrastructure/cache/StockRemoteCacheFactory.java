@@ -88,7 +88,7 @@ public class StockRemoteCacheFactory implements CacheFactory {
                     .withFlags(CacheContainerAdmin.AdminFlag.PERMANENT)
                     .getOrCreateCache(STOCK_CACHE_NAME, xml);
 
-
+            logger.debug("[{}] transactional cache has been created.",STOCK_CACHE_NAME);
 
             /*
             cache = ((RemoteCacheManager) cacheManager).getCache(STOCK_CACHE_NAME);
