@@ -79,16 +79,18 @@ public class StockRemoteCacheFactory implements CacheFactory {
                     "<infinispan>" +
                             "<cache-container>" +
                                 "<distributed-cache name=\"%1$s\">" +
-                                    "<transaction mode=\"NON_XA\" locking=\"PESSIMISTIC\" protocol=\"DEFAULT\"/>" +
-                                    "<locking isolation=\"REPEATABLE_READ\" acquire-timeout=\"30000\" concurrency-level=\"1000\" striping=\"false\"/>" +
+                                    "<locking isolation=\"REPEATABLE_READ\" striping=\"false\"/>" +
+                                    "<transaction mode=\"NON_XA\" locking=\"PESSIMISTIC\" protocol=\"DEFAULT\" transaction-manager-lookup=\"org.infinispan.transaction.lookup.GenericTransactionManagerLookup\"/>" +
                                 "</distributed-cache>" +
                             "</cache-container>" +
                     "</infinispan>",
                     STOCK_CACHE_NAME
             ));
 
+            logger.debug("XML configuration is ready [{}].",xml);
+
             cache = cacheManager.administration()
-                    .withFlags(CacheContainerAdmin.AdminFlag.PERMANENT)
+                    //.withFlags(CacheContainerAdmin.AdminFlag.PERMANENT)
                     .getOrCreateCache(STOCK_CACHE_NAME, xml);
 
             if (cache != null) {
