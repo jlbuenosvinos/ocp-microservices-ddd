@@ -75,13 +75,11 @@ public class StockRemoteCacheFactory implements CacheFactory {
             builder.marshaller(new ProtoStreamMarshaller());
             cacheManager = new RemoteCacheManager(builder.build());
 
-            // here we have the RemoteCacheManager ready to use
-
             XMLStringConfiguration xml = new XMLStringConfiguration(String.format(
                     "<infinispan>" +
                             "<cache-container>" +
                                 "<distributed-cache name=\"%1$s\">" +
-                                    "<transaction mode=\"NON_XA\" locking=\"PESSIMISTIC\" transaction-protocol=\"DEFAULT\"/>" +
+                                    "<transaction mode=\"NON_XA\" locking=\"PESSIMISTIC\" protocol=\"DEFAULT\"/>" +
                                     "<locking isolation=\"REPEATABLE_READ\" acquire-timeout=\"30000\" concurrency-level=\"1000\" striping=\"false\"/>" +
                                 "</distributed-cache>" +
                             "</cache-container>" +
