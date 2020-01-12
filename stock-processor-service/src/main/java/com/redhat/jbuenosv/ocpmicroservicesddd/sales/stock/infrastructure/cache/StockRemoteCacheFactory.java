@@ -67,13 +67,6 @@ public class StockRemoteCacheFactory implements CacheFactory {
 
             logger.debug("Configuration security.");
 
-            /*
-            builder.transaction()
-                    .transactionManagerLookup(GenericTransactionManagerLookup.getInstance())
-                    .timeout(5, TimeUnit.SECONDS)
-                    .transactionMode(TransactionMode.NON_XA);
-            */
-
             builder.marshaller(new ProtoStreamMarshaller());
             cacheManager = new RemoteCacheManager(builder.build());
 
@@ -92,7 +85,7 @@ public class StockRemoteCacheFactory implements CacheFactory {
             logger.debug("XML configuration is ready [{}].",xml);
 
             cache = cacheManager.administration()
-                    //.withFlags(CacheContainerAdmin.AdminFlag.PERMANENT)
+                    .withFlags(CacheContainerAdmin.AdminFlag.PERMANENT)
                     .getOrCreateCache(STOCK_CACHE_NAME, xml);
 
             if (cache != null) {
