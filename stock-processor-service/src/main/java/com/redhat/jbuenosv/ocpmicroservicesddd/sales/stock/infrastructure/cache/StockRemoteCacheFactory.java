@@ -65,8 +65,6 @@ public class StockRemoteCacheFactory implements CacheFactory {
                     .callbackHandler(new StockSecurityCallbackHandler(config.getUserName(),config.getPassword(),"ApplicationRealm"))
                     .enable();
 
-            // RemoteTransactionManagerLookup.getInstance()
-
             builder.transaction()
                     .transactionManagerLookup(GenericTransactionManagerLookup.getInstance())
                     .timeout(5, TimeUnit.SECONDS)
@@ -83,8 +81,7 @@ public class StockRemoteCacheFactory implements CacheFactory {
                     "<infinispan>" +
                             "<cache-container>" +
                                 "<distributed-cache name=\"%1$s\">" +
-                                    "<transaction mode=\"NON_XA\" protocol=\"DEFAULT\"/>" +
-                                    //"<transaction mode=\"NON_XA\" locking=\"PESSIMISTIC\" />" +
+                                    "<transaction mode=\"NON_XA\" locking=\"PESSIMISTIC\" transaction-protocol=\"DEFAULT\"/>" +
                                     "<locking isolation=\"REPEATABLE_READ\" acquire-timeout=\"30000\" concurrency-level=\"1000\" striping=\"false\"/>" +
                                 "</distributed-cache>" +
                             "</cache-container>" +
