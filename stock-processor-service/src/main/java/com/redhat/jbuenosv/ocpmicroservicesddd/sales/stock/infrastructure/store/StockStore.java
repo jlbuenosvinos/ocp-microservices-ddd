@@ -30,7 +30,7 @@ public class StockStore {
     public static final Logger logger = LoggerFactory.getLogger(StockStore.class);
     private static final String STOCK_CACHE_NAME = "STOCK";
     private RemoteCache<StockKey, StockValue> cache;
-    private RemoteCache<?,?> transCache;
+    //private RemoteCache<StockKey,StockValue> transCache;
 
     @Autowired
     DataGridConfig config;
@@ -44,9 +44,8 @@ public class StockStore {
     @PostConstruct
     public void init() {
         logger.debug("Service init.");
-        cache = stockCacheFactory.getRemoteCache();
-
-        transCache = stockRemoteCacheFactory.getRemoteCache();
+        //cache = stockCacheFactory.getRemoteCache();
+        cache = stockRemoteCacheFactory.getRemoteCache();
         logger.debug("Trans cache [{}] loaded.",transCache.getName());
         logger.debug("Service init ends.");
     }

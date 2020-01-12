@@ -43,7 +43,7 @@ public class StockRemoteCacheFactory implements CacheFactory {
     DataGridConfig config;
 
     @Override
-    public RemoteCache<?,?> getRemoteCache() {
+    public RemoteCache<StockKey,StockValue> getRemoteCache() {
 
         String errors = null;
         RemoteCacheManager cacheManager;
@@ -81,8 +81,6 @@ public class StockRemoteCacheFactory implements CacheFactory {
                     "</infinispan>",
                     STOCK_CACHE_NAME
             ));
-
-            logger.debug("XML configuration is ready [{}].",xml);
 
             cache = cacheManager.administration()
                     .withFlags(CacheContainerAdmin.AdminFlag.PERMANENT)
