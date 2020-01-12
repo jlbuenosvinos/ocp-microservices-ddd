@@ -46,7 +46,8 @@ public class StockStore {
         logger.debug("Service init.");
         //cache = stockCacheFactory.getRemoteCache();
         cache = stockRemoteCacheFactory.getRemoteCache();
-        logger.debug("Trans cache [{}] loaded.",transCache.getName());
+        //logger.debug("Cache [{}] loaded.",cache.getName());
+        logger.debug("Trans Cache [{}] loaded.",cache.getName());
         logger.debug("Service init ends.");
     }
 
