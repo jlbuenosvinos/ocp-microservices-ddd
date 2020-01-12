@@ -70,8 +70,6 @@ public class StockStore {
             stockKey.setStoreId(stockEvent.getStoreId());
             stockKey.setProductId(stockEvent.getProductId());
 
-            logger.debug("stockKey [{}].",stockKey);
-
             try {
 
                 tm = cache.getTransactionManager();
@@ -80,6 +78,9 @@ public class StockStore {
                     logger.debug("TransactionManager status [{}].",tm.getStatus());
                     tm.begin();
                     logger.debug("Transaction has been started.");
+                }
+                else {
+                    logger.debug("Transaction Manager is null.");
                 }
 
                 stockValue = (StockValue)cache.get(stockKey);

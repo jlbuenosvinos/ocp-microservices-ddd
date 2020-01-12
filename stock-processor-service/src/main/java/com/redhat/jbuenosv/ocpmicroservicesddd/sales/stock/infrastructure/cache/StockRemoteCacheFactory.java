@@ -35,7 +35,7 @@ public class StockRemoteCacheFactory implements CacheFactory {
 
     public static final Logger logger = LoggerFactory.getLogger(StockRemoteCacheFactory.class);
 
-    private static final String STOCK_CACHE_NAME = "STOCK_TRAN";
+    private static final String STOCK_CACHE_NAME = "STOCK";
 
     private static final String PROTOBUF_DEFINITION_RESOURCE = "/stock.proto";
 
