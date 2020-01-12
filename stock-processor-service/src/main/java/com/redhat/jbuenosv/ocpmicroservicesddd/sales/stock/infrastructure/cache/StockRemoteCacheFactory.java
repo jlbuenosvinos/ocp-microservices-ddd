@@ -65,12 +65,14 @@ public class StockRemoteCacheFactory implements CacheFactory {
                     .callbackHandler(new StockSecurityCallbackHandler(config.getUserName(),config.getPassword(),"ApplicationRealm"))
                     .enable();
 
+            logger.debug("Configuration security.");
+
+            /*
             builder.transaction()
                     .transactionManagerLookup(GenericTransactionManagerLookup.getInstance())
                     .timeout(5, TimeUnit.SECONDS)
                     .transactionMode(TransactionMode.NON_XA);
-
-            logger.debug("Configuration security.");
+            */
 
             builder.marshaller(new ProtoStreamMarshaller());
             cacheManager = new RemoteCacheManager(builder.build());
