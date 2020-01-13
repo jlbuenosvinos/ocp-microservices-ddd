@@ -11,6 +11,7 @@ import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.infrastructure.util.F
 import org.infinispan.client.hotrod.RemoteCache;
 import org.infinispan.client.hotrod.RemoteCacheManager;
 import org.infinispan.client.hotrod.configuration.ConfigurationBuilder;
+import org.infinispan.client.hotrod.configuration.TransactionMode;
 import org.infinispan.client.hotrod.marshall.ProtoStreamMarshaller;
 import org.infinispan.commons.api.CacheContainerAdmin;
 import org.infinispan.commons.configuration.XMLStringConfiguration;
@@ -61,7 +62,8 @@ public class StockRemoteCacheFactory implements CacheFactory {
                     .saslMechanism("DIGEST-MD5")
                     .callbackHandler(new StockSecurityCallbackHandler(config.getUserName(),config.getPassword(),"ApplicationRealm"))
                     .enable()
-                    .transaction().transactionMode(org.infinispan.client.hotrod.configuration.TransactionMode.NON_XA);
+                    .transaction()
+                        .transactionMode(org.infinispan.client.hotrod.configuration.TransactionMode.NON_XA);
 
             builder.marshaller(new ProtoStreamMarshaller());
             cacheManager = new RemoteCacheManager(builder.build());
@@ -91,7 +93,7 @@ public class StockRemoteCacheFactory implements CacheFactory {
                 ctx.registerMarshaller(new StockKeyMarshaller());
                 ctx.registerMarshaller(new StockValueMarshaller());
 
-                RemoteCache<String, String> metadataCache = cacheManager.getCache(ProtobufMetadataManagerConstants.PROTOBUF_METADATA_CACHE_NAME);
+                RemoteCache<String, String> metadataCache = cacheManager.getCache(ProtobufMetadataManagerConstants.PROTOBUF_METADATA_CACHE_NAME, TransactionMode.NONE);
                 metadataCache.put(PROTOBUF_DEFINITION_RESOURCE, fileUtils.readResource(PROTOBUF_DEFINITION_RESOURCE));
 
                 errors = metadataCache.get(ProtobufMetadataManagerConstants.ERRORS_KEY_SUFFIX);
