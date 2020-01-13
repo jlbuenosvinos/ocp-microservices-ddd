@@ -27,16 +27,14 @@ public class KafkaTicketStore implements EventStore {
      */
     @Subscribe
     public void store(TicketGeneratedEvent event) {
-        logger.debug("Saving begin.");
+        logger.debug("store begin.");
 
         TicketGeneratedEvent ticketGeneratedEvent = event;
 
 
 
 
-
-
-
+        logger.debug("store end.");
     }
 
 }

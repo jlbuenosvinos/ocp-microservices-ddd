@@ -7,6 +7,7 @@ import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.model.Orde
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.model.OrderLineType;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.model.Ticket;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.model.TicketItem;
+import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.store.KafkaTicketStore;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.store.StockStore;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.store.TicketStore;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.util.UUIDGenerator;
@@ -36,6 +37,9 @@ class TicketServiceImpl implements TicketService {
     StockStore stockStore;
 
     @Autowired
+    KafkaTicketStore ticketKafkaStore;
+
+    @Autowired
     TicketProcessorEventBus ticketProcessorEventBus;
 
     @Autowired
@@ -55,6 +59,10 @@ class TicketServiceImpl implements TicketService {
             ticketProcessorEventBus.register(this.ticketStore);
             logger.debug("The TicketStore has been registered.");
         }
+        if (config.isKakfaStore()) {
+            ticketProcessorEventBus.register(this.ticketKafkaStore);
+            logger.debug("The Ticket Kafka Store has been registered.");
+        } // end if
         logger.debug("TicketServiceImpl init ends.");
     }
 
@@ -67,6 +75,10 @@ class TicketServiceImpl implements TicketService {
         else {
             ticketProcessorEventBus.unregister(this.ticketStore);
         }
+        if (config.isKakfaStore()) {
+            ticketProcessorEventBus.unregister(this.ticketKafkaStore);
+            logger.debug("The Ticket Kafka Store has been unregistered.");
+        } // end if
         logger.debug("TicketServiceImpl stop ends.");
     }
 

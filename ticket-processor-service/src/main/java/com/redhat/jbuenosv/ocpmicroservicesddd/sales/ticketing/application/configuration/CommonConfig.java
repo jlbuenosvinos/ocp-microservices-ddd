@@ -18,6 +18,9 @@ public class CommonConfig {
     @Value("${ticketing.servicemesh.on}")
     Boolean isServiceMesh;
 
+    @Value("${ticketing.kafka.store.enabled}")
+    Boolean isKafkaStore;
+
     @Value("${ticketing.sales.vitamine.on}")
     Boolean isSaleVitamine;
 
@@ -28,6 +31,8 @@ public class CommonConfig {
     public Boolean isServiceMesh() {
         return isServiceMesh;
     }
+
+    public Boolean isKakfaStore() { return isKafkaStore; }
 
     public String getTicketingStockProcessorUri() {
         return ticketingStockProcessorUri;
