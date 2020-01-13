@@ -5,7 +5,6 @@ import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.application.exception
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.domain.event.StockEvent;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.domain.model.StockKey;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.domain.model.StockValue;
-import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.infrastructure.cache.StockCacheFactory;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.infrastructure.cache.StockRemoteCacheFactory;
 import org.infinispan.client.hotrod.RemoteCache;
 import org.infinispan.client.hotrod.RemoteCacheManager;
@@ -30,13 +29,9 @@ public class StockStore {
     public static final Logger logger = LoggerFactory.getLogger(StockStore.class);
     private static final String STOCK_CACHE_NAME = "STOCK";
     private RemoteCache<StockKey, StockValue> cache;
-    //private RemoteCache<StockKey,StockValue> transCache;
 
     @Autowired
     DataGridConfig config;
-
-    @Autowired
-    StockCacheFactory stockCacheFactory;
 
     @Autowired
     StockRemoteCacheFactory stockRemoteCacheFactory;
@@ -44,9 +39,7 @@ public class StockStore {
     @PostConstruct
     public void init() {
         logger.debug("Service init.");
-        //cache = stockCacheFactory.getRemoteCache();
         cache = stockRemoteCacheFactory.getRemoteCache();
-        //logger.debug("Cache [{}] loaded.",cache.getName());
         logger.debug("Trans Cache [{}] loaded.",cache.getName());
         logger.debug("Service init ends.");
     }

@@ -23,7 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by jlbuenosvinos.
@@ -63,8 +62,6 @@ public class StockRemoteCacheFactory implements CacheFactory {
                     .callbackHandler(new StockSecurityCallbackHandler(config.getUserName(),config.getPassword(),"ApplicationRealm"))
                     .enable();
 
-            logger.debug("Configuration security.");
-
             builder.marshaller(new ProtoStreamMarshaller());
             cacheManager = new RemoteCacheManager(builder.build());
 
@@ -79,6 +76,8 @@ public class StockRemoteCacheFactory implements CacheFactory {
                     "</infinispan>",
                     STOCK_CACHE_NAME
             ));
+
+            logger.debug("XML configuration ready to go.");
 
             cache = cacheManager.administration()
                     .withFlags(CacheContainerAdmin.AdminFlag.PERMANENT)
