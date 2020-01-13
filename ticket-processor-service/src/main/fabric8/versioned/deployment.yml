@@ -33,6 +33,11 @@ spec:
             successThreshold: 1
             timeoutSeconds: 1
           env:
+            - name: "TICKETING_TICKETS_STORE_KAFKA_ENABLED"
+              valueFrom:
+                configMapKeyRef:
+                  name: ${project.artifactId}
+                  key: TICKETING_TICKETS_STORE_KAFKA_ENABLED
             - name: "TICKETING_TICKETS_SERVICE_SALE_VITAMINE_ON"
               valueFrom:
                 configMapKeyRef:
