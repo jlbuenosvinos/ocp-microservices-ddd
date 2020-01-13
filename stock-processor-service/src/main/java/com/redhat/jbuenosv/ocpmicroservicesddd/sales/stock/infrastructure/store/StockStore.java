@@ -15,8 +15,11 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.transaction.SystemException;
 import javax.transaction.TransactionManager;
+import javax.transaction.UserTransaction;
 
 import com.google.common.eventbus.Subscribe;
 
@@ -65,7 +68,9 @@ public class StockStore {
 
             try {
 
-                tm = cache.getTransactionManager();
+                tm = (TransactionManager) getUserTransactionFromJNDI();
+
+                //tm = cache.getTransactionManager();
 
                 if (tm != null) {
                     logger.debug("TransactionManager status [{}].",tm.getStatus());
@@ -123,6 +128,22 @@ public class StockStore {
         } // end else
 
         logger.debug("Saving end.");
+    }
+
+    /**
+     * Gets the default transaction manager
+     * @return UserTransaction
+     */
+    private UserTransaction getUserTransactionFromJNDI() {
+        InitialContext context;
+        Object result;
+        try {
+            context = new InitialContext();
+            result = context.lookup("java:comp/UserTransaction");
+        } catch (NamingException ex) {
+            throw new RuntimeException("UserTransaction could not be found in JNDI", ex);
+        }
+        return (UserTransaction) result;
     }
 
     @PreDestroy
