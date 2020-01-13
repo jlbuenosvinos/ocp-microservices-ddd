@@ -33,16 +33,14 @@ public class StockEventStore implements EventStore {
     public <T> void save(final T event) {
         logger.debug("Saving begin.");
 
-
-
-
-
         logger.debug("Saving end.");
     }
 
     @PreDestroy
     public void stop() {
+        logger.debug("Service stop.");
 
+        logger.debug("Service stop ends.");
     }
 
 }
