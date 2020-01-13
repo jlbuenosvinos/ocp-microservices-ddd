@@ -60,7 +60,8 @@ public class StockRemoteCacheFactory implements CacheFactory {
                     .serverName("jdg-server")
                     .saslMechanism("DIGEST-MD5")
                     .callbackHandler(new StockSecurityCallbackHandler(config.getUserName(),config.getPassword(),"ApplicationRealm"))
-                    .enable();
+                    .enable()
+                    .transaction().transactionMode(org.infinispan.client.hotrod.configuration.TransactionMode.NON_XA);
 
             builder.marshaller(new ProtoStreamMarshaller());
             cacheManager = new RemoteCacheManager(builder.build());
