@@ -23,7 +23,8 @@ public class TicketProcessorEventBus {
      * Default constructor
      */
     public TicketProcessorEventBus() {
-        this.eventBus = new EventBus();
+        //this.eventBus = new EventBus();
+        this.eventBus = new EventBus(new TicketProcessorEventBusExceptionHandler());
     }
 
     /**
