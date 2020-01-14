@@ -109,7 +109,7 @@ spec:
                   name: ${project.artifactId}-${project.version}
                   key: TICKETING_METRICS_ARTIFACTID_NAME
             - name: "TICKETING_TICKETS_STORE_KAFKA_ENABLED"
-                valueFrom:
-                  configMapKeyRef:
-                    name: ${project.artifactId}-${project.version}
-                    key: TICKETING_TICKETS_STORE_KAFKA_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  name: ${project.artifactId}-${project.version}
+                  key: TICKETING_TICKETS_STORE_KAFKA_ENABLED
