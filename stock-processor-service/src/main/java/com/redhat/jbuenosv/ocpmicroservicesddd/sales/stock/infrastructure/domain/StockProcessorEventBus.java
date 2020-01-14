@@ -23,7 +23,7 @@ public class StockProcessorEventBus {
      * Default constructor
      */
     public StockProcessorEventBus() {
-        this.eventBus = new EventBus();
+        this.eventBus = new EventBus(new StockProcessorEventBusExceptionHandler());
     }
 
     /**
