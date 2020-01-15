@@ -17,7 +17,7 @@ public class KafkaSenderConfig {
 
     public static final Logger logger = LoggerFactory.getLogger(KafkaSenderConfig.class);
 
-    @Value("${ticketing.kafka.store.bootstrap.servers}")
+    @Value("${ticketing.kafka.bootstrap.servers}")
     private String bootstrapServers;
 
     @Bean
