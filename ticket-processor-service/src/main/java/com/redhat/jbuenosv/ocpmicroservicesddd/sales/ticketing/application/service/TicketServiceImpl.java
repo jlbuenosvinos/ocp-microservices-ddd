@@ -1,5 +1,6 @@
 package com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.application.service;
 
+import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.application.configuration.ActiveMQConfig;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.application.configuration.CommonConfig;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.domain.TicketProcessorEventBus;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.event.TicketGeneratedEvent;
@@ -48,6 +49,9 @@ class TicketServiceImpl implements TicketService {
     @Autowired
     CommonConfig config;
 
+    @Autowired
+    ActiveMQConfig amqConfig;
+
     @PostConstruct
     public void init() {
         logger.debug("TicketServiceImpl init.");
@@ -55,7 +59,7 @@ class TicketServiceImpl implements TicketService {
             ticketProcessorEventBus.register(this.stockStore);
             logger.debug("The StockStore has been registered.");
         }
-        else {
+        if (amqConfig.isTicketsStoreEnabled()) {
             ticketProcessorEventBus.register(this.ticketStore);
             logger.debug("The TicketStore has been registered.");
         }

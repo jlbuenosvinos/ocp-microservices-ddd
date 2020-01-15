@@ -40,7 +40,7 @@ public class ActiveMQConfig {
         return ticketsTopicName;
     }
 
-    public Boolean getTicketsStoreEnabled() {
+    public Boolean isTicketsStoreEnabled() {
         return ticketsStoreEnabled;
     }
 
