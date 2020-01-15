@@ -3,7 +3,6 @@ package com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.s
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.common.serialization.StringSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,17 +17,15 @@ public class KafkaSenderConfig {
 
     public static final Logger logger = LoggerFactory.getLogger(KafkaSenderConfig.class);
 
-    @Value("${spring.kafka.consumer.bootstrap-servers}")
+    @Value("${ticketing.kafka.store.bootstrap.servers}")
     private String bootstrapServers;
 
     @Bean
     public Map<String, Object> producerConfigs() {
         Map<String, Object> props = new HashMap<>();
-
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-
+        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, TicketGeneratedEventKeySerializer.class);
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, TicketGeneratedEventSerializer.class);
         return props;
     }
 

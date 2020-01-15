@@ -29,7 +29,6 @@ public class KafkaTicketStore implements EventStore {
     @Subscribe
     public void store(TicketGeneratedEvent event) {
         logger.debug("store begin.");
-
         TicketGeneratedEvent ticketGeneratedEvent = event;
 
 
