@@ -1,8 +1,9 @@
-package com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.store;
+package com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.store.amq;
 
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.application.configuration.ActiveMQConfig;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.application.configuration.CommonConfig;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.event.TicketGeneratedEvent;
+import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.store.EventStore;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

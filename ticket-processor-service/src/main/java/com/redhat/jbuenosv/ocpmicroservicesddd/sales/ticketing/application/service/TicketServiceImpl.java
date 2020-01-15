@@ -7,9 +7,9 @@ import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.model.Orde
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.model.OrderLineType;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.model.Ticket;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.model.TicketItem;
-import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.store.KafkaTicketStore;
+import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.store.kafka.KafkaTicketStore;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.store.StockStore;
-import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.store.TicketStore;
+import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.store.amq.TicketStore;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.util.UUIDGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
