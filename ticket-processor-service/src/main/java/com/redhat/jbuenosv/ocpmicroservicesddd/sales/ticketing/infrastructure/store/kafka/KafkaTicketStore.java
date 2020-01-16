@@ -36,7 +36,7 @@ public class KafkaTicketStore implements EventStore {
 
         TicketGeneratedEventKey key = new TicketGeneratedEventKey(event.getTicket().getStoreId(),event.getTicket().getTicketId());
         // we have the kafka key and value components to be sent to the kafka cluster
-        this.kafkaSenderConfig.sender().send(kafkaSenderConfig.getKafkaTicketsTopicName(),key,event);
+        // this.kafkaSenderConfig.sender().send(kafkaSenderConfig.getKafkaTicketsTopicName(),key,event);
         logger.debug("store end.");
     }
 

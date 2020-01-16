@@ -22,7 +22,7 @@
     <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.store.kafka" level="DEBUG" />
     <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.store.amq" level="DEBUG" />
 
-    <root level="TRACE">
+    <root level="INFO">
         <appender-ref ref="STDOUT" />
     </root>
 
