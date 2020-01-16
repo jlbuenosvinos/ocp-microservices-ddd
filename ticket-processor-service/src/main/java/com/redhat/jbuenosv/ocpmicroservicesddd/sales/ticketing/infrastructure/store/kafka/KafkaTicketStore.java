@@ -5,6 +5,7 @@ import com.google.common.eventbus.Subscribe;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.application.configuration.ActiveMQConfig;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.event.TicketGeneratedEvent;
 
+import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.event.TicketGeneratedEventKey;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.store.EventStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +23,9 @@ public class KafkaTicketStore implements EventStore {
     @Autowired
     ActiveMQConfig mqConfig;
 
+    @Autowired
+    KafkaSenderConfig kafkaSenderConfig;
+
     /**
      * Saves a ticket event to a Kafka Topic
      * @param event ticket event
@@ -29,11 +33,10 @@ public class KafkaTicketStore implements EventStore {
     @Subscribe
     public void store(TicketGeneratedEvent event) {
         logger.debug("store begin.");
-        TicketGeneratedEvent ticketGeneratedEvent = event;
 
-
-
-
+        TicketGeneratedEventKey key = new TicketGeneratedEventKey(event.getTicket().getStoreId(),event.getTicket().getTicketId());
+        // we have the kafka key and value components to be sent to the kafka cluster
+        this.kafkaSenderConfig.sender().send(kafkaSenderConfig.getKafkaTicketsTopicName(),key,event);
         logger.debug("store end.");
     }
 

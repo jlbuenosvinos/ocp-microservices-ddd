@@ -20,6 +20,16 @@ public class KafkaSenderConfig {
     @Value("${ticketing.kafka.bootstrap.servers}")
     private String bootstrapServers;
 
+    @Value("${ticketing.kafka.username}")
+    private String kafkaUserName;
+
+    @Value("${ticketing.kafka.tickets.topic}")
+    private String kafkaTicketsTopicName;
+
+    public String getKafkaUserName() { return this.kafkaUserName; }
+
+    public String getKafkaTicketsTopicName() {return this.kafkaTicketsTopicName; }
+
     @Bean
     public Map<String, Object> producerConfigs() {
         Map<String, Object> props = new HashMap<>();
