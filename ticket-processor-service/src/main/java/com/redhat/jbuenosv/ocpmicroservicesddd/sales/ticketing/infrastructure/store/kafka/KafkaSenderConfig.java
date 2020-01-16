@@ -36,21 +36,25 @@ public class KafkaSenderConfig {
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, TicketGeneratedEventKeySerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, TicketGeneratedEventSerializer.class);
+        logger.debug("Kafka producer configuration is ready.");
         return props;
     }
 
     @Bean
     public ProducerFactory<String, String> producerFactory() {
+        logger.debug("Kafka producer factory is ready.");
         return new DefaultKafkaProducerFactory<>(producerConfigs());
     }
 
     @Bean
     public KafkaTemplate<String, String> kafkaTemplate() {
+        logger.debug("Kafka producer template is ready.");
         return new KafkaTemplate<>(producerFactory());
     }
 
     @Bean
     public KafkaSender sender() {
+        logger.debug("Kafka producer sender is ready.");
         return new KafkaSender();
     }
 

@@ -76,7 +76,7 @@ class TicketServiceImpl implements TicketService {
         if (config.isServiceMesh()) {
             ticketProcessorEventBus.unregister(this.stockStore);
         }
-        else {
+        if (amqConfig.isTicketsStoreEnabled()) {
             ticketProcessorEventBus.unregister(this.ticketStore);
         }
         if (config.isKakfaStore()) {
