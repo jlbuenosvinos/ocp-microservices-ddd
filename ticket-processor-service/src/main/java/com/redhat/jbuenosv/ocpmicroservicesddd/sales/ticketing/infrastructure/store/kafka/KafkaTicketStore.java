@@ -33,7 +33,6 @@ public class KafkaTicketStore implements EventStore {
     @Subscribe
     public void store(TicketGeneratedEvent event) {
         logger.debug("store begin.");
-
         TicketGeneratedEventKey key = new TicketGeneratedEventKey(event.getTicket().getStoreId(),event.getTicket().getTicketId());
         // we have the kafka key and value components to be sent to the kafka cluster
         kafkaSenderConfig.sender().send(kafkaSenderConfig.getKafkaTicketsTopicName(),key,event);

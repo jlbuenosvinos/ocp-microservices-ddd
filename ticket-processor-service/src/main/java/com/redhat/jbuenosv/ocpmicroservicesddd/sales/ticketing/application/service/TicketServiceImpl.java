@@ -106,11 +106,9 @@ class TicketServiceImpl implements TicketService {
             ticketItem.setId(order.getItems().get(i).getId());
 
             if (order.getItems().get(i).getType() == OrderLineType.RETURN) {
-                // ticketItem.setUnits(order.getItems().get(i).getUnits());
                 newUnits = order.getItems().get(i).getUnits();
             }
             else {
-                //ticketItem.setUnits(order.getItems().get(i).getUnits() * -1);
                 newUnits = order.getItems().get(i).getUnits() * -1;
                 if (config.isSaleViatamine()) newUnits = newUnits * 2;
             }
