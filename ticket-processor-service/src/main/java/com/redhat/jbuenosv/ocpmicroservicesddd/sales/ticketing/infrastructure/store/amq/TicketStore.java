@@ -41,7 +41,6 @@ public class TicketStore implements EventStore {
     public void store(TicketGeneratedEvent event) {
         logger.debug("store begin.");
 
-        TicketGeneratedEvent ticketGeneratedEvent = event;
         ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
         connectionFactory.setBrokerURL(mqConfig.getBrokerUrl());
         connectionFactory.setPassword(mqConfig.getPassword());
@@ -59,11 +58,11 @@ public class TicketStore implements EventStore {
         MessageCreator mc = new MessageCreator() {
             @Override
             public Message createMessage(Session session) throws JMSException {
-                Message msg = session.createTextMessage(ticketGeneratedEvent.getTicket().toJson());
-                msg.setStringProperty("sales-event-type", ticketGeneratedEvent.getEventType());
-                msg.setStringProperty("sales-event-id", ticketGeneratedEvent.getEventId());
-                msg.setLongProperty("sales-occuredon", ticketGeneratedEvent.getOccurredOn().getTime());
-                msg.setStringProperty("sales-event-version", ticketGeneratedEvent.getEventVersion());
+                Message msg = session.createTextMessage(event.getTicket().toJson());
+                msg.setStringProperty("sales-event-type", event.getEventType());
+                msg.setStringProperty("sales-event-id", event.getEventId());
+                msg.setLongProperty("sales-occuredon", event.getOccurredOn().getTime());
+                msg.setStringProperty("sales-event-version", event.getEventVersion());
                 return msg;
             }
         };
