@@ -13,9 +13,9 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 
 @Configuration
-public class KafkaSenderConfig {
+public class KafkaPublisherConfig {
 
-    public static final Logger logger = LoggerFactory.getLogger(KafkaSenderConfig.class);
+    public static final Logger logger = LoggerFactory.getLogger(KafkaPublisherConfig.class);
 
     @Value("${ticketing.kafka.bootstrap.servers}")
     private String bootstrapServers;

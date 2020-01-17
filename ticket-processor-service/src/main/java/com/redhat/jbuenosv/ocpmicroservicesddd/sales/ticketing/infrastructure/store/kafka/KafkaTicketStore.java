@@ -24,7 +24,7 @@ public class KafkaTicketStore implements EventStore {
     ActiveMQConfig mqConfig;
 
     @Autowired
-    KafkaSenderConfig kafkaSenderConfig;
+    KafkaPublisherConfig kafkaPublisherConfig;
 
     /**
      * Saves a ticket event to a Kafka Topic
@@ -35,7 +35,7 @@ public class KafkaTicketStore implements EventStore {
         logger.debug("store begin.");
         TicketGeneratedEventKey key = new TicketGeneratedEventKey(event.getTicket().getStoreId(),event.getTicket().getTicketId());
         // we have the kafka key and value components to be sent to the kafka cluster
-        kafkaSenderConfig.publisher().publish(kafkaSenderConfig.getKafkaTicketsTopicName(),key,event);
+        kafkaPublisherConfig.publisher().publish(kafkaPublisherConfig.getKafkaTicketsTopicName(),key,event);
         logger.debug("store end.");
     }
 
