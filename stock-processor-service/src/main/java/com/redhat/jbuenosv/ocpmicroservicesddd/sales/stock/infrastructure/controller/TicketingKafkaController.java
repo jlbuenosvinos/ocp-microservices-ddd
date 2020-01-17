@@ -39,7 +39,7 @@ class TicketingKafkaController {
     public TicketingKafkaController() {
     }
 
-    @KafkaListener(topics = "${ticketing.kafka.tickets.topic}")
+    //@KafkaListener(topics = "${ticketing.kafka.tickets.topic}")
     public void receiveTicket() {
         Ticket ticketEvent = null;
         String ticketEventId = null;

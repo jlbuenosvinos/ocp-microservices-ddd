@@ -1,4 +1,4 @@
-package com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.domain.event;
+package com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.domain.model;
 
 import java.io.Serializable;
 
