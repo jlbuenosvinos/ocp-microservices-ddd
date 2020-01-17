@@ -2,6 +2,9 @@ package com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.s
 
 import java.util.HashMap;
 import java.util.Map;
+
+import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.event.TicketGeneratedEvent;
+import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.event.TicketGeneratedEventKey;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,15 +44,15 @@ public class KafkaPublisherConfig {
     }
 
     @Bean
-    public ProducerFactory<String, String> producerFactory() {
+    public ProducerFactory<TicketGeneratedEventKey, TicketGeneratedEvent> producerFactory() {
         logger.debug("Kafka producer factory is ready.");
         return new DefaultKafkaProducerFactory<>(producerConfigs());
     }
 
     @Bean
-    public KafkaTemplate<String, String> kafkaTemplate() {
+    public KafkaTemplate<TicketGeneratedEventKey, TicketGeneratedEvent> kafkaTemplate() {
         logger.debug("Kafka producer template is ready.");
-        return new KafkaTemplate<>(producerFactory());
+        return new KafkaTemplate<TicketGeneratedEventKey, TicketGeneratedEvent>(producerFactory());
     }
 
     @Bean

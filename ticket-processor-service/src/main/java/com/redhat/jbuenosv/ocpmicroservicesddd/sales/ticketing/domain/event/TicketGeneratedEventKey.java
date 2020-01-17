@@ -1,14 +1,11 @@
 package com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.event;
 
-import org.springframework.stereotype.Component;
-
 import java.io.Serializable;
 
 /**
  * This class represents a ticket event
  * Created by jlbuenosvinos.
  */
-@Component
 public class TicketGeneratedEventKey implements Serializable {
 
     private Integer storeId;

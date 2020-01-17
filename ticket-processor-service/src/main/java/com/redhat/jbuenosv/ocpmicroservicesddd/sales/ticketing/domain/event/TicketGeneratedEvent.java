@@ -1,7 +1,6 @@
 package com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.event;
 
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.model.Ticket;
-import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -10,7 +9,6 @@ import java.util.Date;
  * This class represents a ticket event
  * Created by jlbuenosvinos.
  */
-@Component
 public class TicketGeneratedEvent implements DomainEvent {
 
     private Date occurredOn;
