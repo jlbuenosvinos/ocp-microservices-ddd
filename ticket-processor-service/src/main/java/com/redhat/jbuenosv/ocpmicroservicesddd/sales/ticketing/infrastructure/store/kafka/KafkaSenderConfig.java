@@ -53,9 +53,9 @@ public class KafkaSenderConfig {
     }
 
     @Bean
-    public KafkaSender sender() {
+    public KafkaPublisher publisher() {
         logger.debug("Kafka producer sender is ready.");
-        return new KafkaSender();
+        return new KafkaPublisher();
     }
 
 }

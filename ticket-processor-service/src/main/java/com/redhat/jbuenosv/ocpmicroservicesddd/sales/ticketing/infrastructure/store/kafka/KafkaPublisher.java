@@ -9,20 +9,20 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
-public class KafkaSender {
+public class KafkaPublisher {
 
-    public static final Logger logger = LoggerFactory.getLogger(KafkaSender.class);
+    public static final Logger logger = LoggerFactory.getLogger(KafkaPublisher.class);
 
     @Autowired
     private KafkaTemplate<TicketGeneratedEventKey,TicketGeneratedEvent> kafkaTemplate;
 
     /**
-     * Sends an event to a Kafka Topic
+     * Publishes an event to a Kafka Topic
      * @param topic topic name
      * @param key event key
      * @param value event value
      */
-    public void send(String topic, TicketGeneratedEventKey key, TicketGeneratedEvent value) {
+    public void publish(String topic, TicketGeneratedEventKey key, TicketGeneratedEvent value) {
         logger.debug("Ready to send Event [{}] to topic [{}].",key,topic);
         kafkaTemplate.send(topic,key,value);
         logger.debug("Event [{}] has been sent to topic [{}].",key,topic);
