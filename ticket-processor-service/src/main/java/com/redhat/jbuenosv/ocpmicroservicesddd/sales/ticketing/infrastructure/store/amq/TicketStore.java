@@ -39,7 +39,7 @@ public class TicketStore implements EventStore {
      */
     @Subscribe
     public void store(TicketGeneratedEvent event) {
-        logger.debug("Saving begin.");
+        logger.debug("store begin.");
 
         TicketGeneratedEvent ticketGeneratedEvent = event;
         ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
@@ -68,9 +68,9 @@ public class TicketStore implements EventStore {
             }
         };
 
-        logger.debug("AMQ message is available.");
-
         template.send(mqConfig.getTicketsTopicName(), mc);
+
+        logger.debug("store end.");
 
     }
 

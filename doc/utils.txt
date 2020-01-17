@@ -1,6 +1,5 @@
 
 
-
 docker push default-route-openshift-image-registry.apps.cluster-bcn-2028.bcn-2028.example.opentlc.com/openshift/installer-artifacts:<tag>
 
 
@@ -8,8 +7,6 @@ docker push default-route-openshift-image-registry.apps.cluster-bcn-2028.bcn-202
 
 
 podman push default-route-openshift-image-registry.apps.cluster-bcn-2028.bcn-2028.example.opentlc.com/openshift/redhat-openjdk18-openshift:latest
-
-
 
 
 podman image import openjdk18-openshift.tar default-route-openshift-image-registry.apps.ocp4.ocpdev.io/openshift/redhat-openjdk18-openshift:latest
@@ -20,8 +17,6 @@ podman push default-route-openshift-image-registry.apps.ocp4.ocpdev.io/openshift
 podman image import datagrid72-openshift.tar default-route-openshift-image-registry.apps.ocp4.ocpdev.io/openshift/jboss-datagrid72-openshift:latest
 
 podman push default-route-openshift-image-registry.apps.ocp4.ocpdev.io/openshift/jboss-datagrid72-openshift:latest --tls-verify=false
-
-
 
 
 oc create secret docker-registry dv-pull-secret --docker-server=registry.redhat.io --docker-username=jbuenosv@redhat.com --docker-password=nxe-8bv-72A-EHp --docker-email=jbuenosv@redhat.com
