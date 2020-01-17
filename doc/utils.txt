@@ -209,8 +209,6 @@ oc import-image jboss-datagrid-7/datagrid73-openshift --from=registry.redhat.io/
 
 oc create -f https://raw.githubusercontent.com/jboss-container-images/jboss-datagrid-7-openshift-image/7.3-v1.2https://raw.githubusercontent.com/jboss-container-images/jboss-datagrid-7-openshift-image/7.3-v1.2/templates/datagrid73-basic.json
 
-oc create -f datagrid72-basic.json
-
 oc project devops-tools
 
 # for OCP 4
@@ -218,15 +216,16 @@ oc new-app --template=jenkins-ephemeral -p JENKINS_IMAGE_STREAM_TAG=jenkins:late
 
 oc new-app --template=jenkins-persistent -p JENKINS_IMAGE_STREAM_TAG=jenkins:latest -p MEMORY_LIMIT=1024Mi -p ENABLE_OAUTH=true
 
-# !!!!!!!! Modify the agent image jenkins-agent-maven-35-rhel7:v3.10.127 in the Jenkins configuration
-image-registry.openshift-image-registry.svc:5000/openshift/jenkins-agent-maven-35-rhel7
-
-
 oc project devops-tools
 
 oc adm policy add-cluster-role-to-user cluster-admin -z jenkins
 
 oc adm policy add-cluster-role-to-user cluster-admin -z opentlc-mgr
+
+# !!!!!!!! Modify the agent image jenkins-agent-maven-35-rhel7:v3.10.127 in the Jenkins configuration
+image-registry.openshift-image-registry.svc:5000/openshift/jenkins-agent-maven-35-rhel7
+
+
 
 oc project automation-tools
 
@@ -443,9 +442,9 @@ oc login https://masterdns6fkvd2aq5m6cg.westeurope.cloudapp.azure.com:443 --toke
 
 Templates execution
 
-oc start-build sales-infra-pipeline -e SALES_EVENT_STORE_VOLUME_CAPACITY=20Gi
+oc start-build sales-infra-pipeline -e SALES_EVENT_STORE_VOLUME_CAPACITY=10Gi
 
-oc start-build sales-deploy-ticket-service-endpoint-pipeline -e TICKET_SERVICE_ENDPOINT_VERSION=v1
+oc start-build sales-deploy-ticket-processor-endpoint-pipeline -e TICKET_PROCESSOR_ENDPOINT_VERSION=v1
 
 
 oc start-build sales-deploy-stock-query-endpoint-pipeline -e STOCK_QUERY_ENDPOINT_VERSION=v1

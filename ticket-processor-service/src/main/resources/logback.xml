@@ -8,7 +8,7 @@
         </encoder>
     </appender>
 
-    <logger name="org.springframework" level="DEBUG" />
+    <logger name="org.springframework" level="INFO" />
     <!--
     <logger name="org.springframework" level="OFF" />
     -->
@@ -22,7 +22,7 @@
     <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.store.kafka" level="DEBUG" />
     <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.store.amq" level="DEBUG" />
 
-    <root level="DEBUG">
+    <root level="INFO">
         <appender-ref ref="STDOUT" />
     </root>
 
