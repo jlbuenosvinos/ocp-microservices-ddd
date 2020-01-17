@@ -1,7 +1,5 @@
 package com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.infrastructure.controller;
 
-
-import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.application.configuration.ActiveMQConfig;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.application.exception.StockApplicationException;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.application.service.StockService;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.domain.builder.TicketBuilder;
@@ -11,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.EnableJms;
-import org.springframework.jms.annotation.JmsListener;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -20,17 +18,14 @@ import org.springframework.stereotype.Component;
 import javax.jms.Message;
 import javax.jms.Session;
 
+
 /**
  * Created by jlbuenosvinos.
  */
 @Component
-@EnableJms
-class TicketingController {
+class TicketingKafkaController {
 
-    public static final Logger logger = LoggerFactory.getLogger(TicketingController.class);
-
-    @Autowired
-    private ActiveMQConfig activeMQConfig;
+    public static final Logger logger = LoggerFactory.getLogger(TicketingKafkaController.class);
 
     @Autowired
     private TicketBuilder ticketBuilder;
@@ -41,27 +36,19 @@ class TicketingController {
     /**
      * Default constructor
      */
-    public TicketingController() {
+    public TicketingKafkaController() {
     }
 
-    /**
-     * Receives a ticket event
-     * @param ticket
-     * @param headers
-     * @param message
-     * @param session
-     */
-    @Timed
-    @JmsListener(destination = "${ticketing.activemq.tickets.topic}", containerFactory = "jmsListenerContainerFactory")
-    public void receiveTicket(@Payload String ticket, @Headers MessageHeaders headers, Message message, Session session) {
+    @KafkaListener(topics = "${ticketing.kafka.tickets.topic}")
+    public void receiveTicket() {
         Ticket ticketEvent = null;
         String ticketEventId = null;
 
         try {
-            ticketEvent = ticketBuilder.build(message);
-            ticketEventId = message.getStringProperty("sales-event-id");
-            logger.debug("Message received [{},{}]",message.getStringProperty("sales-event-type"),ticket);
-            stockService.processTicket(ticketEvent);
+
+
+
+
             logger.debug("The ticket [{}] event has been processed ok.",ticketEventId);
         }
         catch(Exception e) {

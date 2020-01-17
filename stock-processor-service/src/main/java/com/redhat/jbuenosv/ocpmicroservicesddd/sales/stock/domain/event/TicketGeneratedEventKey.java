@@ -1,4 +1,4 @@
-package com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.event;
+package com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.domain.event;
 
 import java.io.Serializable;
 

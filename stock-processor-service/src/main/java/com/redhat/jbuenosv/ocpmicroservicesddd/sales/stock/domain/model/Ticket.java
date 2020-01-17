@@ -78,16 +78,6 @@ public class Ticket implements Serializable {
     public String toJson() {
         StringBuilder result = new StringBuilder();
         String NEW_LINE = System.getProperty("line.separator");
-        /*
-        result.append("{" + NEW_LINE);
-        result.append("    \"store_id\": " + getStoreId() + "," + NEW_LINE);
-        result.append("    \"ticket_id\": " + getTicketId() + "," + NEW_LINE);
-        result.append("    \"item\": {" + NEW_LINE);
-        result.append("        \"id\": \"" + getItem().getId() + "\","  + NEW_LINE);
-        result.append("        \"units\": " + getItem().getUnits() + NEW_LINE);
-        result.append("      }" + NEW_LINE);
-        result.append("}");
-        */
         result.append("{");
         result.append("    \"store_id\": " + getStoreId() + ",");
         result.append("    \"ticket_id\": " + getTicketId() + ",");
