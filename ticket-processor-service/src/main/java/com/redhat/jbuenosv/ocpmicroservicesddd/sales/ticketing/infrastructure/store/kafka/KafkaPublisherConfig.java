@@ -33,10 +33,12 @@ public class KafkaPublisherConfig {
 
     public String getKafkaTicketsTopicName() {return this.kafkaTicketsTopicName; }
 
+    public String getBootstrapServers() {return this.bootstrapServers; }
+
     @Bean
     public Map<String, Object> producerConfigs() {
         Map<String, Object> props = new HashMap<>();
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, getBootstrapServers());
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, TicketGeneratedEventKeySerializer.class);
         // props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, TicketGeneratedEventSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
