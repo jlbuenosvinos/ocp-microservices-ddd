@@ -32,7 +32,7 @@ class TicketingKafkaController {
     }
 
     @KafkaListener(topics = "${ticketing.kafka.tickets.topic}", groupId = "1")
-    public void receiveTicket(TicketGeneratedEventKey key, String ticketPayLoad) {
+    public void receiveTicket(String ticketPayLoad) {
         logger.debug("receiveTicket start.");
         Ticket ticketEvent = null;
         String ticketEventId = null;
@@ -40,7 +40,7 @@ class TicketingKafkaController {
         try {
             ticketEvent = ticketBuilder.build(ticketPayLoad);
             stockService.processTicket(ticketEvent);
-            logger.debug("The ticket [{}] event has been processed ok.",key.toString());
+            //logger.debug("The ticket [{}] event has been processed ok.",key.toString());
         }
         catch(Exception e) {
             logger.debug("Error processing the ticket event due to an Exception [{}].",e.getMessage());

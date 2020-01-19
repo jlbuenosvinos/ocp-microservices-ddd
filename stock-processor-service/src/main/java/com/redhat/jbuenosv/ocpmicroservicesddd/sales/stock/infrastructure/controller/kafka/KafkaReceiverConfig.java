@@ -42,6 +42,7 @@ public class KafkaReceiverConfig {
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, getBootstrapServers());
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, TicketGeneratedEventKeyDeSerializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, "1");
         return new DefaultKafkaConsumerFactory<>(props);
     }
 
