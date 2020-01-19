@@ -4,7 +4,6 @@ import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.application.exception
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.application.service.StockService;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.domain.builder.TicketBuilder;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.domain.model.Ticket;
-import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.domain.model.TicketGeneratedEventKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
