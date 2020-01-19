@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
-
 /**
  * Created by jlbuenosvinos.
  */
@@ -42,7 +41,7 @@ class TicketingKafkaController {
 
 
 
-            logger.debug("The ticket [{}] event has been processed ok.",1);
+            logger.debug("The ticket [{}] event has been processed ok.",key.toString());
         }
         catch(Exception e) {
             logger.debug("Error processing the ticket event due to an Exception [{}].",e.getMessage());
