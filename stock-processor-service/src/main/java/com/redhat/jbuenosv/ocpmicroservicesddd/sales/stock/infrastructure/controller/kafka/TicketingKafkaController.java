@@ -31,7 +31,7 @@ class TicketingKafkaController {
     public TicketingKafkaController() {
     }
 
-    @KafkaListener(topics = "${ticketing.kafka.tickets.topic}")
+    @KafkaListener(topics = "${ticketing.kafka.tickets.topic}", groupId = "1")
     public void receiveTicket(TicketGeneratedEventKey key, String ticketPayLoad) {
         logger.debug("receiveTicket start.");
         Ticket ticketEvent = null;

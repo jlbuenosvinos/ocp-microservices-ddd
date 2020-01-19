@@ -15,6 +15,9 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 
+/**
+ * Created by jlbuenosvinos.
+ */
 @Configuration
 public class KafkaPublisherConfig {
 
