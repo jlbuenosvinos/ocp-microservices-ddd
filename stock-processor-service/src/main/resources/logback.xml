@@ -8,7 +8,7 @@
         </encoder>
     </appender>
 
-    <logger name="org.springframework" level="INFO" />
+    <logger name="org.springframework" level="DEBUG" />
 
     <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.application.configuration" level="DEBUG" />
     <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.domain.model" level="DEBUG" />
@@ -17,10 +17,11 @@
     <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.application.handler" level="DEBUG" />
     <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.application.handler.controller" level="DEBUG" />
     <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.infrastructure.store" level="DEBUG" />
+    <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.infrastructure.controller.kafka" level="DEBUG" />
     <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.infrastructure.repository" level="DEBUG" />
     <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.infrastructure.cache" level="DEBUG" />
 
-    <root level="INFO">
+    <root level="DEBUG">
         <appender-ref ref="STDOUT" />
     </root>
 
