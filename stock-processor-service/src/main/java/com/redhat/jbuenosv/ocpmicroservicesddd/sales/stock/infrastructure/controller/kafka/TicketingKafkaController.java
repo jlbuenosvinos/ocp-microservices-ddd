@@ -36,11 +36,10 @@ class TicketingKafkaController {
         logger.debug("receiveTicket start.");
         Ticket ticketEvent = null;
         String ticketEventId = null;
+
         try {
-
-
-
-
+            ticketEvent = ticketBuilder.build(ticketPayLoad);
+            stockService.processTicket(ticketEvent);
             logger.debug("The ticket [{}] event has been processed ok.",key.toString());
         }
         catch(Exception e) {
