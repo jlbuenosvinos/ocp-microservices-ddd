@@ -17,6 +17,7 @@
     <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.application.handler" level="DEBUG" />
     <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.application.handler.controller" level="DEBUG" />
     <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.infrastructure.store" level="DEBUG" />
+    <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.infrastructure.controller" level="DEBUG" />
     <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.infrastructure.controller.kafka" level="DEBUG" />
     <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.infrastructure.repository" level="DEBUG" />
     <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.infrastructure.cache" level="DEBUG" />
