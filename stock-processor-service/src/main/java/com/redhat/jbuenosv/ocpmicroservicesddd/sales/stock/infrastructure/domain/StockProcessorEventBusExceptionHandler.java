@@ -17,8 +17,10 @@ public class StockProcessorEventBusExceptionHandler implements com.google.common
 
     @Override
     public void handleException(Throwable throwable, SubscriberExceptionContext subscriberExceptionContext) {
-        logger.debug("Exception [{}]",throwable.getCause().toString());
+        logger.debug("Exception [{}]",throwable.toString());
         // @todo proper exception handling
+
+        
 
         // end @todo
         Throwables.propagate(Throwables.getRootCause(throwable));
