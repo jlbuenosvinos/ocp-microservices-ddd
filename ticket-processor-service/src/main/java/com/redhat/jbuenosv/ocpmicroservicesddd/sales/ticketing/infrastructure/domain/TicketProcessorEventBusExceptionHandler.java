@@ -17,7 +17,7 @@ public class TicketProcessorEventBusExceptionHandler implements com.google.commo
 
     @Override
     public void handleException(Throwable throwable, SubscriberExceptionContext subscriberExceptionContext) {
-        logger.debug("Exception [{}]",throwable.getCause().toString());
+        logger.debug("handle exception start.");
         // @todo proper exception handling
 
         // end @todo
