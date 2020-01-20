@@ -54,15 +54,19 @@ public class KafkaPublisherConfig {
         return props;
     }
 
+    /*
     @Bean("payloadTransactionManager")
     KafkaTransactionManager<TicketGeneratedEventKey, String> transactionManager() {
         return new KafkaTransactionManager<TicketGeneratedEventKey, String>(producerFactory());
     }
+    */
 
     @Bean
     public ProducerFactory<TicketGeneratedEventKey, String> producerFactory() {
         logger.debug("Kafka producer factory is ready.");
         DefaultKafkaProducerFactory<TicketGeneratedEventKey, String> factory = new DefaultKafkaProducerFactory<TicketGeneratedEventKey, String>(producerConfigs());
+        factory.transactionCapable();
+        factory.setTransactionIdPrefix("trans-");
         return factory;
     }
 
