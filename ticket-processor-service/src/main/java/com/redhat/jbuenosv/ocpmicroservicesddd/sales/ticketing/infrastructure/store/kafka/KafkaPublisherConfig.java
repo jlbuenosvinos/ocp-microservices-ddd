@@ -14,7 +14,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
-import org.springframework.kafka.transaction.KafkaTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
@@ -53,13 +52,6 @@ public class KafkaPublisherConfig {
         logger.debug("Kafka producer configuration is ready.");
         return props;
     }
-
-    /*
-    @Bean("payloadTransactionManager")
-    KafkaTransactionManager<TicketGeneratedEventKey, String> transactionManager() {
-        return new KafkaTransactionManager<TicketGeneratedEventKey, String>(producerFactory());
-    }
-    */
 
     @Bean
     public ProducerFactory<TicketGeneratedEventKey, String> producerFactory() {
