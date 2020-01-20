@@ -15,11 +15,13 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.transaction.KafkaTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  * Created by jlbuenosvinos.
  */
 @Configuration
+@EnableTransactionManagement
 public class KafkaPublisherConfig {
 
     public static final Logger logger = LoggerFactory.getLogger(KafkaPublisherConfig.class);
@@ -60,7 +62,8 @@ public class KafkaPublisherConfig {
     @Bean
     public ProducerFactory<TicketGeneratedEventKey, String> producerFactory() {
         logger.debug("Kafka producer factory is ready.");
-        return new DefaultKafkaProducerFactory<>(producerConfigs());
+        DefaultKafkaProducerFactory<TicketGeneratedEventKey, String> factory = new DefaultKafkaProducerFactory<TicketGeneratedEventKey, String>(producerConfigs());
+        return factory;
     }
 
     @Bean
