@@ -20,7 +20,8 @@ public class StockProcessorEventBusExceptionHandler implements com.google.common
         logger.debug("Exception [{}]",throwable.toString());
         // @todo proper exception handling
 
-        
+
+
 
         // end @todo
         Throwables.propagate(Throwables.getRootCause(throwable));

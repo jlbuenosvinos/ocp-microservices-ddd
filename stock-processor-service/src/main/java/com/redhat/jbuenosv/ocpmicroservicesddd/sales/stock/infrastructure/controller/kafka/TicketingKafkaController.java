@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by jlbuenosvinos.
@@ -30,6 +31,7 @@ class TicketingKafkaController {
     public TicketingKafkaController() {
     }
 
+    @Transactional
     @KafkaListener(topics = "${ticketing.kafka.tickets.topic}", groupId = "1")
     public void receiveTicket(String ticketPayLoad) {
         logger.debug("receiveTicket start.");
