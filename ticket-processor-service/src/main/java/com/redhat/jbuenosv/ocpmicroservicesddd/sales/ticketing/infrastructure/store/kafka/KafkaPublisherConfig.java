@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.kafka.transaction.KafkaTransactionManager;
 
 /**
  * Created by jlbuenosvinos.
@@ -34,9 +35,9 @@ public class KafkaPublisherConfig {
 
     public String getKafkaUserName() { return this.kafkaUserName; }
 
-    public String getKafkaTicketsTopicName() {return this.kafkaTicketsTopicName; }
+    public String getKafkaTicketsTopicName() { return this.kafkaTicketsTopicName; }
 
-    public String getBootstrapServers() {return this.bootstrapServers; }
+    public String getBootstrapServers() { return this.bootstrapServers; }
 
     @Bean
     public Map<String, Object> producerConfigs() {
@@ -48,6 +49,11 @@ public class KafkaPublisherConfig {
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         logger.debug("Kafka producer configuration is ready.");
         return props;
+    }
+
+    @Bean("payloadTransactionManager")
+    KafkaTransactionManager<TicketGeneratedEventKey, String> transactionManager() {
+        return new KafkaTransactionManager<TicketGeneratedEventKey, String>(producerFactory());
     }
 
     @Bean
