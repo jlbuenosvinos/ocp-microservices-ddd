@@ -17,10 +17,12 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 public class MetricsConfig {
 
     @Value("${management.metrics.artifactid.name}")
-    String metricsAppName;
+    private String metricsAppName;
 
     @Autowired
     private MeterRegistry registry;
+
+    public String getMetricsAppName() { return metricsAppName; }
 
     @Bean
     MeterRegistryCustomizer<MeterRegistry> metricsCommonTags() {

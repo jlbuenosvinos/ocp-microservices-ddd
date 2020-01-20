@@ -26,6 +26,7 @@ public class KafkaPublisher {
      */
     public void publish(String topic, TicketGeneratedEventKey key, String value) {
         logger.debug("Ready to send Event [{}] to topic [{}].",key,topic);
+        kafkaTemplate.inTransaction();
         kafkaTemplate.send(topic,key,value);
         logger.debug("Event [{}] has been sent to topic [{}].",key,topic);
     }

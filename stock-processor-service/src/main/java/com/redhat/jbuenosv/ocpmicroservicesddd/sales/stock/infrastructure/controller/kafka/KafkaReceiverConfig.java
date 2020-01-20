@@ -43,8 +43,9 @@ public class KafkaReceiverConfig {
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, TicketGeneratedEventKeyDeSerializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "1");
-        props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, Boolean.TRUE);
-        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG,"earliest");
+        props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");
+        //props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG,"earliest");
+        props.put(ConsumerConfig.ISOLATION_LEVEL_CONFIG,"read_committed");
         return new DefaultKafkaConsumerFactory<>(props);
     }
 

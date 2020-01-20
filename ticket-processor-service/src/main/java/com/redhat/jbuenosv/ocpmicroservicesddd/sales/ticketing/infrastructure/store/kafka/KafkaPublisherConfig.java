@@ -43,7 +43,8 @@ public class KafkaPublisherConfig {
         Map<String, Object> props = new HashMap<>();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, getBootstrapServers());
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, TicketGeneratedEventKeySerializer.class);
-        // props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, TicketGeneratedEventSerializer.class);
+        props.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, "true");
+        props.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, "ticket-processor-service");
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         logger.debug("Kafka producer configuration is ready.");
         return props;
