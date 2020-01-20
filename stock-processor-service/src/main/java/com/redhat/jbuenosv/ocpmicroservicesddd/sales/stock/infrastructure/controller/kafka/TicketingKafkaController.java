@@ -41,7 +41,6 @@ class TicketingKafkaController {
         try {
             ticketEvent = ticketBuilder.build(ticketPayLoad);
             stockService.processTicket(ticketEvent);
-            //logger.debug("The ticket [{}] event has been processed ok.",key.toString());
         }
         catch(Exception e) {
             logger.debug("Error processing the ticket event due to an Exception [{}].",e.getMessage());
