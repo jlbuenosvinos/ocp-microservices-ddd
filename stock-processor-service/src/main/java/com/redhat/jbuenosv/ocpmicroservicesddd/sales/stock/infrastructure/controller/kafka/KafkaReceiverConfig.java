@@ -11,12 +11,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.*;
+import org.springframework.kafka.transaction.KafkaTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
 @EnableKafka
+@EnableTransactionManagement
 public class KafkaReceiverConfig {
 
     public static final Logger logger = LoggerFactory.getLogger(KafkaReceiverConfig.class);
@@ -46,6 +49,11 @@ public class KafkaReceiverConfig {
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");
         props.put(ConsumerConfig.ISOLATION_LEVEL_CONFIG,"read_committed");
         return new DefaultKafkaConsumerFactory<>(props);
+    }
+
+    @Bean
+    public KafkaTransactionManager<TicketGeneratedEventKey, String> transactionManager(ProducerFactory<TicketGeneratedEventKey, String> consumerFactory) {
+        return new KafkaTransactionManager<TicketGeneratedEventKey, String>(consumerFactory);
     }
 
     @Bean
