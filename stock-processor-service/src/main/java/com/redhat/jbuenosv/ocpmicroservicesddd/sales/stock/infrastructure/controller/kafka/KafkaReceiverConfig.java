@@ -17,8 +17,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import java.util.HashMap;
 import java.util.Map;
 
-@Configuration
 @EnableKafka
+@Configuration
 @EnableTransactionManagement
 public class KafkaReceiverConfig {
 
@@ -40,7 +40,7 @@ public class KafkaReceiverConfig {
     public String getBootstrapServers() {return this.bootstrapServers; }
 
     @Bean
-    public ConsumerFactory<TicketGeneratedEventKey, String> consumerFactory() {
+    public ConsumerFactory consumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, getBootstrapServers());
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, TicketGeneratedEventKeyDeSerializer.class);
@@ -52,14 +52,10 @@ public class KafkaReceiverConfig {
     }
 
     @Bean
-    public KafkaTransactionManager<TicketGeneratedEventKey, String> transactionManager(ProducerFactory<TicketGeneratedEventKey, String> consumerFactory) {
-        return new KafkaTransactionManager<TicketGeneratedEventKey, String>(consumerFactory);
-    }
-
-    @Bean
-    public ConcurrentKafkaListenerContainerFactory<TicketGeneratedEventKey, String> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<TicketGeneratedEventKey, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    public ConcurrentKafkaListenerContainerFactory kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
+        //factory.getContainerProperties().setTransactionManager(transactionManager(factory));
         return factory;
     }
 

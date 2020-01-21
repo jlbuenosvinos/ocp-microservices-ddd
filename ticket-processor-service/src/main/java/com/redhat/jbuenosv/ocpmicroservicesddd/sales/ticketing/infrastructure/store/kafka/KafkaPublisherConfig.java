@@ -50,6 +50,7 @@ public class KafkaPublisherConfig {
         props.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, "ticket-processor-service");
         props.put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, 1);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        props.put(ProducerConfig.RETRIES_CONFIG, 3);
         logger.debug("Kafka producer configuration is ready.");
         return props;
     }
