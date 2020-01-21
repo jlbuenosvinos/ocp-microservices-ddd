@@ -56,8 +56,7 @@ public class KafkaPublisherConfig {
 
     @Bean
     public KafkaTransactionManager<TicketGeneratedEventKey, String> transactionManager(ProducerFactory<TicketGeneratedEventKey, String> producerFactory) {
-        KafkaTransactionManager<TicketGeneratedEventKey, String> manager = new KafkaTransactionManager<TicketGeneratedEventKey, String>(producerFactory);
-        return manager;
+        return new KafkaTransactionManager<TicketGeneratedEventKey, String>(producerFactory);
     }
 
     @Bean
