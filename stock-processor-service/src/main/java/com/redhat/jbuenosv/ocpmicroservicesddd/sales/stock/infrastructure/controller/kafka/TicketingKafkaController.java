@@ -31,7 +31,6 @@ class TicketingKafkaController {
     public TicketingKafkaController() {
     }
 
-    @Transactional
     @KafkaListener(topics = "${ticketing.kafka.tickets.topic}", groupId = "1")
     public void receiveTicket(String ticketPayLoad) {
         logger.debug("receiveTicket start.");
