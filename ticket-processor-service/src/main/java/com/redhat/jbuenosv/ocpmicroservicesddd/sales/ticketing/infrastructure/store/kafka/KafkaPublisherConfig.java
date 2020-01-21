@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.kafka.transaction.KafkaTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
@@ -51,6 +52,12 @@ public class KafkaPublisherConfig {
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         logger.debug("Kafka producer configuration is ready.");
         return props;
+    }
+
+    @Bean
+    public KafkaTransactionManager<TicketGeneratedEventKey, String> transactionManager(ProducerFactory<TicketGeneratedEventKey, String> producerFactory) {
+        KafkaTransactionManager<TicketGeneratedEventKey, String> manager = new KafkaTransactionManager<TicketGeneratedEventKey, String>(producerFactory);
+        return manager;
     }
 
     @Bean
