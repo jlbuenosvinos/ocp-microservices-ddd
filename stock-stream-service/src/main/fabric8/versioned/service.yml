@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ${project.artifactId}
+  labels:
+    app: ${project.artifactId}
+    service: ${project.artifactId}
+    version: ${project.version}
+spec:
+  ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: ${project.artifactId}

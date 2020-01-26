@@ -37,7 +37,6 @@ public class KafkaTicketStore implements EventStore {
         logger.debug("store begin.");
         TicketGeneratedEventKey key = new TicketGeneratedEventKey(event.getTicket().getStoreId(),event.getTicket().getTicketId());
         kafkaPublisherConfig.publisher().publish(kafkaPublisherConfig.getKafkaTicketsTopicName(),key,event.getTicket().toJson());
-        logger.debug("Ticket Event Payload [{}] has been stored.",event.getTicket().toJson());
         logger.debug("store end.");
     }
 

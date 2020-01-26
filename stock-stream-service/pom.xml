@@ -4,14 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.redhat.jbuenosv.ocpmicroservicesddd.sales</groupId>
-    <artifactId>ticket-processor-service</artifactId>
-
-    <version>${TICKETING_SERVICE_VERSION}</version>
-
+    <artifactId>stock-stream-service</artifactId>
+    <version>0.1</version>
     <packaging>jar</packaging>
 
-    <name>ticket-processor-service</name>
-    <description>ticket-processor-service</description>
+    <name>stock-stream-service</name>
+    <description>stock-stream-service</description>
 
     <parent>
         <groupId>io.openshift</groupId>
@@ -23,14 +21,13 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-        <postgresql.version>9.4.1212</postgresql.version>
         <maven.spring-boot.plugin.version>2.0.8.RELEASE</maven.spring-boot.plugin.version>
         <spring-boot-bom.version>2.1.3.Final-redhat-00001</spring-boot-bom.version>
-        <quarkus.version>0.21.2.redhat-00005</quarkus.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+
             <dependency>
                 <groupId>me.snowdrop</groupId>
                 <artifactId>spring-boot-bom</artifactId>
@@ -38,20 +35,11 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-        </dependencies>
-        <dependencies>
-            <dependency>
-                <groupId>io.quarkus</groupId>
-                <artifactId>quarkus-bom</artifactId>
-                <version>${quarkus.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
     <dependencies>
-
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-xml</artifactId>
@@ -130,11 +118,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.kafka</groupId>
-            <artifactId>spring-kafka</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
@@ -162,6 +145,53 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>1.2.3.redhat-00001</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-commons</artifactId>
+            <version>9.4.15.Final-redhat-00001</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-core</artifactId>
+            <version>9.4.15.Final-redhat-00001</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-client-hotrod</artifactId>
+            <version>9.4.15.Final-redhat-00001</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-query-dsl</artifactId>
+            <version>9.4.15.Final-redhat-00001</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-remote-query-client</artifactId>
+            <version>9.4.15.Final-redhat-00001</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-clustered-lock</artifactId>
+            <version>9.4.15.Final-redhat-00001</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-cachestore-remote</artifactId>
+            <version>9.4.15.Final-redhat-00001</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
         </dependency>
 
         <dependency>
@@ -239,7 +269,6 @@
     </pluginRepositories>
 
     <profiles>
-
         <profile>
             <id>local</id>
             <activation>
@@ -269,7 +298,6 @@
                 </plugins>
             </build>
         </profile>
-        
     </profiles>
 
 </project>
