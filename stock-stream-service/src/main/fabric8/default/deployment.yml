@@ -119,18 +119,18 @@ spec:
               configMapKeyRef:
                 name: ${project.artifactId}
                 key: STOCK_METRICS_ARTIFACTID_NAME
-          - name: "TICKETING_TICKETS_KAFKA_BOOTSTRAP_SERVERS"
-            valueFrom:
-              configMapKeyRef:
-                name: ${project.artifactId}
-                key: TICKETING_TICKETS_KAFKA_BOOTSTRAP_SERVERS
-          - name: "TICKETING_TICKETS_KAFKA_USERNAME"
-            valueFrom:
-              configMapKeyRef:
-                name: ${project.artifactId}
-                key: TICKETING_TICKETS_KAFKA_USERNAME
           - name: "TICKETING_TICKETS_KAFKA_DESTINATION_NAME"
             valueFrom:
               configMapKeyRef:
                 name: ${project.artifactId}
                 key: TICKETING_TICKETS_KAFKA_DESTINATION_NAME
+          - name: "TICKETING_TICKETS_KAFKA_BOOTSTRAP_SERVERS"
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}-${project.version}
+                key: TICKETING_TICKETS_KAFKA_BOOTSTRAP_SERVERS
+          - name: "TICKETING_TICKETS_KAFKA_USERNAME"
+            valueFrom:
+              configMapKeyRef:
+                name: ${project.artifactId}-${project.version}
+                key: TICKETING_TICKETS_KAFKA_USERNAME

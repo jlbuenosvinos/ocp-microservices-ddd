@@ -18,20 +18,22 @@ public class TicketStreamLoaderImp implements StreamLoader {
     @PostConstruct
     public void init() {
         logger.debug("TicketStreamLoaderImp init.");
-
         logger.debug("TicketStreamLoaderImp init ends.");
+    }
+
+    @Override
+    public void loadStream() {
+        logger.debug("start.");
+
+
+
+        logger.debug("end.");
     }
 
     @PreDestroy
     public void stop() {
         logger.debug("TicketStreamLoaderImp stop.");
-
         logger.debug("TicketStreamLoaderImp stop ends.");
     }
 
-    @Override
-    public void loadStream() {
-        
-
-    }
 }
