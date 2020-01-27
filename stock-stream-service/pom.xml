@@ -5,7 +5,7 @@
 
     <groupId>com.redhat.jbuenosv.ocpmicroservicesddd.sales</groupId>
     <artifactId>stock-stream-service</artifactId>
-    <version>0.1</version>
+    <version>${STOCK_STREAM_PROCESSOR_SERVICE_VERSION}</version>
     <packaging>jar</packaging>
 
     <name>stock-stream-service</name>
