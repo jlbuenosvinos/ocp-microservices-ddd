@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.redhat.jbuenosv.ocpmicroservicesddd.sales</groupId>
-    <artifactId>stock-processor-service</artifactId>
+    <artifactId>stock-stream-processor-service</artifactId>
     <version>${STOCK_PROCESSOR_SERVICE_VERSION}</version>
     <packaging>jar</packaging>
 
