@@ -10,6 +10,7 @@ import org.springframework.kafka.annotation.EnableKafka;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 @EnableKafka
 @Configuration
@@ -32,12 +33,27 @@ public class KafkaStreamConfig {
 
     public String getBootstrapServers() {return this.bootstrapServers; }
 
+    private Properties properties;
+
     @Bean
-    public StreamsConfig streamsFactory() {
+    private Map<String,Object> propMap() {
         Map<String, Object> props = new HashMap<>();
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, "test-stream-app");
         props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, getBootstrapServers());
-        return new StreamsConfig(props);
+        return props;
+    }
+
+    @Bean
+    public Properties propValues() {
+        Properties props = new Properties();
+        props.setProperty(StreamsConfig.APPLICATION_ID_CONFIG, propMap().get(StreamsConfig.APPLICATION_ID_CONFIG).toString());
+        props.setProperty(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, propMap().get(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG).toString());
+        return props;
+    }
+
+    @Bean
+    public StreamsConfig streamsFactory() {
+        return new StreamsConfig(propMap());
     }
 
 }

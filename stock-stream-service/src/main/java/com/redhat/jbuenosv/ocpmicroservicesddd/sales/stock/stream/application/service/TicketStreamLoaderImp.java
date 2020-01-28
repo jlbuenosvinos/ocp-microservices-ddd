@@ -41,10 +41,15 @@ public class TicketStreamLoaderImp implements StreamLoader {
         StreamsBuilder builder = new StreamsBuilder();
         KStream<String, String> simpleFirstStream = builder.stream(kafkaConfig.getKafkaTicketsTopicName(), Consumed.with(stringSerde, stringSerde));
 
-        //KStream<String, String> upperCasedStream = simpleFirstStream.mapValues(String::toUpperCase);
+        logger.debug("simpleFirstStream.");
 
         simpleFirstStream.to( "my-output-topic", Produced.with(stringSerde, stringSerde));
-        KafkaStreams kafkaStreams = new KafkaStreams(builder.build(),kafkaConfig.streamsFactory());
+        logger.debug("simpleFirstStream - my-output-topic.");
+
+        KafkaStreams kafkaStreams = new KafkaStreams(builder.build(),kafkaConfig.propValues());
+
+        logger.debug("kafkaStreams.");
+
         kafkaStreams.start();
 
         logger.debug("end.");
