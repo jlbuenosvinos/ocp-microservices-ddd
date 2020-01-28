@@ -7,6 +7,7 @@ import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.KStream;
+import org.apache.kafka.streams.kstream.Printed;
 import org.apache.kafka.streams.kstream.Produced;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,15 +42,12 @@ public class TicketStreamLoaderImp implements StreamLoader {
         StreamsBuilder builder = new StreamsBuilder();
         KStream<String, String> simpleFirstStream = builder.stream(kafkaConfig.getKafkaTicketsTopicName(), Consumed.with(stringSerde, stringSerde));
 
-        logger.debug("simpleFirstStream.");
-
         simpleFirstStream.to( "my-output-topic", Produced.with(stringSerde, stringSerde));
         logger.debug("simpleFirstStream - my-output-topic.");
 
+        simpleFirstStream.print(Printed.<String, String>toSysOut().withLabel("my-output-topic"));
+
         KafkaStreams kafkaStreams = new KafkaStreams(builder.build(),kafkaConfig.propValues());
-
-        logger.debug("kafkaStreams.");
-
         kafkaStreams.start();
 
         logger.debug("end.");
