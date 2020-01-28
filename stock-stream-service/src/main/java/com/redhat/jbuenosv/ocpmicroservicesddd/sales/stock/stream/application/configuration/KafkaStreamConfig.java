@@ -36,7 +36,7 @@ public class KafkaStreamConfig {
     private Properties properties;
 
     @Bean
-    private Map<String,Object> propMap() {
+    public Map<String,Object> propMap() {
         Map<String, Object> props = new HashMap<>();
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, "test-stream-app");
         props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, getBootstrapServers());
