@@ -28,15 +28,12 @@ public class TicketStreamLoaderImp implements StreamLoader {
     @Autowired
     KafkaStreamConfig kafkaConfig;
 
+    private Boolean isReady;
+    private KafkaStreams kafkaStreams;
+
     @PostConstruct
     public void init() {
         logger.debug("TicketStreamLoaderImp init.");
-        logger.debug("TicketStreamLoaderImp init ends.");
-    }
-
-    @Override
-    public void loadStream() {
-        logger.debug("start.");
 
         Serde<String> stringSerde = Serdes.String();
         StreamsBuilder builder = new StreamsBuilder();
@@ -47,8 +44,22 @@ public class TicketStreamLoaderImp implements StreamLoader {
 
         simpleFirstStream.print(Printed.<String, String>toSysOut().withLabel("my-output-topic"));
 
-        KafkaStreams kafkaStreams = new KafkaStreams(builder.build(),kafkaConfig.propValues());
-        kafkaStreams.start();
+        kafkaStreams = new KafkaStreams(builder.build(),kafkaConfig.propValues());
+
+        logger.debug("TicketStreamLoaderImp init ends.");
+    }
+
+    @Override
+    public void loadStream() {
+        logger.debug("start.");
+
+        if (kafkaStreams != null) {
+            kafkaStreams.start();
+            logger.error("kafkaStreams has been started.");
+        }
+        else {
+            logger.error("kafkaStreams is null");
+        }
 
         logger.debug("end.");
     }
@@ -56,6 +67,15 @@ public class TicketStreamLoaderImp implements StreamLoader {
     @PreDestroy
     public void stop() {
         logger.debug("TicketStreamLoaderImp stop.");
+
+        if (kafkaStreams != null) {
+            kafkaStreams.close();
+            logger.error("kafkaStreams has been closed.");
+        }
+        else {
+            logger.error("kafkaStreams is null");
+        }
+
         logger.debug("TicketStreamLoaderImp stop ends.");
     }
 
