@@ -21,9 +21,8 @@ public class StockStreamApplicationListener {
 
     @EventListener
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        logger.debug("start. [{}]",event.getApplicationContext().getStartupDate());
-
-
+        logger.debug("start.");
+        ticketStreamLoader.loadStream();
         logger.debug("end.");
     }
 
