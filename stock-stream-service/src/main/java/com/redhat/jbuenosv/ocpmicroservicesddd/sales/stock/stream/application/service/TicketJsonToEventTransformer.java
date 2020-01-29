@@ -28,7 +28,7 @@ public class TicketJsonToEventTransformer implements Transformer<String, String,
 
     @Override
     public KeyValue<TicketKey, TicketValue> transform(String s1, String s2) {
-        logger.debug("s [{}]",s1);
+        logger.debug("s1 [{}]",s1);
         logger.debug("s2 [{}]",s2);
         TicketKey key = builder.buildKey(s2);
         TicketValue value = builder.buildValue(s2);

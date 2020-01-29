@@ -5,10 +5,12 @@ import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.domain.model.T
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.kstream.Transformer;
 import org.apache.kafka.streams.kstream.TransformerSupplier;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by jlbuenosvinos.
  */
+@Component
 public class TicketJsonToEventProcessorSupplier implements TransformerSupplier<String, String, KeyValue<TicketKey, TicketValue>> {
 
     @Override
