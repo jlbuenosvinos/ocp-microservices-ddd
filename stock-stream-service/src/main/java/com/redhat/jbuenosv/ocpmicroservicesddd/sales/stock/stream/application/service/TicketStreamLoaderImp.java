@@ -34,18 +34,12 @@ public class TicketStreamLoaderImp implements StreamLoader {
     @PostConstruct
     public void init() {
         logger.debug("TicketStreamLoaderImp init.");
-
         Serde<String> stringSerde = Serdes.String();
         StreamsBuilder builder = new StreamsBuilder();
-        KStream<String, String> simpleFirstStream = builder.stream(kafkaConfig.getKafkaTicketsTopicName(), Consumed.with(stringSerde, stringSerde));
-
-        simpleFirstStream.to( "my-output-topic", Produced.with(stringSerde, stringSerde));
-        logger.debug("simpleFirstStream - my-output-topic.");
-
-        simpleFirstStream.print(Printed.<String, String>toSysOut().withLabel("my-output-topic"));
-
+        KStream<String, String> eventsStream = builder.stream(kafkaConfig.getKafkaTicketsTopicName(), Consumed.with(stringSerde, stringSerde));
+        eventsStream.to(kafkaConfig.getKafkaTicketsEventsTopicName(), Produced.with(stringSerde, stringSerde));
+        eventsStream.print(Printed.<String, String>toSysOut().withLabel(kafkaConfig.getKafkaTicketsEventsTopicName()));
         kafkaStreams = new KafkaStreams(builder.build(),kafkaConfig.propValues());
-
         logger.debug("TicketStreamLoaderImp init ends.");
     }
 

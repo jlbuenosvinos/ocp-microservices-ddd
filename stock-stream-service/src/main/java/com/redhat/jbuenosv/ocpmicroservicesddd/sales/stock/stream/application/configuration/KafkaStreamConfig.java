@@ -27,11 +27,16 @@ public class KafkaStreamConfig {
     @Value("${ticketing.kafka.tickets.topic}")
     private String kafkaTicketsTopicName;
 
+    @Value("${ticketing.kafka.tickets.events.topic}")
+    private String kafkaTicketsEventsTopicName;
+
     public String getKafkaUserName() { return this.kafkaUserName; }
 
     public String getKafkaTicketsTopicName() {return this.kafkaTicketsTopicName; }
 
     public String getBootstrapServers() {return this.bootstrapServers; }
+
+    public String getKafkaTicketsEventsTopicName() { return this.kafkaTicketsEventsTopicName; }
 
     private Properties properties;
 
