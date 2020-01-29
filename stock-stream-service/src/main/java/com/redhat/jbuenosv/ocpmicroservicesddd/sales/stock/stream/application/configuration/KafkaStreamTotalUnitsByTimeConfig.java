@@ -64,7 +64,7 @@ public class KafkaStreamTotalUnitsByTimeConfig {
     }
 
     @Bean
-    public StreamsConfig streamsFactory() {
+    public StreamsConfig streamsFactoryStreamTotalUnitsByTime() {
         return new StreamsConfig(propMapStreamTotalUnitsByTime());
     }
 
