@@ -29,8 +29,8 @@ public class TicketBuilder {
             JsonNode rootNode = mapper.readTree(ticket);
             nameNode = rootNode.path("store_id");
             newTicketKey.setStoreId(nameNode.intValue());
-            nameNode = rootNode.path("ticket_id");
-            newTicketKey.setTicketId(nameNode.textValue());
+            nameNode = rootNode.path("item").path("id");
+            newTicketKey.setId(nameNode.textValue());
             logger.debug("newTicketKey ready.",newTicketKey);
         }
         catch(Exception e) {

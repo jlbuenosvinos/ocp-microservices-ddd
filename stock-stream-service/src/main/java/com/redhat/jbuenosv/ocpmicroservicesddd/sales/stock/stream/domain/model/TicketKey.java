@@ -9,24 +9,21 @@ import java.io.Serializable;
 public class TicketKey implements Serializable {
 
     private Integer storeId;
-    private String ticketId;
+    private String id;
 
     /**
      * Default constructor
      */
     public TicketKey() {
         this.storeId = 0;
-        this.ticketId = "";
     }
 
-    /**
-     * Custom constructor
-     * @param storeId store id
-     * @param ticketId ticket id
-     */
-    public TicketKey(Integer storeId, String ticketId) {
-        this.storeId = storeId;
-        this.ticketId = ticketId;
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public Integer getStoreId() {
@@ -37,20 +34,13 @@ public class TicketKey implements Serializable {
         this.storeId = storeId;
     }
 
-    public String getTicketId() {
-        return ticketId;
-    }
-
-    public void setTicketId(String ticketId) {
-        this.ticketId = ticketId;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TicketKey ticket = (TicketKey)o;
-        if (ticket.getTicketId().equalsIgnoreCase(ticketId) && ticket.getStoreId().intValue() == storeId.intValue()) return true;
+        if (ticket.getStoreId().intValue() == storeId.intValue()
+                && ticket.getId().equalsIgnoreCase(getId())) return true;
         else return false;
     }
 
@@ -60,7 +50,7 @@ public class TicketKey implements Serializable {
         String NEW_LINE = System.getProperty("line.separator");
         result.append(this.getClass().getName() + " Object {" + NEW_LINE);
         result.append(" storeId: " + getStoreId() + NEW_LINE);
-        result.append(" ticketId: " + getTicketId() + NEW_LINE);
+        result.append(" id: " + getId() + NEW_LINE);
         result.append("}");
         return result.toString();
     }
@@ -74,7 +64,7 @@ public class TicketKey implements Serializable {
         String NEW_LINE = System.getProperty("line.separator");
         result.append("{" + NEW_LINE);
         result.append("    \"store_id\": " + getStoreId() + "," + NEW_LINE);
-        result.append("    \"ticket_id\": \"" + getTicketId() + "\","  + NEW_LINE);
+        result.append("    \"id\": \"" + getId() + "\","  + NEW_LINE);
         result.append("}");
         return result.toString();
     }
