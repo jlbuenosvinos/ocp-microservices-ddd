@@ -1,6 +1,12 @@
 package com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.application.service;
 
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.application.configuration.KafkaStreamConfig;
+import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.domain.model.TicketKey;
+import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.domain.model.TicketValue;
+import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.infrastructure.domain.TicketKeyDeSerializer;
+import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.infrastructure.domain.TicketKeySerializer;
+import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.infrastructure.domain.TicketValueDeSerializer;
+import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.infrastructure.domain.TicketValueSerializer;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
@@ -34,20 +40,23 @@ public class TicketStreamLoaderImp implements StreamLoader {
     @PostConstruct
     public void init() {
         logger.debug("TicketStreamLoaderImp init.");
-        Serde<String> stringSerde = Serdes.String();
+
         StreamsBuilder builder = new StreamsBuilder();
+        Serde<String> stringSerde = Serdes.String();
+        Serde<TicketKey> ticketKeySerde = Serdes.serdeFrom(new TicketKeySerializer(), new TicketKeyDeSerializer());
+        Serde<TicketValue> ticketValueSerde = Serdes.serdeFrom(new TicketValueSerializer(), new TicketValueDeSerializer());
         KStream<String, String> eventsStream = builder.stream(kafkaConfig.getKafkaTicketsTopicName(), Consumed.with(stringSerde, stringSerde));
+        // KStream<TicketKey, TicketValue> ticketsStream = eventsStream.transform(new TicketJsonToEventProcessorSupplier().get());
 
+        KStream<TicketKey, TicketValue> ticketsStream = eventsStream.transform(TicketJsonToEventTransformer::new,"ticketJsonToEventTransformState");
+        ticketsStream.to(kafkaConfig.getKafkaTicketsEventsTopicName(), Produced.with(ticketKeySerde,ticketValueSerde));
+        ticketsStream.print(Printed.<TicketKey, TicketValue>toSysOut().withLabel(kafkaConfig.getKafkaTicketsEventsTopicName()));
 
-
-
-
-
-
-
-
+        /*
         eventsStream.to(kafkaConfig.getKafkaTicketsEventsTopicName(), Produced.with(stringSerde, stringSerde));
         eventsStream.print(Printed.<String, String>toSysOut().withLabel(kafkaConfig.getKafkaTicketsEventsTopicName()));
+        */
+
         kafkaStreams = new KafkaStreams(builder.build(),kafkaConfig.propValues());
         logger.debug("TicketStreamLoaderImp init ends.");
     }

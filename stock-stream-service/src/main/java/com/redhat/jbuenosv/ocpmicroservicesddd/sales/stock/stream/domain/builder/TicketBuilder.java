@@ -39,7 +39,7 @@ public class TicketBuilder {
         return newTicketKey;
     }  // end buildKey
 
-    public TicketValue build(String ticket) {
+    public TicketValue buildValue(String ticket) {
         JsonNode nameNode;
         JsonNode jsonItem;
         TicketValue newTicketValue = new TicketValue();
@@ -62,6 +62,6 @@ public class TicketBuilder {
         }
 
         return newTicketValue;
-    }
+    } // end buildValue
 
 }
