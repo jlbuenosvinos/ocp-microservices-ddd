@@ -42,7 +42,7 @@ public class KafkaStreamTotalUnitsByTimeConfig {
     private Properties properties;
 
     @Bean
-    public Map<String,Object> propMap() {
+    public Map<String,Object> propMapStreamTotalUnitsByTime() {
         Map<String, Object> props = new HashMap<>();
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, "totalunitsbytime-stream-app");
         props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, getBootstrapServers());
@@ -53,19 +53,19 @@ public class KafkaStreamTotalUnitsByTimeConfig {
     }
 
     @Bean
-    public Properties propValues() {
+    public Properties propValuesStreamTotalUnitsByTime() {
         Properties props = new Properties();
-        props.setProperty(StreamsConfig.APPLICATION_ID_CONFIG, propMap().get(StreamsConfig.APPLICATION_ID_CONFIG).toString());
-        props.setProperty(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, propMap().get(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG).toString());
-        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, propMap().get(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG).toString());
-        props.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, propMap().get(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG).toString());
-        props.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, propMap().get(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG).toString());
+        props.setProperty(StreamsConfig.APPLICATION_ID_CONFIG, propMapStreamTotalUnitsByTime().get(StreamsConfig.APPLICATION_ID_CONFIG).toString());
+        props.setProperty(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, propMapStreamTotalUnitsByTime().get(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG).toString());
+        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, propMapStreamTotalUnitsByTime().get(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG).toString());
+        props.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, propMapStreamTotalUnitsByTime().get(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG).toString());
+        props.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, propMapStreamTotalUnitsByTime().get(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG).toString());
         return props;
     }
 
     @Bean
     public StreamsConfig streamsFactory() {
-        return new StreamsConfig(propMap());
+        return new StreamsConfig(propMapStreamTotalUnitsByTime());
     }
 
 }
