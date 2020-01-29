@@ -8,7 +8,6 @@ import org.apache.kafka.streams.kstream.Transformer;
 import org.apache.kafka.streams.processor.ProcessorContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,8 +25,6 @@ public class TicketJsonToEventTransformer implements Transformer<String, String,
     @Override
     public KeyValue<TicketKey, TicketValue> transform(String s1, String s2) {
         TicketBuilder builder = new TicketBuilder();
-        logger.debug("s1 [{}]",s1);
-        logger.debug("s2 [{}]",s2);
         TicketKey key = builder.buildKey(s2);
         TicketValue value = builder.buildValue(s2);
         return new KeyValue<TicketKey, TicketValue>(key,value);
