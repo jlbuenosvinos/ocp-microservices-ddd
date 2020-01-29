@@ -6,7 +6,7 @@ import java.io.Serializable;
  * This class represents a ticket event
  * Created by jlbuenosvinos.
  */
-public class TicketGeneratedEventKey implements Serializable {
+public class TicketKey implements Serializable {
 
     private Integer storeId;
     private String ticketId;
@@ -14,7 +14,7 @@ public class TicketGeneratedEventKey implements Serializable {
     /**
      * Default constructor
      */
-    public TicketGeneratedEventKey() {
+    public TicketKey() {
         this.storeId = 0;
         this.ticketId = "";
     }
@@ -24,7 +24,7 @@ public class TicketGeneratedEventKey implements Serializable {
      * @param storeId store id
      * @param ticketId ticket id
      */
-    public TicketGeneratedEventKey(Integer storeId, String ticketId) {
+    public TicketKey(Integer storeId, String ticketId) {
         this.storeId = storeId;
         this.ticketId = ticketId;
     }
@@ -49,7 +49,7 @@ public class TicketGeneratedEventKey implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TicketGeneratedEventKey ticket = (TicketGeneratedEventKey)o;
+        TicketKey ticket = (TicketKey)o;
         if (ticket.getTicketId().equalsIgnoreCase(ticketId) && ticket.getStoreId().intValue() == storeId.intValue()) return true;
         else return false;
     }

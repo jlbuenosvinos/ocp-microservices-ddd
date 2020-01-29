@@ -1,8 +1,6 @@
 package com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.domain.builder;
 
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.application.exception.StockApplicationException;
-import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.domain.model.Ticket;
-import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.domain.model.TicketItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

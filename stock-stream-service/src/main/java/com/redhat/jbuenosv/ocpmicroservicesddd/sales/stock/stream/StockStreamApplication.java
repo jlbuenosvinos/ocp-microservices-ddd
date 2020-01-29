@@ -11,14 +11,14 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 
 @SpringBootApplication
 @EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class, DataSourceTransactionManagerAutoConfiguration.class, HibernateJpaAutoConfiguration.class,ErrorMvcAutoConfiguration.class})
-public class StockApplication extends SpringBootServletInitializer {
+public class StockStreamApplication extends SpringBootServletInitializer {
 
 	/**
 	 * main method
 	 * @param args application arguments
 	 */
 	public static void main(String[] args) {
-	    SpringApplication.run(StockApplication.class, args);
+	    SpringApplication.run(StockStreamApplication.class, args);
 	}
 
 }
