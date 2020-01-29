@@ -15,6 +15,9 @@ import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.Printed;
 import org.apache.kafka.streams.kstream.Produced;
+import org.apache.kafka.streams.state.KeyValueStore;
+import org.apache.kafka.streams.state.StoreBuilder;
+import org.apache.kafka.streams.state.Stores;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,17 +49,11 @@ public class TicketStreamLoaderImp implements StreamLoader {
         Serde<TicketKey> ticketKeySerde = Serdes.serdeFrom(new TicketKeySerializer(), new TicketKeyDeSerializer());
         Serde<TicketValue> ticketValueSerde = Serdes.serdeFrom(new TicketValueSerializer(), new TicketValueDeSerializer());
         KStream<String, String> eventsStream = builder.stream(kafkaConfig.getKafkaTicketsTopicName(), Consumed.with(stringSerde, stringSerde));
-        // KStream<TicketKey, TicketValue> ticketsStream = eventsStream.transform(new TicketJsonToEventProcessorSupplier().get());
-
+        StoreBuilder<KeyValueStore<TicketKey, TicketValue>> keyValueStoreBuilder = Stores.keyValueStoreBuilder(Stores.persistentKeyValueStore("ticketJsonToEventTransformState"),ticketKeySerde,ticketValueSerde);
+        builder.addStateStore(keyValueStoreBuilder);
         KStream<TicketKey, TicketValue> ticketsStream = eventsStream.transform(TicketJsonToEventTransformer::new,"ticketJsonToEventTransformState");
         ticketsStream.to(kafkaConfig.getKafkaTicketsEventsTopicName(), Produced.with(ticketKeySerde,ticketValueSerde));
         ticketsStream.print(Printed.<TicketKey, TicketValue>toSysOut().withLabel(kafkaConfig.getKafkaTicketsEventsTopicName()));
-
-        /*
-        eventsStream.to(kafkaConfig.getKafkaTicketsEventsTopicName(), Produced.with(stringSerde, stringSerde));
-        eventsStream.print(Printed.<String, String>toSysOut().withLabel(kafkaConfig.getKafkaTicketsEventsTopicName()));
-        */
-
         kafkaStreams = new KafkaStreams(builder.build(),kafkaConfig.propValues());
         logger.debug("TicketStreamLoaderImp init ends.");
     }
