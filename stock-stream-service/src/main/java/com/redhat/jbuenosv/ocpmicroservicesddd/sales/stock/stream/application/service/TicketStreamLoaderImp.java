@@ -42,6 +42,10 @@ public class TicketStreamLoaderImp implements StreamLoader {
 
 
 
+
+
+
+
         eventsStream.to(kafkaConfig.getKafkaTicketsEventsTopicName(), Produced.with(stringSerde, stringSerde));
         eventsStream.print(Printed.<String, String>toSysOut().withLabel(kafkaConfig.getKafkaTicketsEventsTopicName()));
         kafkaStreams = new KafkaStreams(builder.build(),kafkaConfig.propValues());

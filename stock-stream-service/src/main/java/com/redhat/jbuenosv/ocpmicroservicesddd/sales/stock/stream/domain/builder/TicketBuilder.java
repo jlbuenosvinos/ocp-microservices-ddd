@@ -1,14 +1,13 @@
 package com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.domain.builder;
 
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.application.exception.StockApplicationException;
+import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.domain.model.TicketKey;
+import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.domain.model.TicketValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import javax.jms.Message;
-import javax.jms.TextMessage;
 
 /**
  * Order builder
@@ -19,64 +18,50 @@ public class TicketBuilder {
 
     public static final Logger logger = LoggerFactory.getLogger(TicketBuilder.class);
 
-    /**
-     * Builds a Ticket type reading its JSON representation
-     * @param ticket ticket item
-     * @return ticket object based on the event representation
-     */
-    public Ticket build(Message ticket) {
-        Ticket newTicket;
-        TextMessage ticketMessage = (TextMessage)ticket;
-        try {
-            newTicket = build(ticketMessage.getText());
-        }
-        catch(Exception e) {
-            logger.error("Unable to build the ticket. [{}]",e.getMessage());
-            throw new StockApplicationException(e) ;
-        }
-        return newTicket;
-    }
-
-    /**
-     * Builds a Ticket type reading its JSON representation
-     * @param ticket ticket item
-     * @return ticket object based on the event representation
-     */
-    public Ticket build(String ticket) {
+    public TicketKey buildKey(String ticket) {
         JsonNode nameNode;
         JsonNode jsonItem;
-        Ticket newTicket = new Ticket();
-        TicketItem ticketItem = new TicketItem();
+        TicketKey newTicketKey = new TicketKey();
 
         try {
-
             ObjectMapper mapper = new ObjectMapper();
             JsonNode rootNode = mapper.readTree(ticket);
-
             nameNode = rootNode.path("store_id");
-            Integer nodeStoreId = nameNode.intValue();
-            newTicket.setStoreId(nodeStoreId);
-
+            newTicketKey.setStoreId(nameNode.intValue());
             nameNode = rootNode.path("ticket_id");
-            String nodeTicketId = nameNode.textValue();
-            newTicket.setTicketId(nodeTicketId);
+            newTicketKey.setTicketId(nameNode.textValue());
+        }
+        catch(Exception e) {
+            logger.error("Unable to build the ticket key. [{}]",e.getMessage());
+            throw new StockApplicationException(e) ;
+        }
 
-            jsonItem = rootNode.path("item").path("id");
-            String nodeId = jsonItem.textValue();
+        return newTicketKey;
+    }  // end buildKey
 
-            jsonItem = rootNode.path("item").path("units");
-            Integer units = jsonItem.asInt();
+    public TicketValue build(String ticket) {
+        JsonNode nameNode;
+        JsonNode jsonItem;
+        TicketValue newTicketValue = new TicketValue();
 
-            ticketItem.setId(nodeId);
-            ticketItem.setUnits(units);
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode rootNode = mapper.readTree(ticket);
+            nameNode = rootNode.path("store_id");
+            newTicketValue.setStoreId(nameNode.intValue());
+            nameNode = rootNode.path("ticket_id");
+            newTicketValue.setTicketId(nameNode.textValue());
+            nameNode = rootNode.path("item").path("id");
+            newTicketValue.setId(nameNode.textValue());
+            nameNode = rootNode.path("item").path("units");
+            newTicketValue.setUnits(nameNode.intValue());
         }
         catch(Exception e) {
             logger.error("Unable to build the ticket. [{}]",e.getMessage());
             throw new StockApplicationException(e) ;
         }
 
-        newTicket.setItem(ticketItem);
-        return newTicket;
+        return newTicketValue;
     }
 
 }
