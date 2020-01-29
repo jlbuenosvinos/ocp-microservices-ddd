@@ -1,6 +1,7 @@
 package com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.infrastructure.listener;
 
-import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.application.service.TicketStreamLoaderImp;
+import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.application.service.processor.TotalUnitsByTimeStreamLoaderImp;
+import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.application.service.transform.TicketStreamLoaderImp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +20,14 @@ public class StockStreamApplicationListener {
     @Autowired
     TicketStreamLoaderImp ticketStreamLoader;
 
+    @Autowired
+    TotalUnitsByTimeStreamLoaderImp totalUnitsbyTimeStreamLoader;
+
     @EventListener
     public void onApplicationEvent(ContextRefreshedEvent event) {
         logger.debug("start.");
         ticketStreamLoader.loadStream();
+        totalUnitsbyTimeStreamLoader.loadStream();
         logger.debug("end.");
     }
 

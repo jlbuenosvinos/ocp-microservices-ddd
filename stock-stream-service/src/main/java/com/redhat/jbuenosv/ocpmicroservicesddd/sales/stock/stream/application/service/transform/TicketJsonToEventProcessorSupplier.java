@@ -1,4 +1,4 @@
-package com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.application.service;
+package com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.application.service.transform;
 
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.domain.model.TicketKey;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.domain.model.TicketValue;

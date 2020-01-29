@@ -1,6 +1,9 @@
-package com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.application.service;
+package com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.application.service.processor;
 
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.application.configuration.KafkaStreamConfig;
+import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.application.configuration.KafkaStreamTotalUnitsByTimeConfig;
+import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.application.service.StreamLoader;
+import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.application.service.transform.TicketJsonToEventTransformer;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.domain.model.TicketKey;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.domain.model.TicketValue;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.infrastructure.domain.TicketKeyDeSerializer;
@@ -30,37 +33,49 @@ import javax.annotation.PreDestroy;
  * Created by jlbuenosvinos.
  */
 @Service
-public class TicketStreamLoaderImp implements StreamLoader {
+public class TotalUnitsByTimeStreamLoaderImp implements StreamLoader {
 
-    public static final Logger logger = LoggerFactory.getLogger(TicketStreamLoaderImp.class);
+    public static final Logger logger = LoggerFactory.getLogger(TotalUnitsByTimeStreamLoaderImp.class);
 
     @Autowired
     KafkaStreamConfig kafkaConfig;
 
-    private Boolean isReady;
+    @Autowired
+    KafkaStreamTotalUnitsByTimeConfig kafkaStreamTotalUnitsByTimeConfig;
+
     private KafkaStreams kafkaStreams;
 
     @PostConstruct
     public void init() {
-        logger.debug("TicketStreamLoaderImp init.");
+        logger.debug("begin.");
 
         StreamsBuilder builder = new StreamsBuilder();
         Serde<String> stringSerde = Serdes.String();
         Serde<TicketKey> ticketKeySerde = Serdes.serdeFrom(new TicketKeySerializer(), new TicketKeyDeSerializer());
         Serde<TicketValue> ticketValueSerde = Serdes.serdeFrom(new TicketValueSerializer(), new TicketValueDeSerializer());
+        KStream<TicketKey, TicketValue> eventsStream = builder.stream(kafkaConfig.getKafkaTicketsEventsTopicName(),Consumed.with(ticketKeySerde,ticketValueSerde));
+
+
+
+
+
+
+        /*
         KStream<String, String> eventsStream = builder.stream(kafkaConfig.getKafkaTicketsTopicName(),Consumed.with(stringSerde, stringSerde));
         StoreBuilder<KeyValueStore<TicketKey, TicketValue>> keyValueStoreBuilder = Stores.keyValueStoreBuilder(Stores.persistentKeyValueStore("ticketJsonToEventTransformState"),ticketKeySerde,ticketValueSerde);
         builder.addStateStore(keyValueStoreBuilder);
         KStream<TicketKey, TicketValue> ticketsStream = eventsStream.transform(TicketJsonToEventTransformer::new,"ticketJsonToEventTransformState");
         ticketsStream.to(kafkaConfig.getKafkaTicketsEventsTopicName(), Produced.with(ticketKeySerde,ticketValueSerde));
         ticketsStream.print(Printed.<TicketKey, TicketValue>toSysOut().withLabel(kafkaConfig.getKafkaTicketsEventsTopicName()));
-        kafkaStreams = new KafkaStreams(builder.build(),kafkaConfig.propValues());
-        logger.debug("TicketStreamLoaderImp init ends.");
+        */
+
+        kafkaStreams = new KafkaStreams(builder.build(),kafkaStreamTotalUnitsByTimeConfig.propValues());
+        logger.debug("end.");
     }
 
     @Override
     public void loadStream() {
-        logger.debug("start.");
+        logger.debug("begin.");
 
         if (kafkaStreams != null) {
             kafkaStreams.start();
@@ -75,7 +90,7 @@ public class TicketStreamLoaderImp implements StreamLoader {
 
     @PreDestroy
     public void stop() {
-        logger.debug("TicketStreamLoaderImp stop.");
+        logger.debug("begin.");
 
         if (kafkaStreams != null) {
             kafkaStreams.close();
@@ -85,7 +100,7 @@ public class TicketStreamLoaderImp implements StreamLoader {
             logger.error("kafkaStreams is null");
         }
 
-        logger.debug("TicketStreamLoaderImp stop ends.");
+        logger.debug("end.");
     }
 
 }
