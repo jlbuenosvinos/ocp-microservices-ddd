@@ -19,15 +19,13 @@ public class TicketJsonToEventTransformer implements Transformer<String, String,
 
     public static final Logger logger = LoggerFactory.getLogger(TicketJsonToEventTransformer.class);
 
-    @Autowired
-    TicketBuilder builder;
-
     @Override
     public void init(ProcessorContext processorContext) {
     }
 
     @Override
     public KeyValue<TicketKey, TicketValue> transform(String s1, String s2) {
+        TicketBuilder builder = new TicketBuilder();
         logger.debug("s1 [{}]",s1);
         logger.debug("s2 [{}]",s2);
         TicketKey key = builder.buildKey(s2);

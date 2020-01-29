@@ -19,6 +19,7 @@ public class TicketBuilder {
     public static final Logger logger = LoggerFactory.getLogger(TicketBuilder.class);
 
     public TicketKey buildKey(String ticket) {
+        logger.debug("begin.");
         JsonNode nameNode;
         JsonNode jsonItem;
         TicketKey newTicketKey = new TicketKey();
@@ -36,11 +37,12 @@ public class TicketBuilder {
             logger.error("Unable to build the ticket key. [{}]",e.getMessage());
             throw new StockApplicationException(e) ;
         }
-
+        logger.debug("end.");
         return newTicketKey;
     }  // end buildKey
 
     public TicketValue buildValue(String ticket) {
+        logger.debug("begin.");
         JsonNode nameNode;
         JsonNode jsonItem;
         TicketValue newTicketValue = new TicketValue();
@@ -61,7 +63,7 @@ public class TicketBuilder {
             logger.error("Unable to build the ticket. [{}]",e.getMessage());
             throw new StockApplicationException(e) ;
         }
-
+        logger.debug("end.");
         return newTicketValue;
     } // end buildValue
 
