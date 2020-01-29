@@ -9,10 +9,12 @@ import org.apache.kafka.streams.processor.ProcessorContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by jlbuenosvinos.
  */
+@Component
 public class TicketJsonToEventTransformer implements Transformer<String, String, KeyValue<TicketKey, TicketValue>> {
 
     public static final Logger logger = LoggerFactory.getLogger(TicketJsonToEventTransformer.class);
