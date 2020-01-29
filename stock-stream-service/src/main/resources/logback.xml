@@ -8,7 +8,7 @@
         </encoder>
     </appender>
 
-    <logger name="org.springframework" level="INFO" />
+    <logger name="org.springframework" level="DEBUG" />
 
     <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.application.configuration" level="DEBUG" />
     <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.streamdomain.model" level="DEBUG" />
@@ -23,7 +23,7 @@
     <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.infrastructure.cache" level="DEBUG" />
     <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.infrastructure.listener" level="DEBUG" />
 
-    <root level="INFO">
+    <root level="DEBUG">
         <appender-ref ref="STDOUT" />
     </root>
 
