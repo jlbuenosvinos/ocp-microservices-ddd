@@ -48,7 +48,7 @@ public class TicketStreamLoaderImp implements StreamLoader {
         Serde<String> stringSerde = Serdes.String();
         Serde<TicketKey> ticketKeySerde = Serdes.serdeFrom(new TicketKeySerializer(), new TicketKeyDeSerializer());
         Serde<TicketValue> ticketValueSerde = Serdes.serdeFrom(new TicketValueSerializer(), new TicketValueDeSerializer());
-        KStream<String, String> eventsStream = builder.stream(kafkaConfig.getKafkaTicketsTopicName(), Consumed.with(stringSerde, stringSerde));
+        KStream<String, String> eventsStream = builder.stream(kafkaConfig.getKafkaTicketsTopicName(),Consumed.with(stringSerde, stringSerde));
         StoreBuilder<KeyValueStore<TicketKey, TicketValue>> keyValueStoreBuilder = Stores.keyValueStoreBuilder(Stores.persistentKeyValueStore("ticketJsonToEventTransformState"),ticketKeySerde,ticketValueSerde);
         builder.addStateStore(keyValueStoreBuilder);
         KStream<TicketKey, TicketValue> ticketsStream = eventsStream.transform(TicketJsonToEventTransformer::new,"ticketJsonToEventTransformState");
