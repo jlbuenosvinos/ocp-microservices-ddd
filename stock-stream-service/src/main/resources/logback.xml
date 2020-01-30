@@ -14,6 +14,8 @@
     <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.streamdomain.model" level="DEBUG" />
     <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream" level="DEBUG" />
     <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.application.service" level="DEBUG" />
+    <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.application.service.processor" level="DEBUG" />
+    <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.application.service.transform" level="DEBUG" />
     <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.application.handler" level="DEBUG" />
     <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.application.handler.controller" level="DEBUG" />
     <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.infrastructure.store" level="DEBUG" />
