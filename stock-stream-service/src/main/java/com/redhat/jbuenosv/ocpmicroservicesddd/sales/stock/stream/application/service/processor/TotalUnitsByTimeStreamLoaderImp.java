@@ -55,7 +55,7 @@ public class TotalUnitsByTimeStreamLoaderImp implements StreamLoader {
         StoreBuilder<KeyValueStore<TicketKey, TicketTotalValue>> keyValueStoreBuilder = Stores.keyValueStoreBuilder(Stores.persistentKeyValueStore("ticketTotalValueState"),ticketKeySerde,ticketTotalValueSerde);
         builder.addStateStore(keyValueStoreBuilder);
 
-        KTable<TicketKey, TicketTotalValue> eventsTotalKtable = builder.stream(kafkaConfig.getKafkaTicketsEventsTopicName(),
+        KTable<TicketKey, TicketTotalValue> eventsTotalSalesKtable = builder.stream(kafkaConfig.getKafkaTicketsEventsTopicName(),
                                                                                Consumed.with(ticketKeySerde,ticketValueSerde)
                                                                                        .withOffsetResetPolicy(EARLIEST))
                                                                                        .mapValues(TicketTotalValue::build)
@@ -63,9 +63,25 @@ public class TotalUnitsByTimeStreamLoaderImp implements StreamLoader {
                                                                                        .groupByKey(Serialized.with(ticketKeySerde, ticketTotalValueSerde))
                                                                                        .reduce(TicketTotalValue::sum);
 
-        KStream<TicketKey, TicketTotalValue> eventsTotalStream = eventsTotalKtable.toStream();
-        eventsTotalStream.to("tickets-totalsales-topic",Produced.with(ticketKeySerde,ticketTotalValueSerde));
-        eventsTotalStream.print(Printed.<TicketKey, TicketTotalValue>toSysOut().withLabel("tickets-totalsales-topic"));
+        logger.debug("eventsTotalSalesKtable.");
+
+        KTable<TicketKey, TicketTotalValue> eventsTotalReturnsKtable = builder.stream(kafkaConfig.getKafkaTicketsEventsTopicName(),
+                                                                                     Consumed.with(ticketKeySerde,ticketValueSerde)
+                                                                                             .withOffsetResetPolicy(EARLIEST))
+                                                                                             .mapValues(TicketTotalValue::build)
+                                                                                             .filter(new ReturnPredicate())
+                                                                                             .groupByKey(Serialized.with(ticketKeySerde, ticketTotalValueSerde))
+                                                                                             .reduce(TicketTotalValue::sum);
+
+        logger.debug("eventsTotalReturnsKtable.");
+
+        KStream<TicketKey, TicketTotalValue> eventsTotalSalesStream = eventsTotalSalesKtable.toStream();
+        eventsTotalSalesStream.to("tickets-totalsales-topic",Produced.with(ticketKeySerde,ticketTotalValueSerde));
+        eventsTotalSalesStream.print(Printed.<TicketKey, TicketTotalValue>toSysOut().withLabel("tickets-totalsales-topic"));
+
+        KStream<TicketKey, TicketTotalValue> eventsTotalReturnsStream = eventsTotalReturnsKtable.toStream();
+        eventsTotalReturnsStream.to("tickets-totalreturns-topic",Produced.with(ticketKeySerde,ticketTotalValueSerde));
+        eventsTotalReturnsStream.print(Printed.<TicketKey, TicketTotalValue>toSysOut().withLabel("tickets-totalreturns-topic"));
 
         kafkaStreams = new KafkaStreams(builder.build(),kafkaStreamTotalUnitsByTimeConfig.propValuesStreamTotalUnitsByTime());
         logger.debug("end.");
