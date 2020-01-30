@@ -3,16 +3,13 @@ package com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.application.s
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.application.configuration.KafkaStreamConfig;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.application.configuration.KafkaStreamTotalUnitsByTimeConfig;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.application.service.StreamLoader;
-import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.application.service.transform.TicketJsonToEventTransformer;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.domain.model.TicketKey;
-import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.domain.model.TicketTotalKey;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.domain.model.TicketTotalValue;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.domain.model.TicketValue;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.infrastructure.domain.*;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
-import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.*;
 import org.apache.kafka.streams.state.KeyValueStore;
@@ -49,11 +46,14 @@ public class TotalUnitsByTimeStreamLoaderImp implements StreamLoader {
         logger.debug("begin.");
 
         StreamsBuilder builder = new StreamsBuilder();
+
         Serde<String> stringSerde = Serdes.String();
         Serde<TicketKey> ticketKeySerde = Serdes.serdeFrom(new TicketKeySerializer(), new TicketKeyDeSerializer());
         Serde<TicketValue> ticketValueSerde = Serdes.serdeFrom(new TicketValueSerializer(), new TicketValueDeSerializer());
-
         Serde<TicketTotalValue> ticketTotalValueSerde = Serdes.serdeFrom(new TicketTotalValueSerializer(), new TicketTotalValueDeSerializer());
+
+        StoreBuilder<KeyValueStore<TicketKey, TicketTotalValue>> keyValueStoreBuilder = Stores.keyValueStoreBuilder(Stores.persistentKeyValueStore("ticketTotalValueState"),ticketKeySerde,ticketTotalValueSerde);
+        builder.addStateStore(keyValueStoreBuilder);
 
         KTable<TicketKey, TicketTotalValue> eventsTotalKtable = builder.stream(kafkaConfig.getKafkaTicketsEventsTopicName(),
                                                                                Consumed.with(ticketKeySerde,ticketValueSerde)
@@ -63,44 +63,12 @@ public class TotalUnitsByTimeStreamLoaderImp implements StreamLoader {
                                                                                        .groupByKey(Serialized.with(ticketKeySerde, ticketTotalValueSerde))
                                                                                        .reduce(TicketTotalValue::sum);
 
-        //  ticketsStream.to(kafkaConfig.getKafkaTicketsEventsTopicName(), Produced.with(ticketKeySerde,ticketValueSerde));
-        // to("tickets-totalsells-topic",Produced.with(ticketKeySerde,ticketValueSerde));
         KStream<TicketKey, TicketTotalValue> eventsTotalStream = eventsTotalKtable.toStream();
-        eventsTotalStream.to("tickets-totalsells-topic",Produced.with(ticketKeySerde,ticketTotalValueSerde));
-        eventsTotalStream.print(Printed.<TicketKey, TicketTotalValue>toSysOut().withLabel("tickets-totalsells-topic"));
-
-        /*
-
-        KTable<String, ShareVolume> shareVolume = builder.stream(STOCK_TRANSACTIONS_TOPIC,
-                Consumed.with(stringSerde, stockTransactionSerde)
-                        .withOffsetResetPolicy(EARLIEST))
-                .mapValues(st -> ShareVolume.newBuilder(st).build())
-                .groupBy((k, v) -> v.getSymbol(), Serialized.with(stringSerde, shareVolumeSerde))
-                .reduce(ShareVolume::sum);
-
-
-        shareVolume.groupBy((k, v) -> KeyValue.pair(v.getIndustry(), v), Serialized.with(stringSerde, shareVolumeSerde))
-                .aggregate(() -> fixedQueue,
-                        (k, v, agg) -> agg.add(v),
-                        (k, v, agg) -> agg.remove(v),
-                        Materialized.with(stringSerde, fixedSizePriorityQueueSerde))
-                .mapValues(valueMapper)
-                .toStream().peek((k, v) -> LOG.info("Stock volume by industry {} {}", k, v))
-                .to("stock-volume-by-company", Produced.with(stringSerde, stringSerde));
-
-         */
-
-
-        /*
-        KStream<String, String> eventsStream = builder.stream(kafkaConfig.getKafkaTicketsTopicName(),Consumed.with(stringSerde, stringSerde));
-        StoreBuilder<KeyValueStore<TicketKey, TicketValue>> keyValueStoreBuilder = Stores.keyValueStoreBuilder(Stores.persistentKeyValueStore("ticketJsonToEventTransformState"),ticketKeySerde,ticketValueSerde);
-        builder.addStateStore(keyValueStoreBuilder);
-        KStream<TicketKey, TicketValue> ticketsStream = eventsStream.transform(TicketJsonToEventTransformer::new,"ticketJsonToEventTransformState");
-        ticketsStream.to(kafkaConfig.getKafkaTicketsEventsTopicName(), Produced.with(ticketKeySerde,ticketValueSerde));
-        ticketsStream.print(Printed.<TicketKey, TicketValue>toSysOut().withLabel(kafkaConfig.getKafkaTicketsEventsTopicName()));
-        */
+        eventsTotalStream.to("tickets-totalsales-topic",Produced.with(ticketKeySerde,ticketTotalValueSerde));
+        eventsTotalStream.print(Printed.<TicketKey, TicketTotalValue>toSysOut().withLabel("tickets-totalsales-topic"));
 
         kafkaStreams = new KafkaStreams(builder.build(),kafkaStreamTotalUnitsByTimeConfig.propValuesStreamTotalUnitsByTime());
+
         logger.debug("end.");
     }
 
