@@ -68,7 +68,6 @@ public class TotalUnitsByTimeStreamLoaderImp implements StreamLoader {
         eventsTotalStream.print(Printed.<TicketKey, TicketTotalValue>toSysOut().withLabel("tickets-totalsales-topic"));
 
         kafkaStreams = new KafkaStreams(builder.build(),kafkaStreamTotalUnitsByTimeConfig.propValuesStreamTotalUnitsByTime());
-
         logger.debug("end.");
     }
 

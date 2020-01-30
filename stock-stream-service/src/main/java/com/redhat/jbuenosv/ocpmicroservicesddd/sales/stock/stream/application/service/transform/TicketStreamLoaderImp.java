@@ -57,6 +57,7 @@ public class TicketStreamLoaderImp implements StreamLoader {
         KStream<TicketKey, TicketValue> ticketsStream = eventsStream.transform(TicketJsonToEventTransformer::new,"ticketJsonToEventTransformState");
         ticketsStream.to(kafkaConfig.getKafkaTicketsEventsTopicName(), Produced.with(ticketKeySerde,ticketValueSerde));
         ticketsStream.print(Printed.<TicketKey, TicketValue>toSysOut().withLabel(kafkaConfig.getKafkaTicketsEventsTopicName()));
+
         kafkaStreams = new KafkaStreams(builder.build(),kafkaConfig.propValues());
         logger.debug("end.");
     }
