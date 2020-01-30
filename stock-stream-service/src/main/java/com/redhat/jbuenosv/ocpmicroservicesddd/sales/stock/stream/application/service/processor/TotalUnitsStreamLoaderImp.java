@@ -40,12 +40,15 @@ public class TotalUnitsStreamLoaderImp implements StreamLoader {
     KafkaStreamTotalUnitsByTimeConfig kafkaStreamTotalUnitsByTimeConfig;
 
     private KafkaStreams kafkaStreams;
+    private KafkaStreams kafkaStreamsTst;
 
     @PostConstruct
     public void init() {
         logger.debug("begin.");
 
         StreamsBuilder builder = new StreamsBuilder();
+
+        StreamsBuilder builderTst = new StreamsBuilder();
 
         Serde<String> stringSerde = Serdes.String();
         Serde<TicketKey> ticketKeySerde = Serdes.serdeFrom(new TicketKeySerializer(), new TicketKeyDeSerializer());
@@ -70,6 +73,12 @@ public class TotalUnitsStreamLoaderImp implements StreamLoader {
         eventsTotalSalesStream.print(Printed.<TicketKey, TicketTotalValue>toSysOut().withLabel("tickets-totalsales-topic"));
 
         kafkaStreams = new KafkaStreams(builder.build(),kafkaStreamTotalUnitsByTimeConfig.propValuesStreamTotalUnitsByTime());
+
+        KStream<TicketKey, TicketTotalValue> tstStream = builderTst.stream("tickets-totalsales-topic",Consumed.with(ticketKeySerde, ticketTotalValueSerde));
+        tstStream.print(Printed.<TicketKey, TicketTotalValue>toSysOut().withLabel("tickets-totalsales-topic"));
+
+        kafkaStreamsTst = new KafkaStreams(builderTst.build(),kafkaStreamTotalUnitsByTimeConfig.propValuesStreamTotalUnitsByTime());
+
         logger.debug("end.");
     }
 
@@ -83,6 +92,14 @@ public class TotalUnitsStreamLoaderImp implements StreamLoader {
         }
         else {
             logger.error("kafkaStreams is null");
+        }
+
+        if (kafkaStreamsTst != null) {
+            kafkaStreamsTst.start();
+            logger.error("kafkaStreamsTst has been started.");
+        }
+        else {
+            logger.error("kafkaStreamsTst is null");
         }
 
         logger.debug("end.");
