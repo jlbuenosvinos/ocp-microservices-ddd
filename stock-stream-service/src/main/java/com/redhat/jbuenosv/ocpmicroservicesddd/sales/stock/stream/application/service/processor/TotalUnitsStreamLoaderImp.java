@@ -29,9 +29,9 @@ import javax.annotation.PreDestroy;
  * Created by jlbuenosvinos.
  */
 @Service
-public class TotalUnitsByTimeStreamLoaderImp implements StreamLoader {
+public class TotalUnitsStreamLoaderImp implements StreamLoader {
 
-    public static final Logger logger = LoggerFactory.getLogger(TotalUnitsByTimeStreamLoaderImp.class);
+    public static final Logger logger = LoggerFactory.getLogger(TotalUnitsStreamLoaderImp.class);
 
     @Autowired
     KafkaStreamConfig kafkaConfig;
@@ -51,9 +51,6 @@ public class TotalUnitsByTimeStreamLoaderImp implements StreamLoader {
         Serde<TicketKey> ticketKeySerde = Serdes.serdeFrom(new TicketKeySerializer(), new TicketKeyDeSerializer());
         Serde<TicketValue> ticketValueSerde = Serdes.serdeFrom(new TicketValueSerializer(), new TicketValueDeSerializer());
         Serde<TicketTotalValue> ticketTotalValueSerde = Serdes.serdeFrom(new TicketTotalValueSerializer(), new TicketTotalValueDeSerializer());
-
-        StoreBuilder<KeyValueStore<TicketKey, TicketTotalValue>> keyValueStoreBuilder = Stores.keyValueStoreBuilder(Stores.persistentKeyValueStore("ticketTotalValueState"),ticketKeySerde,ticketTotalValueSerde);
-        builder.addStateStore(keyValueStoreBuilder);
 
         KTable<TicketKey, TicketTotalValue> eventsTotalSalesKtable = builder.stream(kafkaConfig.getKafkaTicketsEventsTopicName(),
                                                                                Consumed.with(ticketKeySerde,ticketValueSerde)

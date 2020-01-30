@@ -15,15 +15,7 @@ public class SalePredicate implements Predicate<TicketKey, TicketTotalValue> {
 
     @Override
     public boolean test(TicketKey ticketKey, TicketTotalValue ticketTotalValue) {
-
-        if (ticketTotalValue != null) {
             return ticketTotalValue.getUnits() > 0;
-        }
-        else {
-            logger.warn("TicketTotalValue is NULL !!!.");
-            return false;
-        }
-
     }
 
 }
