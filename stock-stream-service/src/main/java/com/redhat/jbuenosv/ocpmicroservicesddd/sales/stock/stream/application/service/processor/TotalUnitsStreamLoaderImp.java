@@ -66,18 +66,16 @@ public class TotalUnitsStreamLoaderImp implements StreamLoader {
                                                                                        .groupByKey(Serialized.with(ticketKeySerde, ticketTotalValueSerde))
                                                                                        .reduce(TicketTotalValue::sum);
 
-        logger.debug("eventsTotalSalesKtable.");
-
         KStream<TicketKey, TicketTotalValue> eventsTotalSalesStream = eventsTotalSalesKtable.toStream();
         eventsTotalSalesStream.to("tickets-totalsales-topic",Produced.with(ticketKeySerde,ticketTotalValueSerde));
         eventsTotalSalesStream.print(Printed.<TicketKey, TicketTotalValue>toSysOut().withLabel("tickets-totalsales-topic"));
 
-        kafkaStreams = new KafkaStreams(builder.build(),kafkaStreamTotalUnitsByTimeConfig.propValuesStreamTotalUnitsByTime("totalunits-stream-app"));
+        kafkaStreams = new KafkaStreams(builder.build(),kafkaStreamTotalUnitsByTimeConfig.propValuesStreamTotalUnits("totalunits-stream-app"));
 
         KStream<TicketKey, TicketTotalValue> tstStream = builderTst.stream("tickets-totalsales-topic",Consumed.with(ticketKeySerde, ticketTotalValueSerde));
         tstStream.print(Printed.<TicketKey, TicketTotalValue>toSysOut().withLabel("tickets-totalsales-topic"));
 
-        kafkaStreamsTst = new KafkaStreams(builderTst.build(),kafkaStreamTotalUnitsByTimeConfig.propValuesStreamTotalUnitsByTime("read-totalunits-stream-app"));
+        kafkaStreamsTst = new KafkaStreams(builderTst.build(),kafkaStreamTotalUnitsByTimeConfig.propValuesStreamTotalUnits("read-totalunits-stream-app"));
 
         logger.debug("end.");
     }
