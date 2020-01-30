@@ -15,9 +15,9 @@ import java.util.Properties;
 
 @EnableKafka
 @Configuration
-public class KafkaStreamTotalUnitsByTimeConfig {
+public class KafkaStreamTotalUnitsConfig {
 
-    public static final Logger logger = LoggerFactory.getLogger(KafkaStreamTotalUnitsByTimeConfig.class);
+    public static final Logger logger = LoggerFactory.getLogger(KafkaStreamTotalUnitsConfig.class);
 
     @Value("${ticketing.kafka.bootstrap.servers}")
     private String bootstrapServers;
@@ -44,7 +44,6 @@ public class KafkaStreamTotalUnitsByTimeConfig {
     @Bean
     public Map<String,Object> propMapStreamTotalUnitsByTime() {
         Map<String, Object> props = new HashMap<>();
-        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "totalunitsbytime-stream-app");
         props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, getBootstrapServers());
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
         props.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, "30000");
@@ -53,9 +52,9 @@ public class KafkaStreamTotalUnitsByTimeConfig {
     }
 
     @Bean
-    public Properties propValuesStreamTotalUnitsByTime() {
+    public Properties propValuesStreamTotalUnitsByTime(String appIdConfig) {
         Properties props = new Properties();
-        props.setProperty(StreamsConfig.APPLICATION_ID_CONFIG, propMapStreamTotalUnitsByTime().get(StreamsConfig.APPLICATION_ID_CONFIG).toString());
+        props.setProperty(StreamsConfig.APPLICATION_ID_CONFIG, appIdConfig);
         props.setProperty(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, propMapStreamTotalUnitsByTime().get(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG).toString());
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, propMapStreamTotalUnitsByTime().get(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG).toString());
         props.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, propMapStreamTotalUnitsByTime().get(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG).toString());

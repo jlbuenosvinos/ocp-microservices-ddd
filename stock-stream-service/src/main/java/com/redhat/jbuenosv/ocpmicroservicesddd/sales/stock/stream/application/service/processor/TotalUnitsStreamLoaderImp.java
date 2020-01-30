@@ -1,7 +1,7 @@
 package com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.application.service.processor;
 
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.application.configuration.KafkaStreamConfig;
-import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.application.configuration.KafkaStreamTotalUnitsByTimeConfig;
+import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.application.configuration.KafkaStreamTotalUnitsConfig;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.application.service.StreamLoader;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.domain.model.TicketKey;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.domain.model.TicketTotalValue;
@@ -37,7 +37,7 @@ public class TotalUnitsStreamLoaderImp implements StreamLoader {
     KafkaStreamConfig kafkaConfig;
 
     @Autowired
-    KafkaStreamTotalUnitsByTimeConfig kafkaStreamTotalUnitsByTimeConfig;
+    KafkaStreamTotalUnitsConfig kafkaStreamTotalUnitsByTimeConfig;
 
     private KafkaStreams kafkaStreams;
     private KafkaStreams kafkaStreamsTst;
@@ -72,12 +72,12 @@ public class TotalUnitsStreamLoaderImp implements StreamLoader {
         eventsTotalSalesStream.to("tickets-totalsales-topic",Produced.with(ticketKeySerde,ticketTotalValueSerde));
         eventsTotalSalesStream.print(Printed.<TicketKey, TicketTotalValue>toSysOut().withLabel("tickets-totalsales-topic"));
 
-        kafkaStreams = new KafkaStreams(builder.build(),kafkaStreamTotalUnitsByTimeConfig.propValuesStreamTotalUnitsByTime());
+        kafkaStreams = new KafkaStreams(builder.build(),kafkaStreamTotalUnitsByTimeConfig.propValuesStreamTotalUnitsByTime("totalunits-stream-app"));
 
         KStream<TicketKey, TicketTotalValue> tstStream = builderTst.stream("tickets-totalsales-topic",Consumed.with(ticketKeySerde, ticketTotalValueSerde));
         tstStream.print(Printed.<TicketKey, TicketTotalValue>toSysOut().withLabel("tickets-totalsales-topic"));
 
-        kafkaStreamsTst = new KafkaStreams(builderTst.build(),kafkaStreamTotalUnitsByTimeConfig.propValuesStreamTotalUnitsByTime());
+        kafkaStreamsTst = new KafkaStreams(builderTst.build(),kafkaStreamTotalUnitsByTimeConfig.propValuesStreamTotalUnitsByTime("read-totalunits-stream-app"));
 
         logger.debug("end.");
     }
