@@ -55,13 +55,19 @@ public class TotalUnitsByTimeStreamLoaderImp implements StreamLoader {
 
         Serde<TicketTotalValue> ticketTotalValueSerde = Serdes.serdeFrom(new TicketTotalValueSerializer(), new TicketTotalValueDeSerializer());
 
-        KTable<TicketKey, TicketTotalValue> eventsTotalStream = builder.stream(kafkaConfig.getKafkaTicketsEventsTopicName(),
+        KTable<TicketKey, TicketTotalValue> eventsTotalKtable = builder.stream(kafkaConfig.getKafkaTicketsEventsTopicName(),
                                                                                Consumed.with(ticketKeySerde,ticketValueSerde)
                                                                                             .withOffsetResetPolicy(EARLIEST))
                                                                                             .mapValues(TicketTotalValue::build)
                                                                                             .filter(new SalePredicate())
                                                                                             .groupByKey(Serialized.with(ticketKeySerde, ticketTotalValueSerde))
                                                                                             .reduce(TicketTotalValue::sum);
+
+        //  ticketsStream.to(kafkaConfig.getKafkaTicketsEventsTopicName(), Produced.with(ticketKeySerde,ticketValueSerde));
+        // to("tickets-totalsells-topic",Produced.with(ticketKeySerde,ticketValueSerde));
+        KStream<TicketKey, TicketTotalValue> eventsTotalStream = eventsTotalKtable.toStream();
+        eventsTotalStream.to("tickets-totalsells-topic",Produced.with(ticketKeySerde,ticketTotalValueSerde));
+        eventsTotalStream.print(Printed.<TicketKey, TicketTotalValue>toSysOut().withLabel("tickets-totalsells-topic"));
 
         /*
 
