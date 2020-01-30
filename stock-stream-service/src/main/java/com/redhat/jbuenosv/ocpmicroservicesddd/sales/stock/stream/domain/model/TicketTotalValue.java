@@ -55,6 +55,7 @@ public class TicketTotalValue implements Serializable  {
         TicketTotalValue ticketTotal = new TicketTotalValue();
         ticketTotal.setId(value.getId());
         ticketTotal.setStoreId(value.getStoreId());
+        ticketTotal.setUnits(value.getUnits().longValue());
         return ticketTotal;
     }
 
