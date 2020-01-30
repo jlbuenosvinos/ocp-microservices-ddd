@@ -31,7 +31,6 @@ public class TicketBuilder {
             newTicketKey.setStoreId(nameNode.intValue());
             nameNode = rootNode.path("item").path("id");
             newTicketKey.setId(nameNode.textValue());
-            logger.debug("newTicketKey ready.",newTicketKey);
         }
         catch(Exception e) {
             logger.error("Unable to build the ticket key. [{}]",e.getMessage());
