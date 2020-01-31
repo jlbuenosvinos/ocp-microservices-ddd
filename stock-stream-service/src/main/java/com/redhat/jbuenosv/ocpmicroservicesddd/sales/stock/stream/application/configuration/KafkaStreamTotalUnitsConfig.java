@@ -41,7 +41,6 @@ public class KafkaStreamTotalUnitsConfig {
 
     private Properties properties;
 
-    @Bean
     public Map<String,Object> propMapStreamTotalUnits() {
         Map<String, Object> props = new HashMap<>();
         props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, getBootstrapServers());
@@ -51,7 +50,6 @@ public class KafkaStreamTotalUnitsConfig {
         return props;
     }
 
-    @Bean
     public Properties propValuesStreamTotalUnits(String appIdConfig) {
         Properties props = new Properties();
         props.setProperty(StreamsConfig.APPLICATION_ID_CONFIG, appIdConfig);
@@ -61,8 +59,7 @@ public class KafkaStreamTotalUnitsConfig {
         props.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, propMapStreamTotalUnits().get(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG).toString());
         return props;
     }
-
-    @Bean
+    
     public StreamsConfig streamsFactoryStreamTotalUnits() {
         return new StreamsConfig(propMapStreamTotalUnits());
     }
