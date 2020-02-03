@@ -39,16 +39,15 @@ public class TotalUnitsStreamLoaderImp implements StreamLoader {
     @Autowired
     KafkaStreamTotalUnitsConfig kafkaStreamTotalUnitsByTimeConfig;
 
-    private KafkaStreams kafkaStreams;
-    private KafkaStreams kafkaStreamsTst;
+    private KafkaStreams kafkaSalesStreams;
+    private KafkaStreams kafkaReturnsStreams;
 
     @PostConstruct
     public void init() {
         logger.debug("begin.");
 
-        StreamsBuilder builder = new StreamsBuilder();
-
-        StreamsBuilder builderTst = new StreamsBuilder();
+        StreamsBuilder builderSales = new StreamsBuilder();
+        StreamsBuilder builderReturns = new StreamsBuilder();
 
         Serde<String> stringSerde = Serdes.String();
         Serde<TicketKey> ticketKeySerde = Serdes.serdeFrom(new TicketKeySerializer(), new TicketKeyDeSerializer());
@@ -56,26 +55,36 @@ public class TotalUnitsStreamLoaderImp implements StreamLoader {
         Serde<TicketTotalValue> ticketTotalValueSerde = Serdes.serdeFrom(new TicketTotalValueSerializer(), new TicketTotalValueDeSerializer());
 
         StoreBuilder<KeyValueStore<TicketKey, TicketTotalValue>> keyValueStoreBuilder = Stores.keyValueStoreBuilder(Stores.persistentKeyValueStore("ticketTotalValueState"),ticketKeySerde,ticketTotalValueSerde);
-        builder.addStateStore(keyValueStoreBuilder);
+        StoreBuilder<KeyValueStore<TicketKey, TicketTotalValue>> keyValueReturnsStoreBuilder = Stores.keyValueStoreBuilder(Stores.persistentKeyValueStore("ticketTotalReturnsValueState"),ticketKeySerde,ticketTotalValueSerde);
+        builderSales.addStateStore(keyValueStoreBuilder);
+        builderReturns.addStateStore(keyValueReturnsStoreBuilder);
 
-        KTable<TicketKey, TicketTotalValue> eventsTotalSalesKtable = builder.stream(kafkaConfig.getKafkaTicketsEventsTopicName(),
-                                                                               Consumed.with(ticketKeySerde,ticketValueSerde)
-                                                                                       .withOffsetResetPolicy(EARLIEST))
-                                                                                       .mapValues(TicketTotalValue::build)
-                                                                                       .filter(new SalePredicate())
-                                                                                       .groupByKey(Serialized.with(ticketKeySerde, ticketTotalValueSerde))
-                                                                                       .reduce(TicketTotalValue::sum);
+        KTable<TicketKey, TicketTotalValue> eventsTotalSalesKtable = builderSales.stream(kafkaConfig.getKafkaTicketsEventsTopicName(),
+                                                                                         Consumed.with(ticketKeySerde,ticketValueSerde)
+                                                                                                 .withOffsetResetPolicy(EARLIEST))
+                                                                                                 .mapValues(TicketTotalValue::build)
+                                                                                                 .filter(new SalePredicate())
+                                                                                                 .groupByKey(Serialized.with(ticketKeySerde, ticketTotalValueSerde))
+                                                                                                 .reduce(TicketTotalValue::sum);
+
+        KTable<TicketKey, TicketTotalValue> eventsTotalReturnsKtable = builderReturns.stream(kafkaConfig.getKafkaTicketsEventsTopicName(),
+                                                                                             Consumed.with(ticketKeySerde,ticketValueSerde)
+                                                                                                     .withOffsetResetPolicy(EARLIEST))
+                                                                                                     .mapValues(TicketTotalValue::build)
+                                                                                                     .filter(new ReturnPredicate())
+                                                                                                     .groupByKey(Serialized.with(ticketKeySerde, ticketTotalValueSerde))
+                                                                                                     .reduce(TicketTotalValue::sum);
 
         KStream<TicketKey, TicketTotalValue> eventsTotalSalesStream = eventsTotalSalesKtable.toStream();
         eventsTotalSalesStream.to("tickets-totalsales-topic",Produced.with(ticketKeySerde,ticketTotalValueSerde));
         eventsTotalSalesStream.print(Printed.<TicketKey, TicketTotalValue>toSysOut().withLabel("tickets-totalsales-topic"));
 
-        kafkaStreams = new KafkaStreams(builder.build(),kafkaStreamTotalUnitsByTimeConfig.propValuesStreamTotalUnits("totalunits-stream-app"));
+        KStream<TicketKey, TicketTotalValue> eventsTotalReturnsStream = eventsTotalReturnsKtable.toStream();
+        eventsTotalReturnsStream.to("tickets-totalreturns-topic",Produced.with(ticketKeySerde,ticketTotalValueSerde));
+        eventsTotalReturnsStream.print(Printed.<TicketKey, TicketTotalValue>toSysOut().withLabel("tickets-totalreturns-topic"));
 
-        KStream<TicketKey, TicketTotalValue> tstStream = builderTst.stream("tickets-totalsales-topic",Consumed.with(ticketKeySerde, ticketTotalValueSerde));
-        tstStream.print(Printed.<TicketKey, TicketTotalValue>toSysOut().withLabel("tickets-totalsales-topic"));
-
-        kafkaStreamsTst = new KafkaStreams(builderTst.build(),kafkaStreamTotalUnitsByTimeConfig.propValuesStreamTotalUnits("read-totalunits-stream-app"));
+        this.kafkaSalesStreams = new KafkaStreams(builderSales.build(),kafkaStreamTotalUnitsByTimeConfig.propValuesStreamTotalUnits("totalunits-stream-app"));
+        this.kafkaReturnsStreams = new KafkaStreams(builderReturns.build(),kafkaStreamTotalUnitsByTimeConfig.propValuesStreamTotalUnits("totalunits-returns-stream-app"));
 
         logger.debug("end.");
     }
@@ -84,20 +93,20 @@ public class TotalUnitsStreamLoaderImp implements StreamLoader {
     public void loadStream() {
         logger.debug("begin.");
 
-        if (kafkaStreams != null) {
-            kafkaStreams.start();
-            logger.error("kafkaStreams has been started.");
+        if (kafkaSalesStreams != null) {
+            kafkaSalesStreams.start();
+            logger.error("kafkaSalesStreams has been started.");
         }
         else {
-            logger.error("kafkaStreams is null");
+            logger.error("kafkaSalesStreams is null");
         }
 
-        if (kafkaStreamsTst != null) {
-            kafkaStreamsTst.start();
-            logger.error("kafkaStreamsTst has been started.");
+        if (kafkaReturnsStreams != null) {
+            kafkaReturnsStreams.start();
+            logger.error("kafkaReturnsStreams has been started.");
         }
         else {
-            logger.error("kafkaStreamsTst is null");
+            logger.error("kafkaReturnsStreams is null");
         }
 
         logger.debug("end.");
@@ -107,12 +116,20 @@ public class TotalUnitsStreamLoaderImp implements StreamLoader {
     public void stop() {
         logger.debug("begin.");
 
-        if (kafkaStreams != null) {
-            kafkaStreams.close();
-            logger.error("kafkaStreams has been closed.");
+        if (kafkaSalesStreams != null) {
+            kafkaSalesStreams.close();
+            logger.error("kafkaSalesStreams has been closed.");
         }
         else {
-            logger.error("kafkaStreams is null");
+            logger.error("kafkaSalesStreams is null");
+        }
+
+        if (kafkaReturnsStreams != null) {
+            kafkaReturnsStreams.close();
+            logger.error("kafkaReturnsStreams has been closed.");
+        }
+        else {
+            logger.error("kafkaReturnsStreams is null");
         }
 
         logger.debug("end.");

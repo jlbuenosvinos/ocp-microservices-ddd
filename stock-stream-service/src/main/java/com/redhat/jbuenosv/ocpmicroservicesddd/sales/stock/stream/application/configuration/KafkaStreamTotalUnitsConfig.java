@@ -59,7 +59,7 @@ public class KafkaStreamTotalUnitsConfig {
         props.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, propMapStreamTotalUnits().get(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG).toString());
         return props;
     }
-    
+
     public StreamsConfig streamsFactoryStreamTotalUnits() {
         return new StreamsConfig(propMapStreamTotalUnits());
     }
