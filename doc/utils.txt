@@ -213,13 +213,13 @@ oc new-app --template=jenkins-persistent -p JENKINS_IMAGE_STREAM_TAG=jenkins:lat
 
 oc project devops-tools
 
+# !!!!!!!! Modify the agent image jenkins-agent-maven-35-rhel7:v3.10.127 in the Jenkins configuration
+  
+image-registry.openshift-image-registry.svc:5000/openshift/jenkins-agent-maven-35-rhel7
+
 oc adm policy add-cluster-role-to-user cluster-admin -z jenkins
 
 oc adm policy add-cluster-role-to-user cluster-admin -z opentlc-mgr
-
-# !!!!!!!! Modify the agent image jenkins-agent-maven-35-rhel7:v3.10.127 in the Jenkins configuration
-image-registry.openshift-image-registry.svc:5000/openshift/jenkins-agent-maven-35-rhel7
-
 
 
 oc project automation-tools

@@ -1,5 +1,6 @@
 package com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.infrastructure.listener;
 
+import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.application.service.processor.StatsStreamLoaderImp;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.application.service.processor.TotalUnitsStreamLoaderImp;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.stream.application.service.transform.TicketStreamLoaderImp;
 import org.slf4j.Logger;
@@ -23,11 +24,15 @@ public class StockStreamApplicationListener {
     @Autowired
     TotalUnitsStreamLoaderImp totalUnitsStreamLoader;
 
+    @Autowired
+    StatsStreamLoaderImp statsStreamLoader;
+
     @EventListener
     public void onApplicationEvent(ContextRefreshedEvent event) {
         logger.debug("start.");
         ticketStreamLoader.loadStream();
         totalUnitsStreamLoader.loadStream();
+        statsStreamLoader.loadStream();
         logger.debug("end.");
     }
 
