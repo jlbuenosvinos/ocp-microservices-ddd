@@ -1,0 +1,12 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: stock-processor-service
+spec:
+  host: stock-processor-service
+  subsets:
+  - name: stock-processor-service
+    labels:
+      app: stock-processor-service
+      version: v0
+      

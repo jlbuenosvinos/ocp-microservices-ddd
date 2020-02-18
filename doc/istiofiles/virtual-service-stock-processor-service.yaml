@@ -1,0 +1,19 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: stock-processor-service
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - sales-demo-app-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /api
+    route:
+    - destination:
+        host: stock-processor-service
+        subset: stock-processor-service
+        port:
+          number: 8080
