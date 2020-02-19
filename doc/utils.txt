@@ -762,3 +762,43 @@ Review the inventory to disable the certificate check
 
 ./setup_openshift.sh -e openshift_host=https://master.bcn-ffce.openshiftworkshop.com -e openshift_project=automation-tools -e openshift_user=opentlc-mgr -e openshift_password=r3dh4t1! -e admin_password=admin1 -e secret_key=mysecret -e pg_username=postgresuser -e pg_password=postgrespwd -e rabbitmq_password=rabbitpwd -e rabbitmq_erlang_cookie=rabbiterlangpwd
 
+
+AMQ Streams cluster
+___________________
+
+
+
+apiVersion: kafka.strimzi.io/v1beta1
+kind: Kafka
+metadata:
+  name: my-cluster
+  namespace: sales-demo-app-dev
+spec:
+  kafka:
+    version: 2.3.0
+    replicas: 3
+    listeners:
+      plain: {}
+      tls: {}
+    config:
+      offsets.topic.replication.factor: 3
+      transaction.state.log.replication.factor: 3
+      transaction.state.log.min.isr: 2
+      log.message.format.version: '2.3'
+    storage:
+      deleteClaim: true
+      size: 10Gi
+      type: persistent-claim
+      class: ocs-storagecluster-cephfs
+  zookeeper:
+    replicas: 3
+    storage:
+      deleteClaim: true
+      size: 10Gi
+      type: persistent-claim
+      class: ocs-storagecluster-cephfs
+  entityOperator:
+    topicOperator: {}
+    userOperator: {}
+
+
