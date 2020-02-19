@@ -26,12 +26,12 @@ public class OrderRoute extends RouteBuilder {
         logger.debug("TicketProcessor Endpoint [{}]", config.getTicketingTicketProcessorUriHost() +  ":" +  config.getTicketingTicketProcessorUriPort());
 
         onException(JsonProcessingException.class)
-                .handled(true)
+                .handled(false)
                 .to("log:Unable to parse the JSON Payload.")
                 .setHeader(Exchange.HTTP_RESPONSE_CODE, constant(400));
 
         onException(Exception.class)
-                .handled(true)
+                .handled(false)
                 .setHeader(Exchange.HTTP_RESPONSE_CODE, constant(500));
 
         restConfiguration()
