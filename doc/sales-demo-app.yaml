@@ -857,7 +857,7 @@ objects:
 - apiVersion: "v1"
   kind: "BuildConfig"
   metadata:
-    name: "sales-infra-pipeline"
+    name: "sales-infra-amq-pipeline"
   spec:
     strategy:
       jenkinsPipelineStrategy:
@@ -869,7 +869,9 @@ objects:
               stage("INIT") {
               }
             }
+
             node("maven") {
+              
               stage("AMQ") {
                   openshift.withCluster() {
                       openshift.withCredentials() {
@@ -909,6 +911,42 @@ objects:
                       }
                   }
               } // end stage("AMQ")
+
+
+            }
+            node {
+              stage("FINISH") {
+              }
+            }
+          }
+          catch (err) {
+            echo "in catch block"
+            echo "Caught: ${err}"
+            currentBuild.result = 'FAILURE'
+            throw err
+          }
+        type: JenkinsPipeline
+    triggers:
+      - generic:
+          allowEnv: true
+          secret: ${GENERIC_WEBHOOK_SECRET}
+        type: Generic
+- apiVersion: "v1"
+  kind: "BuildConfig"
+  metadata:
+    name: "sales-infra-dg-pipeline"
+  spec:
+    strategy:
+      jenkinsPipelineStrategy:
+        jenkinsfile: |-
+          try {
+            def appName="sales-event-store"
+            def appReplicasCount="2"
+            node {
+              stage("INIT") {
+              }
+            }
+            node("maven") {
 
               stage("DG") {
                 openshift.withCluster() {
