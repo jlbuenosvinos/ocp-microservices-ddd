@@ -6,13 +6,17 @@ docker push default-route-openshift-image-registry.apps.cluster-bcn-2028.bcn-202
 docker push default-route-openshift-image-registry.apps.cluster-bcn-2028.bcn-2028.example.opentlc.com/openshift/jboss-datagrid72-openshift:1.2
 
 
-podman push default-route-openshift-image-registry.apps.cluster-bcn-2028.bcn-2028.example.opentlc.com/openshift/redhat-openjdk18-openshift:latest
 
+oc registry login --skip-check
+
+
+
+
+podman push default-route-openshift-image-registry.apps.cluster-bcn-2028.bcn-2028.example.opentlc.com/openshift/redhat-openjdk18-openshift:latest
 
 podman image import openjdk18-openshift.tar default-route-openshift-image-registry.apps.ocp4.ocpdev.io/openshift/redhat-openjdk18-openshift:latest
 
 podman push default-route-openshift-image-registry.apps.ocp4.ocpdev.io/openshift/redhat-openjdk18-openshift:latest --tls-verify=false
-
 
 podman image import datagrid72-openshift.tar default-route-openshift-image-registry.apps.ocp4.ocpdev.io/openshift/jboss-datagrid72-openshift:latest
 
@@ -213,8 +217,7 @@ oc new-app --template=jenkins-persistent -p JENKINS_IMAGE_STREAM_TAG=jenkins:lat
 
 oc project devops-tools
 
-# !!!!!!!! Modify the agent image jenkins-agent-maven-35-rhel7:v3.10.127 in the Jenkins configuration
-  
+# !!!!!!!! Modify the agent image jenkins-agent-maven-35-rhel7:v3.10.127 in the Jenkins configuration  
 image-registry.openshift-image-registry.svc:5000/openshift/jenkins-agent-maven-35-rhel7
 
 oc adm policy add-cluster-role-to-user cluster-admin -z jenkins
