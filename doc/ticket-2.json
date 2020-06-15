@@ -1,0 +1,8 @@
+{
+  "store_id": 1,
+  "ticket_id": "2",
+  "item": {
+    "id": "id-2",
+    "units": 10
+  }
+}
