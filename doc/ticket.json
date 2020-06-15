@@ -1,8 +1,8 @@
 {
-  "store_id": 400,
-  "ticket_id": "abc",
+  "store_id": 1,
+  "ticket_id": "1",
   "item": {
-    "id": "id",
+    "id": "id-1",
     "units": 2
   }
 }
