@@ -9,6 +9,14 @@ docker push default-route-openshift-image-registry.apps.cluster-bcn-2028.bcn-202
 
 oc registry login --skip-check
 
+podman image import openjdk18-openshift.tar default-route-openshift-image-registry.apps.ocp4.ocpdev.io/openshift/redhat-openjdk18-openshift:latest
+
+docker images
+
+podman push default-route-openshift-image-registry.apps.ocp4.ocpdev.io/openshift/redhat-openjdk18-openshift:latest --tls-verify=false
+
+
+
 
 
 
@@ -223,7 +231,6 @@ image-registry.openshift-image-registry.svc:5000/openshift/jenkins-agent-maven-3
 oc adm policy add-cluster-role-to-user cluster-admin -z jenkins
 
 oc adm policy add-cluster-role-to-user cluster-admin -z opentlc-mgr
-
 
 oc project automation-tools
 
@@ -444,6 +451,7 @@ oc start-build sales-infra-pipeline -e SALES_EVENT_STORE_VOLUME_CAPACITY=10Gi
 
 oc start-build sales-deploy-ticket-processor-endpoint-pipeline -e TICKET_PROCESSOR_ENDPOINT_VERSION=v1
 
+oc start-build sales-infra-dg-pipeline
 
 oc start-build sales-deploy-stock-query-endpoint-pipeline -e STOCK_QUERY_ENDPOINT_VERSION=v1
 oc start-build sales-deploy-stock-query-endpoint-pipeline -e STOCK_QUERY_ENDPOINT_VERSION=v2
@@ -458,6 +466,8 @@ oc start-build sales-deploy-stock-processor-pipeline -e STOCK_PROCESSOR_SERVICE_
 oc start-build sales-deploy-stock-processor-pipeline -e STOCK_PROCESSOR_SERVICE_VERSION=v2
 oc start-build sales-deploy-stock-processor-pipeline -e STOCK_PROCESSOR_SERVICE_VERSION=v1
 
+
+oc start-build sales-deploy-stock-stream-processor-pipeline -e STOCK_STREAM_PROCESSOR_SERVICE_VERSION=v1
 
 Login
 
@@ -589,7 +599,9 @@ oc policy add-role-to-user view -z default
 Maven
 _____
 
-export MAVEN_HOME=/Applications/Tools/apache-maven-3.5.0
+
+
+export MAVEN_HOME=/Users/jbuenosv/Applications/apache-maven-3.6.3
 export PATH=$PATH:$MAVEN_HOME/bin/
 
 
@@ -803,5 +815,12 @@ spec:
   entityOperator:
     topicOperator: {}
     userOperator: {}
+
+
+Log configuration
+
+https://docs.openshift.com/container-platform/4.3/logging/cluster-logging-deploying.html#cluster-logging-deploy-clo_cluster-logging-deploying
+
+https://docs.openshift.com/container-platform/4.3/logging/cluster-logging-deploying.html#cluster-logging-deploy-clo_cluster-logging-deploying
 
 
