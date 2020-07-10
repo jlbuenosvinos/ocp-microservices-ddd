@@ -26,12 +26,12 @@ public class StockQueryRoute extends RouteBuilder {
         logger.debug("StockQuery Endpoint [{}]", config.getSalesStockQueryUriHost() +  ":" +  config.getSalesStockQueryUriPort());
 
         onException(JsonProcessingException.class)
-                .handled(false)
+                .handled(true)
                 .to("log:Unable to parse the JSON Payload.")
                 .setHeader(Exchange.HTTP_RESPONSE_CODE, constant(400));
 
         onException(Exception.class)
-                .handled(false)
+                .handled(true)
                 .setHeader(Exchange.HTTP_RESPONSE_CODE, constant(500));
 
         restConfiguration()
