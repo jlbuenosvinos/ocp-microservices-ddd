@@ -6,19 +6,13 @@ docker push default-route-openshift-image-registry.apps.cluster-bcn-2028.bcn-202
 docker push default-route-openshift-image-registry.apps.cluster-bcn-2028.bcn-2028.example.opentlc.com/openshift/jboss-datagrid72-openshift:1.2
 
 
-
-oc registry login --skip-check
+oc registry login --skip-check  
 
 podman image import openjdk18-openshift.tar default-route-openshift-image-registry.apps.ocp4.ocpdev.io/openshift/redhat-openjdk18-openshift:latest
 
 docker images
 
 podman push default-route-openshift-image-registry.apps.ocp4.ocpdev.io/openshift/redhat-openjdk18-openshift:latest --tls-verify=false
-
-
-
-
-
 
 podman push default-route-openshift-image-registry.apps.cluster-bcn-2028.bcn-2028.example.opentlc.com/openshift/redhat-openjdk18-openshift:latest
 
@@ -30,9 +24,7 @@ podman image import datagrid72-openshift.tar default-route-openshift-image-regis
 
 podman push default-route-openshift-image-registry.apps.ocp4.ocpdev.io/openshift/jboss-datagrid72-openshift:latest --tls-verify=false
 
-
 oc create secret docker-registry dv-pull-secret --docker-server=registry.redhat.io --docker-username=jbuenosv@redhat.com --docker-password=nxe-8bv-72A-EHp --docker-email=jbuenosv@redhat.com
-
 
 oc create -f - <<INGRESS
 apiVersion: v1
@@ -212,9 +204,7 @@ oc import-image jenkins-agent-maven-35-rhel7 --from=registry.access.redhat.com/o
 
 oc import-image fuse7/fuse-java-openshift --from=registry.redhat.io/fuse7/fuse-java-openshift --confirm
 
-oc import-image jboss-datagrid-7/datagrid73-openshift --from=registry.redhat.io/jboss-datagrid-7/datagrid73-openshift --confirm
-
-oc create -f https://raw.githubusercontent.com/jboss-container-images/jboss-datagrid-7-openshift-image/7.3-v1.2https://raw.githubusercontent.com/jboss-container-images/jboss-datagrid-7-openshift-image/7.3-v1.2/templates/datagrid73-basic.json
+oc create -f https://raw.githubusercontent.com/jboss-container-images/jboss-datagrid-7-openshift-image/7.3-v1.2/templates/datagrid73-basic.json
 
 oc project devops-tools
 
