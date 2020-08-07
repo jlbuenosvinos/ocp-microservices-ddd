@@ -1,10 +1,9 @@
 metadata:
   name: ${project.artifactId}-${project.version}
   labels:
-    app: ${project.artifactId}-app
+    app: ${project.artifactId}
     version: ${project.version}
     run: ${project.artifactId}-${project.version}
-    app: ${project.artifactId}-app
 spec:
   replicas: 2
   template:
