@@ -1,5 +1,6 @@
 metadata:
   name: ${project.artifactId}-${project.version}
+  app: ${project.artifactId}-app
 spec:
   selector:
     matchLabels:
