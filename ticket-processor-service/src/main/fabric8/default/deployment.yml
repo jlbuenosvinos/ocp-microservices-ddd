@@ -6,10 +6,17 @@ metadata:
     run: ${project.artifactId}-v0
 spec:
   replicas: 2
+  selector:
+    matchLabels:
+      app: ${project.artifactId}
+      version: v0
   template:
     metadata:
       annotations:
         sidecar.istio.io/inject: "true"
+      labels:
+        app: ${project.artifactId}
+        version: v0
     spec:
       containers:
         -
