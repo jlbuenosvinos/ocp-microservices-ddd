@@ -11,7 +11,7 @@ spec:
       labels:
         version: ${project.version}
         run: ${project.artifactId}-${project.version}
-        app: ${project.artifactId}
+        app: ${project.artifactId}-app
     spec:
       containers:
         -
