@@ -2,16 +2,15 @@ metadata:
   name: ${project.artifactId}-${project.version}
   labels:
     app: ${project.artifactId}-app
+    version: ${project.version}
+    run: ${project.artifactId}-${project.version}
+    app: ${project.artifactId}-app
 spec:
   replicas: 2
   template:
     metadata:
       annotations:
         sidecar.istio.io/inject: "true"
-      labels:
-        version: ${project.version}
-        run: ${project.artifactId}-${project.version}
-        app: ${project.artifactId}-app
     spec:
       containers:
         -
