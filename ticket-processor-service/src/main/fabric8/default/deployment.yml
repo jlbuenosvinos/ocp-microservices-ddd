@@ -1,6 +1,7 @@
 metadata:
   name: ${project.artifactId}
-  app: ${project.artifactId}-v0
+  labels:
+    app: ${project.artifactId}-v0
 spec:
   selector:
     matchLabels:
