@@ -5,7 +5,6 @@ metadata:
   labels:
     app: ${project.artifactId}
     run: ${project.artifactId}-${project.version}
-    version: ${project.version}
 spec:
   ports:
     - name: http
