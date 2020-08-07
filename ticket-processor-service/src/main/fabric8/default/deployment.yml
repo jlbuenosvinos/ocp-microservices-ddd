@@ -3,6 +3,7 @@ metadata:
   labels:
     app: ${project.artifactId}
     version: v0
+    run: ${project.artifactId}-v0
 spec:
   replicas: 2
   template:
