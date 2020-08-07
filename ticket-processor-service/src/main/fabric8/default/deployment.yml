@@ -3,9 +3,6 @@ metadata:
   labels:
     app: ${project.artifactId}-v0
 spec:
-  selector:
-    matchLabels:
-      run: ${project.artifactId}-v0
   replicas: 2
   template:
     metadata:
