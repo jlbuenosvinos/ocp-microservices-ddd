@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: ${project.artifactId}
   labels:
-    app: ${project.artifactId}
+    app: ${project.artifactId}-app
 spec:
   ports:
     - name: http
@@ -11,4 +11,4 @@ spec:
       protocol: TCP
       targetPort: 8080
   selector:
-    app: ${project.artifactId}
+    app: ${project.artifactId}-app

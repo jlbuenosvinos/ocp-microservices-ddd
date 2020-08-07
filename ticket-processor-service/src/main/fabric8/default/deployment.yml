@@ -9,7 +9,7 @@ spec:
       labels:
         version: v0
         run: ${project.artifactId}-v0
-        app: ${project.artifactId}
+        app: ${project.artifactId}-app
     spec:
       containers:
         -
