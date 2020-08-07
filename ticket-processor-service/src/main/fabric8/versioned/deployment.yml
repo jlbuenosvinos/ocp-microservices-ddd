@@ -1,8 +1,9 @@
 metadata:
   name: ${project.artifactId}-${project.version}
 spec:
-  matchLabels:
-    run: ${project.artifactId}-${project.version}
+  selector:
+    matchLabels:
+      run: ${project.artifactId}-${project.version}
   replicas: 2
   template:
     metadata:

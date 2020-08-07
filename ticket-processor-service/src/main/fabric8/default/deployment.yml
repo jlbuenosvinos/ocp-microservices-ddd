@@ -1,6 +1,9 @@
 metadata:
   name: ${project.artifactId}
 spec:
+  selector:
+    matchLabels:
+      run: ${project.artifactId}-v0
   replicas: 2
   template:
     metadata:
