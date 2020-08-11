@@ -3,14 +3,12 @@ kind: DestinationRule
 metadata:
   name: ticket-processor-service
 spec:
-  host: ticket-processor-service
+  host: ticket-processor-service.sales-demo-app-dev.svc.cluster.local
   subsets:
   - name: ticket-processor-service-v1
     labels:
-      app: ticket-processor-service
-      version: v1
+      run: ticket-processor-service-v1
   - name: ticket-processor-service-v2
     labels:
-      app: ticket-processor-service
-      version: v2
+      run: ticket-processor-service-v2
       
