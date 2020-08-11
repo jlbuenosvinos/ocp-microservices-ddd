@@ -4,7 +4,6 @@ metadata:
   name: ${project.artifactId}
   labels:
     app: ${project.artifactId}
-    version: ${project.version}
 spec:
   selector:
     app: ${project.artifactId}
