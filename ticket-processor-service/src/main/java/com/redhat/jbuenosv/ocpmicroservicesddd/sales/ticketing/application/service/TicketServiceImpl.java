@@ -8,7 +8,7 @@ import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.model.Orde
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.model.OrderLineType;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.model.Ticket;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.model.TicketItem;
-import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.store.kafka.KafkaTicketStore;
+import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.store.kafka.ticket.TicketKafkaStore;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.store.StockStore;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.store.amq.TicketStore;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.util.UUIDGenerator;
@@ -38,7 +38,7 @@ class TicketServiceImpl implements TicketService {
     StockStore stockStore;
 
     @Autowired
-    KafkaTicketStore ticketKafkaStore;
+    TicketKafkaStore ticketKafkaStore;
 
     @Autowired
     TicketProcessorEventBus ticketProcessorEventBus;

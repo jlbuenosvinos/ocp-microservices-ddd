@@ -1592,3 +1592,12 @@ ticket-processor-service/target/ticket-processor-service-is.yml
 ticket-processor-service/target/ticket-processor-service.jar
 ticket-processor-service/target/ticket-processor-service.jar.original
 ticket-processor-service/ticket-processor-service.iml
+ticket-processor-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/ticketing/application/command/Command.class
+ticket-processor-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/ticketing/application/command/CommandHandler.class
+ticket-processor-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/ticketing/application/command/NewOrderCommand.class
+ticket-processor-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/ticketing/application/command/NewOrderCommandHandler.class
+ticket-processor-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/ticketing/application/process/OrderProcessManager.class
+ticket-processor-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/ticketing/application/process/OrderProcessManagerImpl.class
+ticket-processor-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/ticketing/infrastructure/store/kafka/TicketKafkaPublisher.class
+ticket-processor-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/ticketing/infrastructure/store/kafka/TicketKafkaPublisherConfig.class
+ticket-processor-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/ticketing/infrastructure/store/kafka/TicketKafkaStore.class

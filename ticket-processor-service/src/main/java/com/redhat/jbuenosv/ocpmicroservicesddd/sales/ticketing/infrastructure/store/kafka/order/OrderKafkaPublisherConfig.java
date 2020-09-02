@@ -1,7 +1,4 @@
-package com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.store.kafka;
-
-import java.util.HashMap;
-import java.util.Map;
+package com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.store.kafka.order;
 
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.event.TicketGeneratedEventKey;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -17,14 +14,17 @@ import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.transaction.KafkaTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by jlbuenosvinos.
  */
 @Configuration
 @EnableTransactionManagement
-public class KafkaPublisherConfig {
+public class OrderKafkaPublisherConfig {
 
-    public static final Logger logger = LoggerFactory.getLogger(KafkaPublisherConfig.class);
+    public static final Logger logger = LoggerFactory.getLogger(OrderKafkaPublisherConfig.class);
 
     @Value("${ticketing.kafka.bootstrap.servers}")
     private String bootstrapServers;
@@ -32,12 +32,14 @@ public class KafkaPublisherConfig {
     @Value("${ticketing.kafka.username}")
     private String kafkaUserName;
 
-    @Value("${ticketing.kafka.tickets.topic}")
-    private String kafkaTicketsTopicName;
+    @Value("${ticketing.kafka.order.commands.topic}")
+    private String kafkaOrdersTopicName;
 
     public String getKafkaUserName() { return this.kafkaUserName; }
 
-    public String getKafkaTicketsTopicName() { return this.kafkaTicketsTopicName; }
+    public String getKafkaOrdersTopicName() {
+        return kafkaOrdersTopicName;
+    }
 
     public String getBootstrapServers() { return this.bootstrapServers; }
 
@@ -45,40 +47,40 @@ public class KafkaPublisherConfig {
     public Map<String, Object> producerConfigs() {
         Map<String, Object> props = new HashMap<>();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, getBootstrapServers());
-        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, TicketGeneratedEventKeySerializer.class);
+        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, "true");
-        props.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, "ticket-processor-service");
+        props.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, "ticket-processor-service-orders");
         props.put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, 1);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.RETRIES_CONFIG, 3);
-        logger.debug("Kafka producer configuration is ready.");
+        logger.debug("Kafka order producer configuration is ready.");
         return props;
     }
 
     @Bean
-    public KafkaTransactionManager<TicketGeneratedEventKey, String> transactionManager(ProducerFactory<TicketGeneratedEventKey, String> producerFactory) {
-        return new KafkaTransactionManager<TicketGeneratedEventKey, String>(producerFactory);
+    public KafkaTransactionManager<String, String> transactionManager(ProducerFactory<String, String> producerFactory) {
+        return new KafkaTransactionManager<String,String>(producerFactory);
     }
 
     @Bean
-    public ProducerFactory<TicketGeneratedEventKey, String> producerFactory() {
+    public ProducerFactory<String, String> producerFactory() {
         logger.debug("Kafka producer factory is ready.");
-        DefaultKafkaProducerFactory<TicketGeneratedEventKey, String> factory = new DefaultKafkaProducerFactory<TicketGeneratedEventKey, String>(producerConfigs());
+        DefaultKafkaProducerFactory<String, String> factory = new DefaultKafkaProducerFactory<String, String>(producerConfigs());
         factory.transactionCapable();
         factory.setTransactionIdPrefix("trans-");
         return factory;
     }
 
     @Bean
-    public KafkaTemplate<TicketGeneratedEventKey, String> kafkaTemplate() {
+    public KafkaTemplate<String, String> kafkaTemplate() {
         logger.debug("Kafka producer template is ready.");
-        return new KafkaTemplate<TicketGeneratedEventKey, String>(producerFactory());
+        return new KafkaTemplate<String, String>(producerFactory());
     }
 
     @Bean
-    public KafkaPublisher publisher() {
+    public OrderKafkaPublisher publisher() {
         logger.debug("Kafka producer sender is ready.");
-        return new KafkaPublisher();
+        return new OrderKafkaPublisher();
     }
 
 }

@@ -135,3 +135,8 @@ spec:
                 configMapKeyRef:
                   name: ${project.artifactId}
                   key: TICKETING_TICKETS_KAFKA_DESTINATION_NAME
+            - name: "TICKETING_ORDERS_COMMANDS_KAFKA_DESTINATION_NAME"
+              valueFrom:
+                configMapKeyRef:
+                  name: ${project.artifactId}
+                  key: "TICKETING_ORDERS_COMMANDS_KAFKA_DESTINATION_NAME"

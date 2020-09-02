@@ -3,7 +3,6 @@ package com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.event;
 import java.io.Serializable;
 
 /**
- * This class represents a ticket event
  * Created by jlbuenosvinos.
  */
 public class TicketGeneratedEventKey implements Serializable {

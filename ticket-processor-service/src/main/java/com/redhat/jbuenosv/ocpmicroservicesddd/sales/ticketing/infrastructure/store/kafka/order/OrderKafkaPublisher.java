@@ -1,4 +1,4 @@
-package com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.store.kafka;
+package com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.store.kafka.order;
 
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.event.TicketGeneratedEventKey;
 import org.slf4j.Logger;
@@ -11,25 +11,22 @@ import org.springframework.stereotype.Component;
  * Created by jlbuenosvinos.
  */
 @Component
-public class KafkaPublisher {
+public class OrderKafkaPublisher {
 
-    public static final Logger logger = LoggerFactory.getLogger(KafkaPublisher.class);
+    public static final Logger logger = LoggerFactory.getLogger(OrderKafkaPublisher.class);
 
     @Autowired
-    private KafkaTemplate<TicketGeneratedEventKey,String> kafkaTemplate;
+    private KafkaTemplate<String,String> kafkaTemplate;
 
     /**
      * Publishes an event to a Kafka Topic
      * @param topic topic name
-     * @param key event key
+     * @param key order id key
      * @param value event value
      */
-    public void publish(String topic, TicketGeneratedEventKey key, String value) {
+    public void publish(String topic, String key, String value) {
         logger.debug("Ready to send Event [{}] to topic [{}].",key,topic);
         logger.debug("Transaction initialization [{}].",kafkaTemplate.inTransaction());
-
-
-
         kafkaTemplate.send(topic,key,value);
         logger.debug("Event [{}] has been sent to topic [{}].",key,topic);
     }

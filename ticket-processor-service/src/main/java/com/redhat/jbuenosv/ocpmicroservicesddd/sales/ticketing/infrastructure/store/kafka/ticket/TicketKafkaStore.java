@@ -1,4 +1,4 @@
-package com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.store.kafka;
+package com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.store.kafka.ticket;
 
 import com.google.common.eventbus.Subscribe;
 
@@ -17,15 +17,15 @@ import org.springframework.transaction.annotation.Transactional;
  * Created by jlbuenosvinos.
  */
 @Component
-public class KafkaTicketStore implements EventStore {
+public class TicketKafkaStore implements EventStore {
 
-    public static final Logger logger = LoggerFactory.getLogger(KafkaTicketStore.class);
+    public static final Logger logger = LoggerFactory.getLogger(TicketKafkaStore.class);
 
     @Autowired
     ActiveMQConfig mqConfig;
 
     @Autowired
-    KafkaPublisherConfig kafkaPublisherConfig;
+    TicketKafkaPublisherConfig ticketKafkaPublisherConfig;
 
     /**
      * Saves a ticket event to a Kafka Topic
@@ -36,7 +36,7 @@ public class KafkaTicketStore implements EventStore {
     public void store(TicketGeneratedEvent event) {
         logger.debug("store begin.");
         TicketGeneratedEventKey key = new TicketGeneratedEventKey(event.getTicket().getStoreId(),event.getTicket().getTicketId());
-        kafkaPublisherConfig.publisher().publish(kafkaPublisherConfig.getKafkaTicketsTopicName(),key,event.getTicket().toJson());
+        ticketKafkaPublisherConfig.publisher().publish(ticketKafkaPublisherConfig.getKafkaTicketsTopicName(),key,event.getTicket().toJson());
         logger.debug("store end.");
     }
 
