@@ -1,6 +1,7 @@
 package com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.controller;
 
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.application.exception.TicketApplicationException;
+import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.application.process.OrderProcessManagerImpl;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.builder.OrderBuilder;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.application.service.TicketService;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.model.Order;
@@ -14,8 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
-
-/**
+   /**
  * Created by jlbuenosvinos.
  */
 @RestController
@@ -28,11 +28,13 @@ class OrderController {
     @Autowired
     private OrderBuilder orderBuilder;
 
-    @Autowired
-    private TicketService ticketService;
+      private TicketService ticketService;
 
     @Autowired
     private TicketProcessorEventBus ticketProcessorEventBus;
+
+    @Autowired
+    private OrderProcessManagerImpl orderProcessManager;
 
     /**
      * Default constructor
@@ -44,7 +46,7 @@ class OrderController {
      * Physical store order process
      * @param order physical store order
      * @param ucBuilder uri builder
-     * @return
+     * @return The result of the order process
      */
     @Timed
     @RequestMapping(value = "/order", method = RequestMethod.POST)
@@ -53,7 +55,10 @@ class OrderController {
 
         try {
             Order newOrder = orderBuilder.build(order);
+
             ticketService.processOrder(newOrder);
+
+            // orderProcessManager.processOrder(newOrder);
 
             logger.debug("Order [{}] has been created.", newOrder.getOrderId());
             orderResponse = new ResponseEntity<String>(HttpStatus.CREATED);

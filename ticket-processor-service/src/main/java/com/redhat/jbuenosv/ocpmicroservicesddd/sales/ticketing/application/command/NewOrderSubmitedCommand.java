@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
  * Created by jlbuenosvinos.
  */
 @Component
-public class NewOrderCommand implements Command {
+public class NewOrderSubmitedCommand implements Command {
 
    private Order order;
 
@@ -15,7 +15,7 @@ public class NewOrderCommand implements Command {
      * Default Constructor
      * @param order New order
      */
-   public NewOrderCommand(Order order) {
+   public NewOrderSubmitedCommand(Order order) {
        this.order = order;
    }
 

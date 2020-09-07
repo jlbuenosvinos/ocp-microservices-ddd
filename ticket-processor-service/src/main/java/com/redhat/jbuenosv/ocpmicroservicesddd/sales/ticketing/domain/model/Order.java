@@ -76,4 +76,40 @@ public class Order implements Serializable {
         result.append("}");
         return result.toString();
     }
+
+    /**
+     * Gets the JSON representation
+     * @return order json representation
+     */
+    public String toJson() {
+        StringBuilder result = new StringBuilder();
+        String NEW_LINE = System.getProperty("line.separator");
+        result.append("{" + NEW_LINE);
+        result.append(" \"store_id\": " + getStoreId() + "," + NEW_LINE);
+        result.append(" \"order_id\": \"" + getOrderId() + "\","  + NEW_LINE);
+        result.append(" \"items\": [" + NEW_LINE);
+        for(int i = 0 ; i < getItems().size() ; i++) {
+            result.append(getItems().get(i).toJson() + NEW_LINE);
+        }
+        result.append("            ]" + NEW_LINE);
+        result.append("}");
+        return result.toString();
+    }
+
+     /*
+        {
+        "store_id": 1,
+        "order_id": "1",
+        "items": [
+            {
+              "id": "1",
+              "name": "name1",
+              "size": "xl",
+              "units": 1,
+              "operation_type": "return"
+            }
+          ]
+        }
+    */
+
 }

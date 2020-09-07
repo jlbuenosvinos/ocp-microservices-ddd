@@ -1,5 +1,6 @@
 package com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.store.kafka.ticket;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,24 +57,43 @@ public class TicketKafkaPublisherConfig {
     }
 
     @Bean
+    public ProducerFactory<TicketGeneratedEventKey, String> producerFactory() {
+        logger.debug("Kafka producer factory is ready.");
+        DefaultKafkaProducerFactory<TicketGeneratedEventKey, String> factory = new DefaultKafkaProducerFactory<TicketGeneratedEventKey, String>(producerConfigs());
+        //factory.transactionCapable();
+        factory.setTransactionIdPrefix("ticket-trans");
+        return factory;
+    }
+
+    @Bean("controlTransactionManager")
     public KafkaTransactionManager<TicketGeneratedEventKey, String> transactionManager(ProducerFactory<TicketGeneratedEventKey, String> producerFactory) {
         return new KafkaTransactionManager<TicketGeneratedEventKey, String>(producerFactory);
     }
 
+    /*
     @Bean
-    public ProducerFactory<TicketGeneratedEventKey, String> producerFactory() {
+    public ProducerFactory<ArrayList<TicketGeneratedEventKey>, ArrayList<String>> producerFactoryAll() {
         logger.debug("Kafka producer factory is ready.");
-        DefaultKafkaProducerFactory<TicketGeneratedEventKey, String> factory = new DefaultKafkaProducerFactory<TicketGeneratedEventKey, String>(producerConfigs());
+        DefaultKafkaProducerFactory<ArrayList<TicketGeneratedEventKey>, ArrayList<String>> factory = new DefaultKafkaProducerFactory<ArrayList<TicketGeneratedEventKey>, ArrayList<String>>(producerConfigs());
         factory.transactionCapable();
         factory.setTransactionIdPrefix("trans-");
         return factory;
     }
+    */
 
-    @Bean
+    @Bean("controlTemplate")
     public KafkaTemplate<TicketGeneratedEventKey, String> kafkaTemplate() {
         logger.debug("Kafka producer template is ready.");
         return new KafkaTemplate<TicketGeneratedEventKey, String>(producerFactory());
     }
+
+    /*
+    @Bean
+    public KafkaTemplate<ArrayList<TicketGeneratedEventKey>, ArrayList<String>> kafkaTemplateAll() {
+        logger.debug("Kafka producer template is ready.");
+        return new KafkaTemplate<ArrayList<TicketGeneratedEventKey>, ArrayList<String>>(producerFactoryAll());
+    }
+    */
 
     @Bean
     public TicketKafkaPublisher publisher() {

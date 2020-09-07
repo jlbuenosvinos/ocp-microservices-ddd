@@ -6,6 +6,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import java.util.ArrayList;
 
 /**
  * Created by jlbuenosvinos.
@@ -29,6 +32,26 @@ public class TicketKafkaPublisher {
         logger.debug("Transaction initialization [{}].",kafkaTemplate.inTransaction());
         kafkaTemplate.send(topic,key,value);
         logger.debug("Event [{}] has been sent to topic [{}].",key,topic);
+    }
+
+    /**
+     * Publishes an events collection to a Kafka Topic
+     * @param topic topic name
+     * @param keys event key collection
+     * @param values event value collection
+     */
+    public void publishAll(String topic, ArrayList<TicketGeneratedEventKey> keys, ArrayList<String> values) {
+        logger.debug("Ready to send Events Collection to topic [{}].",topic);
+        logger.debug("Transaction initialization [{}].",kafkaTemplate.inTransaction());
+
+        // @see executeInTransaction
+        //kafkaTemplate.executeInTransaction()
+
+
+        for(int i = 0 ; i < keys.size() ; i ++) {
+            kafkaTemplate.send(topic,keys.get(i),values.get(i));
+        }
+        logger.debug("Events collection has been sent to topic [{}].",topic);
     }
 
 }

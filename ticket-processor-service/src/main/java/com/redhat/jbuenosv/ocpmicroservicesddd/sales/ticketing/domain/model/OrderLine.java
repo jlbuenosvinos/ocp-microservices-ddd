@@ -113,4 +113,38 @@ public class OrderLine implements Serializable {
         result.append("}");
         return result.toString();
     }
+
+    /**
+     * Gets the JSON representation
+     * @return order line json representation
+     */
+    public String toJson() {
+        StringBuilder result = new StringBuilder();
+        String NEW_LINE = System.getProperty("line.separator");
+        result.append("{" + NEW_LINE);
+        result.append(" \"id\": " + getId() + "," + NEW_LINE);
+        result.append(" \"name\": \"" + getName() + "\","  + NEW_LINE);
+        result.append(" \"size\": \"" +  getSize().name() + "\","  + NEW_LINE);
+        result.append(" \"units\": " + getUnits() + "," + NEW_LINE);
+        result.append(" \"operation_type\": \"" +  getType().name() + "\","  + NEW_LINE);
+        result.append("}");
+        return result.toString();
+    }
+
+    /*
+    {
+    "store_id": 1,
+    "order_id": "1",
+    "items": [
+        {
+          "id": "1",
+          "name": "name1",
+          "size": "xl",
+          "units": 1,
+          "operation_type": "return"
+        }
+      ]
+    }
+    */
+
 }
