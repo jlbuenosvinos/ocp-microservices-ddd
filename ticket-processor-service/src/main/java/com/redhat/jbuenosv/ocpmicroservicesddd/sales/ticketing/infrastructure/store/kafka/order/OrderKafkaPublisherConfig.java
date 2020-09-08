@@ -44,7 +44,7 @@ public class OrderKafkaPublisherConfig {
     public String getBootstrapServers() { return this.bootstrapServers; }
 
     @Bean
-    public Map<String, Object> producerConfigs() {
+    public Map<String, Object> orderProducerConfigs() {
         Map<String, Object> props = new HashMap<>();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, getBootstrapServers());
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
@@ -65,7 +65,7 @@ public class OrderKafkaPublisherConfig {
     @Bean
     public ProducerFactory<String, String> producerFactory() {
         logger.debug("Kafka producer factory is ready.");
-        DefaultKafkaProducerFactory<String, String> factory = new DefaultKafkaProducerFactory<String, String>(producerConfigs());
+        DefaultKafkaProducerFactory<String, String> factory = new DefaultKafkaProducerFactory<String, String>(orderProducerConfigs());
         //factory.transactionCapable();
         factory.setTransactionIdPrefix("trans-");
         return factory;
