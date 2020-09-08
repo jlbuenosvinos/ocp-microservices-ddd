@@ -57,7 +57,7 @@ public class OrderKafkaPublisherConfig {
         return props;
     }
 
-    @Bean
+    @Bean("controlTransactionManager")
     public KafkaTransactionManager<String, String> transactionManager(ProducerFactory<String, String> producerFactory) {
         return new KafkaTransactionManager<String,String>(producerFactory);
     }
@@ -66,12 +66,12 @@ public class OrderKafkaPublisherConfig {
     public ProducerFactory<String, String> producerFactory() {
         logger.debug("Kafka producer factory is ready.");
         DefaultKafkaProducerFactory<String, String> factory = new DefaultKafkaProducerFactory<String, String>(producerConfigs());
-        factory.transactionCapable();
+        //factory.transactionCapable();
         factory.setTransactionIdPrefix("trans-");
         return factory;
     }
 
-    @Bean
+    @Bean("controlTemplate")
     public KafkaTemplate<String, String> kafkaTemplate() {
         logger.debug("Kafka producer template is ready.");
         return new KafkaTemplate<String, String>(producerFactory());

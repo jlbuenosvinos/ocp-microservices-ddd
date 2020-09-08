@@ -56,9 +56,9 @@ class OrderController {
         try {
             Order newOrder = orderBuilder.build(order);
 
-            ticketService.processOrder(newOrder);
+            //ticketService.processOrder(newOrder);
 
-            // orderProcessManager.processOrder(newOrder);
+            orderProcessManager.processOrder(newOrder);
 
             logger.debug("Order [{}] has been created.", newOrder.getOrderId());
             orderResponse = new ResponseEntity<String>(HttpStatus.CREATED);
