@@ -43,7 +43,7 @@ public class TicketKafkaPublisherConfig {
     public String getBootstrapServers() { return this.bootstrapServers; }
 
     @Bean
-    public Map<String, Object> producerTicketConfigs() {
+    public Map<String, Object> ticketProducerConfigs() {
         Map<String, Object> props = new HashMap<>();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, getBootstrapServers());
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, TicketGeneratedEventKeySerializer.class);
@@ -52,14 +52,14 @@ public class TicketKafkaPublisherConfig {
         props.put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, 1);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.RETRIES_CONFIG, 3);
-        logger.debug("Kafka producer configuration is ready.");
+        logger.debug("ticketProducerConfigs Kafka producer configuration is ready.");
         return props;
     }
 
     @Bean
     public ProducerFactory<TicketGeneratedEventKey, String> ticketProducerFactory() {
         logger.debug("Kafka producer factory is ready.");
-        DefaultKafkaProducerFactory<TicketGeneratedEventKey, String> factory = new DefaultKafkaProducerFactory<TicketGeneratedEventKey, String>(producerTicketConfigs());
+        DefaultKafkaProducerFactory<TicketGeneratedEventKey, String> factory = new DefaultKafkaProducerFactory<TicketGeneratedEventKey, String>(ticketProducerConfigs());
         //factory.transactionCapable();
         factory.setTransactionIdPrefix("ticket-trans");
         return factory;
