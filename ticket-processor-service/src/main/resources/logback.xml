@@ -16,6 +16,7 @@
     <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.model" level="DEBUG" />
     <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing" level="DEBUG" />
     <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.application.service" level="DEBUG" />
+    <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.application.command" level="DEBUG" />
     <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.application.handler" level="DEBUG" />
     <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.application.handler.controller" level="DEBUG" />
     <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.store" level="DEBUG" />
