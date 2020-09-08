@@ -96,20 +96,4 @@ public class Order implements Serializable {
         return result.toString();
     }
 
-     /*
-        {
-        "store_id": 1,
-        "order_id": "1",
-        "items": [
-            {
-              "id": "1",
-              "name": "name1",
-              "size": "xl",
-              "units": 1,
-              "operation_type": "return"
-            }
-          ]
-        }
-    */
-
 }

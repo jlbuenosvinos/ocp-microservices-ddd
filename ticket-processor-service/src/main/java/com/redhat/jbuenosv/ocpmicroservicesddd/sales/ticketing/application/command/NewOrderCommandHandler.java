@@ -16,13 +16,12 @@ public class NewOrderCommandHandler implements  CommandHandler {
 
     /**
      * Executes the command
-     *
-     * @param command
+     * @param command command to be executed
      */
     @Override
     public void execute(Command command) {
-        NewOrderSubmitedCommand newOrderSubmitedCommand = (NewOrderSubmitedCommand)command;
-        Order newOrder = newOrderSubmitedCommand.getOrder();
+        NewOrderSubmittedCommand newOrderSubmittedCommand = (NewOrderSubmittedCommand)command;
+        Order newOrder = newOrderSubmittedCommand.getOrder();
         orderKafkaPublisherConfig.orderPublisher().publish(orderKafkaPublisherConfig.getKafkaOrdersTopicName(),newOrder.getOrderId(),newOrder.toJson());
     }
 

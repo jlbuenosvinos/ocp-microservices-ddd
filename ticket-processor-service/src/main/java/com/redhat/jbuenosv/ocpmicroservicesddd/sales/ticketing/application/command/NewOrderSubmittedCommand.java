@@ -7,17 +7,15 @@ import org.springframework.stereotype.Component;
 /**
  * Created by jlbuenosvinos.
  */
-@Component
-public class NewOrderSubmitedCommand implements Command {
+public class NewOrderSubmittedCommand implements Command {
 
-   @Autowired
-    private Order order;
+    private final Order order;
 
     /**
      * Default Constructor
      * @param order New order
      */
-   public NewOrderSubmitedCommand(Order order) {
+   public NewOrderSubmittedCommand(Order order) {
        this.order = order;
    }
 
