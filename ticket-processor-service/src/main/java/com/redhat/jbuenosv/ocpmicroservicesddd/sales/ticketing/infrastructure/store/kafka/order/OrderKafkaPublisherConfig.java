@@ -72,13 +72,13 @@ public class OrderKafkaPublisherConfig {
 
     @Bean("order-control-template")
     public KafkaTemplate<String, String> kafkaTemplate() {
-        logger.debug("Kafka producer template is ready.");
+        logger.debug("Kafka order producer template is ready.");
         return new KafkaTemplate<String, String>(orderProducerFactory());
     }
 
     @Bean
     public OrderKafkaPublisher orderPublisher() {
-        logger.debug("Kafka producer sender is ready.");
+        logger.debug("Kafka order producer sender is ready.");
         return new OrderKafkaPublisher();
     }
 
