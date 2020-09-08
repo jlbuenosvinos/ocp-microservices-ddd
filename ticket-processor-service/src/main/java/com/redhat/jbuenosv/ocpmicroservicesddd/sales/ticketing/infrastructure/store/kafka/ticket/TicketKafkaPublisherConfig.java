@@ -65,12 +65,14 @@ public class TicketKafkaPublisherConfig {
         return factory;
     }
 
-    @Bean("controlTransactionManager")
+    //@Bean("controlTransactionManager")
+    @Bean
     public KafkaTransactionManager<TicketGeneratedEventKey, String> transactionManager(ProducerFactory<TicketGeneratedEventKey, String> producerFactory) {
         return new KafkaTransactionManager<TicketGeneratedEventKey, String>(producerFactory);
     }
 
-    @Bean("controlTemplate")
+    //@Bean("controlTemplate")
+    @Bean
     public KafkaTemplate<TicketGeneratedEventKey, String> kafkaTemplate() {
         logger.debug("Kafka producer template is ready.");
         return new KafkaTemplate<TicketGeneratedEventKey, String>(ticketProducerFactory());

@@ -57,7 +57,8 @@ public class OrderKafkaPublisherConfig {
         return props;
     }
 
-    @Bean("controlTransactionManager")
+    //@Bean("controlTransactionManager")
+    @Bean
     public KafkaTransactionManager<String, String> transactionManager(ProducerFactory<String, String> producerFactory) {
         return new KafkaTransactionManager<String,String>(producerFactory);
     }
@@ -71,7 +72,8 @@ public class OrderKafkaPublisherConfig {
         return factory;
     }
 
-    @Bean("controlTemplate")
+    //@Bean("controlTemplate")
+    @Bean
     public KafkaTemplate<String, String> kafkaTemplate() {
         logger.debug("Kafka producer template is ready.");
         return new KafkaTemplate<String, String>(orderProducerFactory());
