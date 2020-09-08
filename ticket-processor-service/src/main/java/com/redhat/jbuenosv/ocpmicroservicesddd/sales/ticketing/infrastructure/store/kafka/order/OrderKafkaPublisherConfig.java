@@ -32,7 +32,7 @@ public class OrderKafkaPublisherConfig {
     @Value("${ticketing.kafka.username}")
     private String kafkaUserName;
 
-    @Value("${ticketing.kafka.order.commands.topic}")
+    @Value("${ticketing.kafka.orders.commands.topic}")
     private String kafkaOrdersTopicName;
 
     public String getKafkaUserName() { return this.kafkaUserName; }

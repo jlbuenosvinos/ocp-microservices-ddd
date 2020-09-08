@@ -36,7 +36,7 @@ public class OrderKafkaReceiverConfig {
     @Value("${ticketing.kafka.tickets.topic}")
     private String kafkaTicketsTopicName;
 
-    @Value("${ticketing.kafka.order.commands.topic}")
+    @Value("${ticketing.kafka.orders.commands.topic}")
     private String kafkaOrdersTopicName;
 
 
