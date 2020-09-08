@@ -36,7 +36,7 @@ public class TicketKafkaStore implements EventStore {
     public void store(TicketGeneratedEvent event) {
         logger.debug("store begin.");
         TicketGeneratedEventKey key = new TicketGeneratedEventKey(event.getTicket().getStoreId(),event.getTicket().getTicketId());
-        ticketKafkaPublisherConfig.publisher().publish(ticketKafkaPublisherConfig.getKafkaTicketsTopicName(),key,event.getTicket().toJson());
+        ticketKafkaPublisherConfig.ticketPublisher().publish(ticketKafkaPublisherConfig.getKafkaTicketsTopicName(),key,event.getTicket().toJson());
         logger.debug("store end.");
     }
 
