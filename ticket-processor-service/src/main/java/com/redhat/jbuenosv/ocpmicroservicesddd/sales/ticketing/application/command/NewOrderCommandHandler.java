@@ -28,7 +28,8 @@ public class NewOrderCommandHandler implements  CommandHandler {
         Order newOrder = newOrderSubmittedCommand.getOrder();
         String orderId = newOrder.getOrderId();
         String orderJson = newOrder.toJson();
-        String ordersTopicName = orderKafkaPublisherConfig.getKafkaOrdersTopicName() ;
+        // String ordersTopicName = orderKafkaPublisherConfig.getKafkaOrdersTopicName() ;
+        String ordersTopicName = "orders-commands";
         logger.debug("execute: [{},{},{}]",orderId,orderJson,ordersTopicName);
         orderKafkaPublisherConfig.orderPublisher().publish(ordersTopicName,orderId,orderJson);
     }
