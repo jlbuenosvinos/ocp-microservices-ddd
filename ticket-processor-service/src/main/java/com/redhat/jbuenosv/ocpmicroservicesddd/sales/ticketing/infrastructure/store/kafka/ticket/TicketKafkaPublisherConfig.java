@@ -49,7 +49,7 @@ public class TicketKafkaPublisherConfig {
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, getBootstrapServers());
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, TicketGeneratedEventKeySerializer.class);
         props.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, "true");
-        props.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, "ticket-processor-service");
+        props.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, "ticket-processor-service-tickets");
         props.put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, 1);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.RETRIES_CONFIG, 3);

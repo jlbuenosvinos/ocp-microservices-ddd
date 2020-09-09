@@ -54,6 +54,7 @@ public class OrderKafkaPublisherConfig {
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.RETRIES_CONFIG, 3);
         logger.debug("orderProducerConfigs Kafka order producer configuration is ready.");
+        logger.debug("Topic [{}].",getKafkaOrdersTopicName());
         return props;
     }
 
