@@ -71,15 +71,24 @@ public class OrderKafkaPublisherConfig {
     }
 
     @Bean("order-control-template")
-    public KafkaTemplate<String, String> kafkaTemplate() {
+    public KafkaTemplate<String, String> orderKafkaTemplate() {
         logger.debug("Kafka order producer template is ready.");
         return new KafkaTemplate<String, String>(orderProducerFactory());
     }
 
-    @Bean
-    public OrderKafkaPublisher orderPublisher() {
-        logger.debug("Kafka order producer sender is ready.");
-        return new OrderKafkaPublisher();
+    /**
+     * Publishes an event to a Kafka Topic
+     * @param topic topic name
+     * @param key order id key
+     * @param value event value
+     */
+    public void publish(String topic, String key, String value) {
+        KafkaTemplate<String, String> orderKafkaTemplate = null;
+        logger.debug("Ready to send Event [{}] to topic [{}].",key,topic);
+        orderKafkaTemplate = orderKafkaTemplate();
+        logger.debug("Transaction initialization [{}].",orderKafkaTemplate.inTransaction());
+        orderKafkaTemplate.send(topic,key,value);
+        logger.debug("Order Event [{}] has been sent to topic [{}].",key,topic);
     }
 
 }

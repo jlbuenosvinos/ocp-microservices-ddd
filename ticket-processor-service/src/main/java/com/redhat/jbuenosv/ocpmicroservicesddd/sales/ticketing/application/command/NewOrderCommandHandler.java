@@ -17,11 +17,8 @@ public class NewOrderCommandHandler implements  CommandHandler {
 
     public static final Logger logger = LoggerFactory.getLogger(NewOrderCommandHandler.class);
 
-    //@Autowired
-    //OrderKafkaPublisherConfig orderKafkaPublisherConfig;
-
     @Autowired
-    OrderKafkaPublisher orderKafkaPublisher;
+    OrderKafkaPublisherConfig orderKafkaPublisherConfig;
 
     /**
      * Executes the command
@@ -39,19 +36,12 @@ public class NewOrderCommandHandler implements  CommandHandler {
 
         logger.debug("execute: [{},{},{}]",orderId,orderJson,ordersTopicName);
 
-        //if (orderKafkaPublisherConfig != null) {
-            //pub = orderKafkaPublisherConfig.orderPublisher();
-            if (orderKafkaPublisher != null) {
-                orderKafkaPublisher.publish(ordersTopicName,orderId,orderJson);
-            }
-            else {
-                logger.error("OrderKafkaPublisher is null :-(");
-            }
-        //}
-        //else {
-        //    logger.error("orderKafkaPublisherConfig is null :-(");
-        //}
-
+        if (orderKafkaPublisherConfig != null) {
+            orderKafkaPublisherConfig.publish(ordersTopicName,orderId,orderJson);
+        }
+        else {
+            logger.error("orderKafkaPublisherConfig is null :-(");
+        }
     }
 
 }
