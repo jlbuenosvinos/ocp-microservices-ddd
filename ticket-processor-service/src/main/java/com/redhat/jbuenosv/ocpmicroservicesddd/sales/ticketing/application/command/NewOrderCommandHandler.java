@@ -17,8 +17,8 @@ public class NewOrderCommandHandler implements  CommandHandler {
 
     public static final Logger logger = LoggerFactory.getLogger(NewOrderCommandHandler.class);
 
-    @Autowired
-    OrderKafkaPublisherConfig orderKafkaPublisherConfig;
+    //@Autowired
+    //OrderKafkaPublisherConfig orderKafkaPublisherConfig;
 
     /**
      * Executes the command
