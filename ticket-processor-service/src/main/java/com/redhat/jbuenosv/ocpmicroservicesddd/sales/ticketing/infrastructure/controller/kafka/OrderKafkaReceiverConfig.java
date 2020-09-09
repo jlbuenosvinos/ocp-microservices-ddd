@@ -69,16 +69,18 @@ public class OrderKafkaReceiverConfig {
         return new DefaultKafkaConsumerFactory<>(props);
     }
 
-    @Bean
+    @Bean("order-consumer-factory")
     public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         return factory;
     }
 
+    /*
     @Bean("order-consumer-transaction-manager")
-    public KafkaTransactionManager<String, String> transactionManager(ProducerFactory<String, String> consumerFactory) {
+    public KafkaTransactionManager<String, String> transactionManager(ConcurrentKafkaListenerContainerFactory<String, String> consumerFactory) {
         return new KafkaTransactionManager<String,String>(consumerFactory);
     }
+    */
 
 }
