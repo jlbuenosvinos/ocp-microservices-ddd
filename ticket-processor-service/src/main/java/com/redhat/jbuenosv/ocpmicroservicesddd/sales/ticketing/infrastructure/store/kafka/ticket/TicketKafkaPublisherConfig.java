@@ -17,6 +17,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.transaction.KafkaTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by jlbuenosvinos.
@@ -71,15 +72,42 @@ public class TicketKafkaPublisherConfig {
     }
 
     @Bean("ticket-control-template")
-    public KafkaTemplate<TicketGeneratedEventKey, String> kafkaTemplate() {
+    public KafkaTemplate<TicketGeneratedEventKey, String> ticketKafkaTemplate() {
         logger.debug("Kafka producer template is ready.");
         return new KafkaTemplate<TicketGeneratedEventKey, String>(ticketProducerFactory());
     }
 
-    @Bean
-    public TicketKafkaPublisher ticketPublisher() {
-        logger.debug("Kafka producer sender is ready.");
-        return new TicketKafkaPublisher();
+    /**
+     * Publishes an event to a Kafka Topic
+     * @param topic topic name
+     * @param key event key
+     * @param value event value
+     */
+    @Transactional
+    public void publish(String topic, TicketGeneratedEventKey key, String value) {
+        logger.debug("Ready to send Event [{}] to topic [{}].",key,topic);
+        KafkaTemplate<TicketGeneratedEventKey, String> ticketKafkaTemplate = ticketKafkaTemplate();
+        logger.debug("Transaction initialization [{}].",ticketKafkaTemplate.inTransaction());
+        ticketKafkaTemplate.send(topic,key,value);
+        logger.debug("Ticket Event [{}] has been sent to topic [{}].",key,topic);
+    }
+
+    /**
+     * Publishes an events collection to a Kafka Topic
+     * @param topic topic name
+     * @param keys event key collection
+     * @param values event value collection
+     */@Transactional
+    public void publishAll(String topic, ArrayList<TicketGeneratedEventKey> keys, ArrayList<String> values) {
+        logger.debug("Ready to send Events Collection to topic [{}].",topic);
+        KafkaTemplate<TicketGeneratedEventKey, String> ticketKafkaTemplate = ticketKafkaTemplate();
+        logger.debug("Transaction initialization [{}].",ticketKafkaTemplate.inTransaction());
+        // @see executeInTransaction
+        //kafkaTemplate.executeInTransaction()
+        for(int i = 0 ; i < keys.size() ; i ++) {
+            ticketKafkaTemplate.send(topic,keys.get(i),values.get(i));
+        }
+        logger.debug("Events collection has been sent to topic [{}].",topic);
     }
 
 }

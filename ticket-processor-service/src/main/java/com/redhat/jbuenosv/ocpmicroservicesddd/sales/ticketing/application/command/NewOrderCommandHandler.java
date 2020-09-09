@@ -1,12 +1,9 @@
 package com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.application.command;
 
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.model.Order;
-import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.store.kafka.order.OrderKafkaPublisher;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.store.kafka.order.OrderKafkaPublisherConfig;
-import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.store.kafka.ticket.TicketKafkaPublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,16 +23,12 @@ public class NewOrderCommandHandler implements  CommandHandler {
      */
     @Override
     public void execute(Command command) {
-        OrderKafkaPublisher pub = null;
+        OrderKafkaPublisherConfig config = new OrderKafkaPublisherConfig();
         NewOrderSubmittedCommand newOrderSubmittedCommand = (NewOrderSubmittedCommand)command;
         Order newOrder = newOrderSubmittedCommand.getOrder();
         String orderId = newOrder.getOrderId();
         String orderJson = newOrder.toJson();
-        //String ordersTopicName = orderKafkaPublisherConfig.getKafkaOrdersTopicName() ;
-        String ordersTopicName = "orders-commands";
-
-        OrderKafkaPublisherConfig config = new OrderKafkaPublisherConfig();
-
+        String ordersTopicName = config.getKafkaOrdersTopicName() ;
         logger.debug("execute: [{},{},{}]",orderId,orderJson,ordersTopicName);
 
         if (config != null) {
