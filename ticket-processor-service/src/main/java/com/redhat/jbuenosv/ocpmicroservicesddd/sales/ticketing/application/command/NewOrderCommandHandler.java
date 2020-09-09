@@ -34,13 +34,15 @@ public class NewOrderCommandHandler implements  CommandHandler {
         //String ordersTopicName = orderKafkaPublisherConfig.getKafkaOrdersTopicName() ;
         String ordersTopicName = "orders-commands";
 
+        OrderKafkaPublisherConfig config = new OrderKafkaPublisherConfig();
+
         logger.debug("execute: [{},{},{}]",orderId,orderJson,ordersTopicName);
 
-        if (orderKafkaPublisherConfig != null) {
-            orderKafkaPublisherConfig.publish(ordersTopicName,orderId,orderJson);
+        if (config != null) {
+            config.publish(ordersTopicName,orderId,orderJson);
         }
         else {
-            logger.error("orderKafkaPublisherConfig is null :-(");
+            logger.error("config is null :-(");
         }
     }
 
