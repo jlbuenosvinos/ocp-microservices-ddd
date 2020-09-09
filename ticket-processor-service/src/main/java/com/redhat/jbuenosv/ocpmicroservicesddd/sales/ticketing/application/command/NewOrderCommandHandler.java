@@ -20,9 +20,9 @@ public class NewOrderCommandHandler implements  CommandHandler {
     @Autowired
     OrderKafkaPublisherConfig config;
 
-    @Autowired
-    @Qualifier("order-control-template")
-    KafkaTemplate<String,String> kafkaTemplate;
+    //@Autowired
+    //@Qualifier("order-control-template")
+    //KafkaTemplate<String,String> kafkaTemplate;
 
     /**
      * Executes the command
@@ -34,15 +34,11 @@ public class NewOrderCommandHandler implements  CommandHandler {
         Order newOrder = newOrderSubmittedCommand.getOrder();
         String orderId = newOrder.getOrderId();
         String orderJson = newOrder.toJson();
-        final String ordersTopicName = "orders-commands" ;
+        String ordersTopicName = config.getKafkaOrdersTopicName() ;
 
-        if (config != null) {
-            //ordersTopicName = config.getKafkaOrdersTopicName() ;
-        }
-        else {
-            logger.error("Config is null.");
-        }
+        config.publish(ordersTopicName,orderId,orderJson);
 
+        /*
         if (kafkaTemplate != null) {
             kafkaTemplate.executeInTransaction(t -> t.send(ordersTopicName,orderId,orderJson));
             // kafkaTemplate.send(ordersTopicName,orderId,orderJson);
@@ -50,8 +46,8 @@ public class NewOrderCommandHandler implements  CommandHandler {
         else {
             logger.error("Kafka template is null.");
         }
+        */
 
-        // logger.debug("execute: [{},{},{}]",orderId,orderJson,ordersTopicName);
 
     }
 

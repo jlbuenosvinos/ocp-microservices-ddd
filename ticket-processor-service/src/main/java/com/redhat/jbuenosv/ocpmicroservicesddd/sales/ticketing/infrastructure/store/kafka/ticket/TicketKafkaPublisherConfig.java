@@ -57,18 +57,18 @@ public class TicketKafkaPublisherConfig {
         return props;
     }
 
+    @Bean("ticket-transactionManager")
+    public KafkaTransactionManager<TicketGeneratedEventKey, String> transactionManager(ProducerFactory<TicketGeneratedEventKey, String> producerFactory) {
+        return new KafkaTransactionManager<TicketGeneratedEventKey, String>(producerFactory);
+    }
+
     @Bean
     public ProducerFactory<TicketGeneratedEventKey, String> ticketProducerFactory() {
         logger.debug("Kafka producer factory is ready.");
         DefaultKafkaProducerFactory<TicketGeneratedEventKey, String> factory = new DefaultKafkaProducerFactory<TicketGeneratedEventKey, String>(ticketProducerConfigs());
         //factory.transactionCapable();
-        factory.setTransactionIdPrefix("ticket-trans");
+        factory.setTransactionIdPrefix("ticket-trans-");
         return factory;
-    }
-
-    @Bean("ticket-transactionManager")
-    public KafkaTransactionManager<TicketGeneratedEventKey, String> transactionManager(ProducerFactory<TicketGeneratedEventKey, String> producerFactory) {
-        return new KafkaTransactionManager<TicketGeneratedEventKey, String>(producerFactory);
     }
 
     @Bean("ticket-control-template")

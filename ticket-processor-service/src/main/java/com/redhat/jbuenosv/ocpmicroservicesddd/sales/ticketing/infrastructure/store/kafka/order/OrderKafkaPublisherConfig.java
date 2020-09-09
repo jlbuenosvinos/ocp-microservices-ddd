@@ -67,7 +67,7 @@ public class OrderKafkaPublisherConfig {
     public ProducerFactory<String, String> orderProducerFactory() {
         logger.debug("Kafka producer factory is ready.");
         DefaultKafkaProducerFactory<String, String> factory = new DefaultKafkaProducerFactory<String, String>(orderProducerConfigs());
-        factory.setTransactionIdPrefix("order-trans");
+        factory.setTransactionIdPrefix("order-trans-");
         return factory;
     }
 
@@ -83,14 +83,12 @@ public class OrderKafkaPublisherConfig {
      * @param key order id key
      * @param value event value
      */
+    @Transactional
     public void publish(String topic, String key, String value) {
         KafkaTemplate<String, String> orderKafkaTemplate = null;
         logger.debug("Ready to send Event [{}] to topic [{}].",key,topic);
         orderKafkaTemplate = orderKafkaTemplate();
         logger.debug("Transaction initialization [{}].",orderKafkaTemplate.inTransaction());
-
-
-
         orderKafkaTemplate.send(topic,key,value);
         logger.debug("Order Event [{}] has been sent to topic [{}].",key,topic);
     }
