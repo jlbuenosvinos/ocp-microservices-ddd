@@ -5,6 +5,8 @@ import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.st
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 /**
@@ -15,8 +17,12 @@ public class NewOrderCommandHandler implements  CommandHandler {
 
     public static final Logger logger = LoggerFactory.getLogger(NewOrderCommandHandler.class);
 
-    //@Autowired
-    //OrderKafkaPublisherConfig orderKafkaPublisherConfig;
+    @Autowired
+    OrderKafkaPublisherConfig config;
+
+    @Autowired
+    @Qualifier("order-control-template")
+    KafkaTemplate<String,String> kafkaTemplate;
 
     /**
      * Executes the command
@@ -24,15 +30,30 @@ public class NewOrderCommandHandler implements  CommandHandler {
      */
     @Override
     public void execute(Command command) {
-        OrderKafkaPublisherConfig orderKafkaPublisherConfig = new OrderKafkaPublisherConfig();
         NewOrderSubmittedCommand newOrderSubmittedCommand = (NewOrderSubmittedCommand)command;
         Order newOrder = newOrderSubmittedCommand.getOrder();
         String orderId = newOrder.getOrderId();
         String orderJson = newOrder.toJson();
-        //String ordersTopicName = orderKafkaPublisherConfig.getKafkaOrdersTopicName() ;
-        String ordersTopicName = "orders-commands" ;
-        logger.debug("execute: [{},{},{}]",orderId,orderJson,ordersTopicName);
-        orderKafkaPublisherConfig.publish(ordersTopicName,orderId,orderJson);
+        final String ordersTopicName = "orders-commands" ;
+
+        if (config != null) {
+            //ordersTopicName = config.getKafkaOrdersTopicName() ;
+        }
+        else {
+            logger.error("Config is null.");
+        }
+
+        if (kafkaTemplate != null) {
+
+            kafkaTemplate.executeInTransaction(t -> t.send(ordersTopicName,orderId,orderJson));
+            // kafkaTemplate.send(ordersTopicName,orderId,orderJson);
+        }
+        else {
+            logger.error("Kafka template is null.");
+        }
+
+        // logger.debug("execute: [{},{},{}]",orderId,orderJson,ordersTopicName);
+
     }
 
 }
