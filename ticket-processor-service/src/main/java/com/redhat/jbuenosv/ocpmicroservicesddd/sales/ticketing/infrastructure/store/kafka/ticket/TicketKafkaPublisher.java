@@ -4,6 +4,7 @@ import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.event.Tick
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -19,6 +20,7 @@ public class TicketKafkaPublisher {
     public static final Logger logger = LoggerFactory.getLogger(TicketKafkaPublisher.class);
 
     @Autowired
+    @Qualifier("ticket-control-template")
     private KafkaTemplate<TicketGeneratedEventKey,String> kafkaTemplate;
 
     /**

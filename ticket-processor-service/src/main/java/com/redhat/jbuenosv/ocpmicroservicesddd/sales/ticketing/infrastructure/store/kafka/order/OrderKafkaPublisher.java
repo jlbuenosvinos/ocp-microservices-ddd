@@ -3,6 +3,7 @@ package com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.s
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +16,7 @@ public class OrderKafkaPublisher {
     public static final Logger logger = LoggerFactory.getLogger(OrderKafkaPublisher.class);
 
     @Autowired
+    @Qualifier("order-control-template")
     private KafkaTemplate<String,String> kafkaTemplate;
 
     /**
