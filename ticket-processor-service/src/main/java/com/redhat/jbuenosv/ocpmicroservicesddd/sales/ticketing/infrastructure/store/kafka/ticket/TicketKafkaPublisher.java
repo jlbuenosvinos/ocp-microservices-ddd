@@ -19,8 +19,8 @@ public class TicketKafkaPublisher {
 
     public static final Logger logger = LoggerFactory.getLogger(TicketKafkaPublisher.class);
 
-    @Autowired
     @Qualifier("ticket-control-template")
+    @Autowired
     private KafkaTemplate<TicketGeneratedEventKey,String> kafkaTemplate;
 
     /**

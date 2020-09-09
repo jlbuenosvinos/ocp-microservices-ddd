@@ -3,6 +3,7 @@ package com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.application.comm
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.model.Order;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.store.kafka.order.OrderKafkaPublisher;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.store.kafka.order.OrderKafkaPublisherConfig;
+import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.store.kafka.ticket.TicketKafkaPublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +17,11 @@ public class NewOrderCommandHandler implements  CommandHandler {
 
     public static final Logger logger = LoggerFactory.getLogger(NewOrderCommandHandler.class);
 
+    //@Autowired
+    //OrderKafkaPublisherConfig orderKafkaPublisherConfig;
+
     @Autowired
-    OrderKafkaPublisherConfig orderKafkaPublisherConfig;
+    OrderKafkaPublisher orderKafkaPublisher;
 
     /**
      * Executes the command
@@ -36,9 +40,9 @@ public class NewOrderCommandHandler implements  CommandHandler {
         logger.debug("execute: [{},{},{}]",orderId,orderJson,ordersTopicName);
 
         //if (orderKafkaPublisherConfig != null) {
-            pub = orderKafkaPublisherConfig.orderPublisher();
-            if (pub != null) {
-                pub.publish(ordersTopicName,orderId,orderJson);
+            //pub = orderKafkaPublisherConfig.orderPublisher();
+            if (orderKafkaPublisher != null) {
+                orderKafkaPublisher.publish(ordersTopicName,orderId,orderJson);
             }
             else {
                 logger.error("OrderKafkaPublisher is null :-(");
