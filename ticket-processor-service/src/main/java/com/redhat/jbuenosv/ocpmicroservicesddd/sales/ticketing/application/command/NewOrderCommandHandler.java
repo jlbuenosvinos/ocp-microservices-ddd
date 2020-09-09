@@ -35,7 +35,7 @@ public class NewOrderCommandHandler implements  CommandHandler {
 
         logger.debug("execute: [{},{},{}]",orderId,orderJson,ordersTopicName);
 
-        if (orderKafkaPublisherConfig != null) {
+        //if (orderKafkaPublisherConfig != null) {
             pub = orderKafkaPublisherConfig.orderPublisher();
             if (pub != null) {
                 pub.publish(ordersTopicName,orderId,orderJson);
@@ -43,10 +43,10 @@ public class NewOrderCommandHandler implements  CommandHandler {
             else {
                 logger.error("OrderKafkaPublisher is null :-(");
             }
-        }
-        else {
-            logger.error("orderKafkaPublisherConfig is null :-(");
-        }
+        //}
+        //else {
+        //    logger.error("orderKafkaPublisherConfig is null :-(");
+        //}
 
     }
 
