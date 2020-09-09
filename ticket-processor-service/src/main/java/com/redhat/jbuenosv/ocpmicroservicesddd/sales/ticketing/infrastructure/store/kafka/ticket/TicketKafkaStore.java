@@ -32,7 +32,7 @@ public class TicketKafkaStore implements EventStore {
      * @param event ticket event
      */
     @Subscribe
-    @Transactional
+    @Transactional("ticket-transaction-manager")
     public void store(TicketGeneratedEvent event) {
         logger.debug("store begin.");
         TicketKafkaPublisherConfig config = new TicketKafkaPublisherConfig();

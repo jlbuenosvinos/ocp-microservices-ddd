@@ -23,6 +23,8 @@
     <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.application.handler" level="DEBUG" />
     <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.application.handler.controller" level="DEBUG" />
     <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.store" level="DEBUG" />
+    <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.controller" level="DEBUG" />
+    <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.controller.kafka" level="DEBUG" />
     <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.store.kafka" level="DEBUG" />
     <logger name="com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.infrastructure.store.amq" level="DEBUG" />
 
