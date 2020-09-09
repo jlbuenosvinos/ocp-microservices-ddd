@@ -58,7 +58,7 @@ public class OrderKafkaPublisherConfig {
         return props;
     }
 
-    @Bean("order-transactionManager")
+    @Bean("order-transaction-manager")
     public KafkaTransactionManager<String, String> transactionManager(ProducerFactory<String, String> producerFactory) {
         return new KafkaTransactionManager<String,String>(producerFactory);
     }
@@ -83,7 +83,7 @@ public class OrderKafkaPublisherConfig {
      * @param key order id key
      * @param value event value
      */
-    @Transactional
+    @Transactional("order-transactionManager")
     public void publish(String topic, String key, String value) {
         KafkaTemplate<String, String> orderKafkaTemplate = null;
         logger.debug("Ready to send Event [{}] to topic [{}].",key,topic);

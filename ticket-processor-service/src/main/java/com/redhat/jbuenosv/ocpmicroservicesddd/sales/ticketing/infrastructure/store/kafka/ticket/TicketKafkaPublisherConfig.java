@@ -57,7 +57,7 @@ public class TicketKafkaPublisherConfig {
         return props;
     }
 
-    @Bean("ticket-transactionManager")
+    @Bean("ticket-transaction-manager")
     public KafkaTransactionManager<TicketGeneratedEventKey, String> transactionManager(ProducerFactory<TicketGeneratedEventKey, String> producerFactory) {
         return new KafkaTransactionManager<TicketGeneratedEventKey, String>(producerFactory);
     }
@@ -83,7 +83,7 @@ public class TicketKafkaPublisherConfig {
      * @param key event key
      * @param value event value
      */
-    @Transactional
+    @Transactional("ticket-transaction-manager")
     public void publish(String topic, TicketGeneratedEventKey key, String value) {
         logger.debug("Ready to send Event [{}] to topic [{}].",key,topic);
         KafkaTemplate<TicketGeneratedEventKey, String> ticketKafkaTemplate = ticketKafkaTemplate();
