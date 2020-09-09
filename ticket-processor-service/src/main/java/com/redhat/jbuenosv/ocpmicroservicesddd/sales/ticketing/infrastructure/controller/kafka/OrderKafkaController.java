@@ -8,7 +8,6 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.event.TransactionalEventListener;
 
 /**
  * Created by jlbuenosvinos.
@@ -22,7 +21,7 @@ public class OrderKafkaController {
 
     @KafkaListener(topics = "${ticketing.kafka.orders.commands.topic}", groupId = "1", concurrency = "3")
     //@Transactional("order-consumer-transaction-manager")
-    @TransactionalEventListener
+    @Transactional
     public void receiveOrder(String orderPayLoad) {
         logger.debug("receiveOrder start.");
         try {
