@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 /**
  * Created by jlbuenosvinos.
  */
-@Component
 public class NewOrderSubmittedCommand implements Command {
 
     private final Order order;
