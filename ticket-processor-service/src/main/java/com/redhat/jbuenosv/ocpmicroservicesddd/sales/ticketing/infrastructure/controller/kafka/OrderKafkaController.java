@@ -21,7 +21,6 @@ public class OrderKafkaController {
 
     @KafkaListener(topics = "${ticketing.kafka.orders.commands.topic}", groupId = "1", concurrency = "3")
     //@Transactional("order-consumer-transaction-manager")
-    @Transactional
     public void receiveOrder(String orderPayLoad) {
         logger.debug("receiveOrder start.");
         try {

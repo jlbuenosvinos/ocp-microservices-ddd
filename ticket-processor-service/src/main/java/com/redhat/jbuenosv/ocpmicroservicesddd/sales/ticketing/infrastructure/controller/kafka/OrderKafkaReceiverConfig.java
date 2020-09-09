@@ -67,7 +67,7 @@ public class OrderKafkaReceiverConfig {
         return new DefaultKafkaConsumerFactory<>(props);
     }
 
-    @Bean("order-consumer-factory")
+    @Bean
     public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
