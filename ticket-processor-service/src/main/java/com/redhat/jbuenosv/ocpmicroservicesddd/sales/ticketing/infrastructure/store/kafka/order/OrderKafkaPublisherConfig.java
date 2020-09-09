@@ -13,6 +13,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.transaction.KafkaTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -82,6 +83,7 @@ public class OrderKafkaPublisherConfig {
      * @param key order id key
      * @param value event value
      */
+    @Transactional
     public void publish(String topic, String key, String value) {
         KafkaTemplate<String, String> orderKafkaTemplate = null;
         logger.debug("Ready to send Event [{}] to topic [{}].",key,topic);
