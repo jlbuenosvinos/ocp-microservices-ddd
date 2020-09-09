@@ -83,7 +83,7 @@ public class OrderKafkaPublisherConfig {
      * @param key order id key
      * @param value event value
      */
-    @Transactional("order-transactionManager")
+    @Transactional("order-transaction-manager")
     public void publish(String topic, String key, String value) {
         KafkaTemplate<String, String> orderKafkaTemplate = null;
         logger.debug("Ready to send Event [{}] to topic [{}].",key,topic);
