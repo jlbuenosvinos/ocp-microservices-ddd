@@ -44,7 +44,6 @@ public class NewOrderCommandHandler implements  CommandHandler {
         }
 
         if (kafkaTemplate != null) {
-
             kafkaTemplate.executeInTransaction(t -> t.send(ordersTopicName,orderId,orderJson));
             // kafkaTemplate.send(ordersTopicName,orderId,orderJson);
         }

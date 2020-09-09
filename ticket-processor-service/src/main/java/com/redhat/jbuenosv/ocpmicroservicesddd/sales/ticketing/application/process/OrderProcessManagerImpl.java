@@ -9,14 +9,19 @@ import org.springframework.stereotype.Service;
 @Service
 public class OrderProcessManagerImpl {
 
+    @Autowired
+    NewOrderCommandHandler newOrderCommandHandler;
+
+    @Autowired
+    NewOrderSubmittedCommand newOrderSubmittedCommand;
+
     /**
      * Process an order
      * @param order Physical order
      */
     public void processOrder(Order order) {
-        NewOrderCommandHandler orderCommandHandler = new NewOrderCommandHandler();
-        NewOrderSubmittedCommand orderCommand = new NewOrderSubmittedCommand(order);
-        orderCommandHandler.execute(orderCommand);
+        newOrderSubmittedCommand.setOrder(order);
+        newOrderCommandHandler.execute(newOrderSubmittedCommand);
     }
 
 }
