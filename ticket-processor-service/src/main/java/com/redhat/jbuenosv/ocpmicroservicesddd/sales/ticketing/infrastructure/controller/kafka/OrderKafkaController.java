@@ -20,7 +20,6 @@ public class OrderKafkaController {
     public static final Logger logger = LoggerFactory.getLogger(OrderKafkaController.class);
 
     @KafkaListener(topics = "${ticketing.kafka.orders.commands.topic}", groupId = "1", concurrency = "3")
-    //@Transactional("order-consumer-transaction-manager")
     public void receiveOrder(String orderPayLoad) {
         logger.debug("receiveOrder start.");
         try {
