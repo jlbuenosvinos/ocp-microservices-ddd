@@ -66,7 +66,6 @@ public class TicketKafkaPublisherConfig {
     public ProducerFactory<TicketGeneratedEventKey, String> ticketProducerFactory() {
         logger.debug("Kafka producer factory is ready.");
         DefaultKafkaProducerFactory<TicketGeneratedEventKey, String> factory = new DefaultKafkaProducerFactory<TicketGeneratedEventKey, String>(ticketProducerConfigs());
-        //factory.transactionCapable();
         factory.setTransactionIdPrefix("ticket-trans-");
         return factory;
     }
@@ -97,16 +96,22 @@ public class TicketKafkaPublisherConfig {
      * @param topic topic name
      * @param keys event key collection
      * @param values event value collection
-     */@Transactional
+     */
+    @Transactional("ticket-transaction-manager")
     public void publishAll(String topic, ArrayList<TicketGeneratedEventKey> keys, ArrayList<String> values) {
         logger.debug("Ready to send Events Collection to topic [{}].",topic);
+        int keysSize = keys.size();
         KafkaTemplate<TicketGeneratedEventKey, String> ticketKafkaTemplate = ticketKafkaTemplate();
+
         logger.debug("Transaction initialization [{}].",ticketKafkaTemplate.inTransaction());
-        // @see executeInTransaction
-        //kafkaTemplate.executeInTransaction()
-        for(int i = 0 ; i < keys.size() ; i ++) {
-            ticketKafkaTemplate.send(topic,keys.get(i),values.get(i));
-        }
+
+        Object o = ticketKafkaTemplate.executeInTransaction(kt -> {
+            for (int i = 0; i < keysSize; i++) {
+                kt.send(topic,keys.get(i),values.get(i));
+            }
+            return null;
+        });
+
         logger.debug("Events collection has been sent to topic [{}].",topic);
     }
 

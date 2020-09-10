@@ -24,8 +24,8 @@ public class TicketKafkaStore implements EventStore {
     @Autowired
     ActiveMQConfig mqConfig;
 
-    //@Autowired
-    //TicketKafkaPublisherConfig ticketKafkaPublisherConfig;
+    @Autowired
+    TicketKafkaPublisherConfig ticketKafkaPublisherConfig;
 
     /**
      * Saves a ticket event to a Kafka Topic
@@ -35,9 +35,8 @@ public class TicketKafkaStore implements EventStore {
     @Transactional("ticket-transaction-manager")
     public void store(TicketGeneratedEvent event) {
         logger.debug("store begin.");
-        TicketKafkaPublisherConfig config = new TicketKafkaPublisherConfig();
         TicketGeneratedEventKey key = new TicketGeneratedEventKey(event.getTicket().getStoreId(),event.getTicket().getTicketId());
-        config.publish(config.getKafkaTicketsTopicName(),key,event.getTicket().toJson());
+        ticketKafkaPublisherConfig.publish(ticketKafkaPublisherConfig.getKafkaTicketsTopicName(),key,event.getTicket().toJson());
         logger.debug("store end.");
     }
 
