@@ -1609,3 +1609,6 @@ ticket-processor-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/
 ticket-processor-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/ticketing/infrastructure/store/kafka/ticket/TicketKafkaPublisher.class
 ticket-processor-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/ticketing/infrastructure/store/kafka/ticket/TicketKafkaPublisherConfig.class
 ticket-processor-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/ticketing/infrastructure/store/kafka/ticket/TicketKafkaStore.class
+ticket-processor-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/ticketing/application/process/OrderTicketsProcessManager.class
+ticket-processor-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/ticketing/application/process/OrderTicketsProcessManagerImpl.class
+ticket-processor-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/ticketing/infrastructure/controller/kafka/OrderKafkaController.class
