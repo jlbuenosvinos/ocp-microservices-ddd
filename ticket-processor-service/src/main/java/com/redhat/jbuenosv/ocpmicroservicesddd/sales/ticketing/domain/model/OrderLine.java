@@ -126,7 +126,7 @@ public class OrderLine implements Serializable {
         result.append("         \"name\": \"" + getName() + "\","  + NEW_LINE);
         result.append("         \"size\": \"" +  getSize().name() + "\","  + NEW_LINE);
         result.append("         \"units\": " + getUnits() + "," + NEW_LINE);
-        result.append("         \"operation_type\": \"" +  getType().name() + NEW_LINE);
+        result.append("         \"operation_type\": \"" +  getType().name() + "\"" + NEW_LINE);
         result.append("     }");
         return result.toString();
     }
