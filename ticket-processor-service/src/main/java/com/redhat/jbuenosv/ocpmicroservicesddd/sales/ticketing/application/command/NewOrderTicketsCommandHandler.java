@@ -2,7 +2,7 @@ package com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.application.comm
 
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.application.configuration.CommonConfig;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.application.exception.TicketApplicationException;
-import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.event.TicketGeneratedEvent;
+import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.event.TicketGeneratedEventKey;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.model.Order;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.model.OrderLineType;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.model.Ticket;
@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by jlbuenosvinos.
@@ -42,24 +41,27 @@ public class NewOrderTicketsCommandHandler implements  CommandHandler {
     public void execute(Command command) {
         NewOrderSubmittedCommand newOrderSubmittedCommand = (NewOrderSubmittedCommand)command;
         Order order = newOrderSubmittedCommand.getOrder();
-        String orderId = order.getOrderId();
-        String orderJson = order.toJson();
         Ticket ticket = null;
         TicketItem ticketItem = null;
         int numTickets = order.getItems().size();
-        TicketGeneratedEvent ticketEvent = null;
-        List<TicketGeneratedEvent> ticketEvents = new ArrayList<TicketGeneratedEvent>();
+        TicketGeneratedEventKey ticketGeneratedEventKey = null;
+        ArrayList<TicketGeneratedEventKey> ticketGeneratedEventKeyList = new ArrayList<TicketGeneratedEventKey>(numTickets);
+        ArrayList<String> ticketGeneratedEventValueList = new ArrayList<String>(numTickets);
         Integer newUnits = 0;
 
         try {
 
             for(int i = 0 ; i < numTickets ; i++) {
-                ticketEvent = new TicketGeneratedEvent();
-                ticketEvent.setEventId(uuidGenerator.getUuid());
-                ticketEvent.setEventType(TicketGeneratedEvent.class.getName());
+
+                ticketGeneratedEventKey = new TicketGeneratedEventKey();
+                ticketGeneratedEventKey.setTicketId(uuidGenerator.getUuid());
+                ticketGeneratedEventKey.setStoreId(order.getStoreId());
+
+                ticketGeneratedEventKeyList.add(ticketGeneratedEventKey);
+
                 ticket = new Ticket();
+                ticket.setTicketId(ticketGeneratedEventKey.getTicketId());
                 ticket.setStoreId(order.getStoreId());
-                ticket.setTicketId(uuidGenerator.getUuid());
                 ticketItem = new TicketItem();
                 ticketItem.setId(order.getItems().get(i).getId());
                 if (order.getItems().get(i).getType() == OrderLineType.RETURN) {
@@ -70,15 +72,12 @@ public class NewOrderTicketsCommandHandler implements  CommandHandler {
                 }
                 ticketItem.setUnits(newUnits);
                 ticket.setItem(ticketItem);
-                ticketEvent.setTicket(ticket);
-                logger.debug("Added new Ticket: {}",ticket.toString());
-                ticketEvent.setEventVersion(config.getTicketingEventVersion());
-                ticketEvents.add(ticketEvent);
+
+                ticketGeneratedEventValueList.add(ticket.toJson());
+
             }
             // time to send the tickets events
-
-
-
+            ticketKafkaPublisherConfig.publishAll(ticketKafkaPublisherConfig.getKafkaTicketsTopicName(),ticketGeneratedEventKeyList,ticketGeneratedEventValueList);
 
         }
         catch(Exception e) {
