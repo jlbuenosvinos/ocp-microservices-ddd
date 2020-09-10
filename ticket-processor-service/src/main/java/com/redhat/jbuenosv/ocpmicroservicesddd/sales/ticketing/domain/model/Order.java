@@ -71,7 +71,13 @@ public class Order implements Serializable {
         result.append(" orderId: " + getOrderId() + NEW_LINE);
         result.append(" items: " + getOrderId() + NEW_LINE);
         for(int i = 0 ; i < getItems().size() ; i++) {
-            result.append(" item: " + getItems().get(i).toString() + NEW_LINE);
+            result.append(" item: " + getItems().get(i).toString());
+            if (i == getItems().size() - 1) {
+                result.append("," + NEW_LINE);
+            }
+            else {
+                result.append( NEW_LINE);
+            }
         }
         result.append("}");
         return result.toString();
