@@ -6,6 +6,9 @@ import com.redhat.jbuenosv.ocpmicroservicesddd.sales.ticketing.domain.model.Orde
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Created by jlbuenosvinos.
+ */
 @Service
 public class OrderProcessManagerImpl {
 
