@@ -1612,3 +1612,14 @@ ticket-processor-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/
 ticket-processor-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/ticketing/application/process/OrderTicketsProcessManager.class
 ticket-processor-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/ticketing/application/process/OrderTicketsProcessManagerImpl.class
 ticket-processor-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/ticketing/infrastructure/controller/kafka/OrderKafkaController.class
+stock-processor-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/stock/application/command/Command.class
+stock-processor-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/stock/application/command/CommandHandler.class
+stock-processor-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/stock/application/process/TicketProcessManager.class
+stock-processor-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/stock/application/process/TicketProcessManagerImpl.class
+stock-processor-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/stock/domain/model/TicketGeneratedEventKey.class
+stock-processor-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/stock/infrastructure/cache/StockRemoteCacheFactory.class
+stock-processor-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/stock/infrastructure/controller/TicketingAmqController.class
+stock-processor-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/stock/infrastructure/controller/kafka/KafkaReceiverConfig.class
+stock-processor-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/stock/infrastructure/controller/kafka/TicketGeneratedEventKeyDeSerializer.class
+stock-processor-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/stock/infrastructure/controller/kafka/TicketingKafkaController.class
+stock-processor-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/stock/infrastructure/domain/StockProcessorEventBusExceptionHandler.class
