@@ -1623,3 +1623,5 @@ stock-processor-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/s
 stock-processor-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/stock/infrastructure/controller/kafka/TicketGeneratedEventKeyDeSerializer.class
 stock-processor-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/stock/infrastructure/controller/kafka/TicketingKafkaController.class
 stock-processor-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/stock/infrastructure/domain/StockProcessorEventBusExceptionHandler.class
+stock-processor-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/stock/application/command/NewTicketSubmittedCommand.class
+stock-processor-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/stock/application/command/NewTicketSubmittedCommandHandler.class

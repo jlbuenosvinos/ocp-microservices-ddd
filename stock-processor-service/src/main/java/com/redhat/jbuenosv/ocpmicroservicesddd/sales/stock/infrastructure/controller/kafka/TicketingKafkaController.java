@@ -1,6 +1,7 @@
 package com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.infrastructure.controller.kafka;
 
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.application.exception.StockApplicationException;
+import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.application.process.TicketProcessManagerImpl;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.application.service.StockService;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.domain.builder.TicketBuilder;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.domain.model.Ticket;
@@ -24,6 +25,9 @@ class TicketingKafkaController {
     @Autowired
     private StockService stockService;
 
+    @Autowired
+    private TicketProcessManagerImpl ticketProcessManager;
+
     /**
      * Default constructor
      */
@@ -40,7 +44,8 @@ class TicketingKafkaController {
             ticketEvent = ticketBuilder.build(ticketPayLoad);
             logger.debug("receiveTicket ticketEvent object [{}].",ticketEvent.toJson());
 
-            stockService.processTicket(ticketEvent);
+            //stockService.processTicket(ticketEvent);
+            ticketProcessManager.processTicket(ticketEvent);
 
         }
         catch(Exception e) {
