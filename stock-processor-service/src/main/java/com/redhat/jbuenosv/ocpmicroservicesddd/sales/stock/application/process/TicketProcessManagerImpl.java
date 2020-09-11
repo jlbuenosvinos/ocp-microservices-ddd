@@ -4,7 +4,12 @@ import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.application.command.N
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.application.command.NewTicketSubmittedCommandHandler;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.domain.model.Ticket;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+/**
+ * Created by jlbuenosvinos.
+ */
+@Service
 public class TicketProcessManagerImpl implements TicketProcessManager {
 
     @Autowired
