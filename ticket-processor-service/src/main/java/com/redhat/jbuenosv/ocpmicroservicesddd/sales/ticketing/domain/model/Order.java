@@ -95,7 +95,12 @@ public class Order implements Serializable {
         result.append(" \"order_id\": \"" + getOrderId() + "\","  + NEW_LINE);
         result.append(" \"items\": [" + NEW_LINE);
         for(int i = 0 ; i < getItems().size() ; i++) {
-            result.append(getItems().get(i).toJson() + NEW_LINE);
+            if (i == getItems().size() - 1) {
+                result.append(getItems().get(i).toJson() + NEW_LINE);
+            }
+            else {
+                result.append(getItems().get(i).toJson() + "\"" + NEW_LINE);
+            }
         }
         result.append("            ]" + NEW_LINE);
         result.append("}");
