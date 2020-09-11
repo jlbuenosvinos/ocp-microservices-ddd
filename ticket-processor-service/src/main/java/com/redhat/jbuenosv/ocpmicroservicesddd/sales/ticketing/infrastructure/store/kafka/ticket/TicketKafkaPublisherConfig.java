@@ -102,16 +102,13 @@ public class TicketKafkaPublisherConfig {
         logger.debug("Ready to send Events Collection to topic [{}].",topic);
         int keysSize = keys.size();
         KafkaTemplate<TicketGeneratedEventKey, String> ticketKafkaTemplate = ticketKafkaTemplate();
-
         logger.debug("Transaction initialization [{}].",ticketKafkaTemplate.inTransaction());
-
         Object o = ticketKafkaTemplate.executeInTransaction(kt -> {
             for (int i = 0; i < keysSize; i++) {
                 kt.send(topic,keys.get(i),values.get(i));
             }
             return null;
         });
-
         logger.debug("Events collection has been sent to topic [{}].",topic);
     }
 
