@@ -99,7 +99,7 @@ public class Order implements Serializable {
                 result.append(getItems().get(i).toJson() + NEW_LINE);
             }
             else {
-                result.append(getItems().get(i).toJson() + "\"" + NEW_LINE);
+                result.append(getItems().get(i).toJson() + "," + NEW_LINE);
             }
         }
         result.append("            ]" + NEW_LINE);
