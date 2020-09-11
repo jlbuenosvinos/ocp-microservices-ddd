@@ -122,7 +122,7 @@ public class OrderLine implements Serializable {
         StringBuilder result = new StringBuilder();
         String NEW_LINE = System.getProperty("line.separator");
         result.append("     {" + NEW_LINE);
-        result.append("         \"id\": " + getId() + "," + NEW_LINE);
+        result.append("         \"id\": " + "\"" + getId() + "\"," + NEW_LINE);
         result.append("         \"name\": \"" + getName() + "\","  + NEW_LINE);
         result.append("         \"size\": \"" +  getSize().name() + "\","  + NEW_LINE);
         result.append("         \"units\": " + getUnits() + "," + NEW_LINE);
