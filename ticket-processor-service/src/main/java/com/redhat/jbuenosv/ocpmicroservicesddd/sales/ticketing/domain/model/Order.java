@@ -73,10 +73,10 @@ public class Order implements Serializable {
         for(int i = 0 ; i < getItems().size() ; i++) {
             result.append(" item: " + getItems().get(i).toString());
             if (i == getItems().size() - 1) {
-                result.append("," + NEW_LINE);
+                result.append( NEW_LINE);
             }
             else {
-                result.append( NEW_LINE);
+                result.append("," + NEW_LINE);
             }
         }
         result.append("}");
