@@ -37,7 +37,9 @@ class TicketingKafkaController {
         String ticketEventId = null;
 
         try {
+            logger.debug("receiveTicket ticket payload [{}].",ticketPayLoad);
             ticketEvent = ticketBuilder.build(ticketPayLoad);
+            logger.debug("receiveTicket ticketEvent object [{}].",ticketEvent.toJson());
             stockService.processTicket(ticketEvent);
         }
         catch(Exception e) {

@@ -105,6 +105,7 @@ public class TicketKafkaPublisherConfig {
         logger.debug("Transaction initialization [{}].",ticketKafkaTemplate.inTransaction());
         Object o = ticketKafkaTemplate.executeInTransaction(kt -> {
             for (int i = 0; i < keysSize; i++) {
+                logger.debug("Ticket [[{}],[{}]].",keys.get(i).toJson(),values.get(i),toString());
                 kt.send(topic,keys.get(i),values.get(i));
             }
             return null;
