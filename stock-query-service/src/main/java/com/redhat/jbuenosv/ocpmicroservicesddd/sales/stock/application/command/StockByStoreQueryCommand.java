@@ -17,7 +17,6 @@ public class StockByStoreQueryCommand implements Command {
 
     public static final Logger logger = LoggerFactory.getLogger(StockByStoreQueryCommand.class);
 
-    @Autowired
     Integer storeId;
 
     @Autowired
