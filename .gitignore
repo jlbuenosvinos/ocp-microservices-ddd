@@ -1625,3 +1625,9 @@ stock-processor-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/s
 stock-processor-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/stock/infrastructure/domain/StockProcessorEventBusExceptionHandler.class
 stock-processor-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/stock/application/command/NewTicketSubmittedCommand.class
 stock-processor-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/stock/application/command/NewTicketSubmittedCommandHandler.class
+stock-query-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/stock/application/command/Command.class
+stock-query-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/stock/application/command/CommandHandler.class
+stock-query-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/stock/application/command/StockByStoreQueryCommand.class
+stock-query-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/stock/application/command/StockByStoreQueryCommandCommandHandler.class
+stock-query-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/stock/application/process/StockQueryProcessManager.class
+stock-query-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/stock/application/process/StockQueryProcessManagerImpl.class

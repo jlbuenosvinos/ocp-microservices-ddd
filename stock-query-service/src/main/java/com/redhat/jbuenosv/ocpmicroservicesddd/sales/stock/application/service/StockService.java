@@ -19,6 +19,14 @@ public interface StockService {
     List<StockValue> getStock(Integer storeId);
 
     /**
+     * Get the current stock for an specific product and store
+     * @param storeId store id
+     * @param productId product id
+     * @return stock value
+     */
+    StockValue getStock(Integer storeId, String productId);
+
+    /**
      * Get the stores list
      * @return stores list
      */
@@ -29,13 +37,5 @@ public interface StockService {
      * @return void
      */
     void removeStock();
-
-    /**
-     * Get the current stock for an specific product and store
-     * @param storeId store id
-     * @param productId product id
-     * @return stock value
-     */
-    StockValue getStock(Integer storeId, String productId);
 
 }
