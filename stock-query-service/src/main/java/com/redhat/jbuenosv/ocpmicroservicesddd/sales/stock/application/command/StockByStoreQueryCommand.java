@@ -18,7 +18,6 @@ public class StockByStoreQueryCommand implements Command {
     public static final Logger logger = LoggerFactory.getLogger(StockByStoreQueryCommand.class);
 
     Integer storeId;
-
     private List<StockValue> stockValueList;
 
     public List<StockValue> getStockValueList() {
