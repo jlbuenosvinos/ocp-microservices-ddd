@@ -71,7 +71,7 @@ public class StockController {
         ResponseEntity stockQueryResponse = null;
 
         try {
-            stockService.removeStock();
+            stockQueryProcessManager.processDelete();
             logger.debug("The stock has been removed.");
         }
         catch(StockApplicationException e) {
@@ -190,7 +190,8 @@ public class StockController {
 
         try {
 
-                stores = stockService.getStores();
+                stores = stockQueryProcessManager.processQuery();
+
                 storesSize = stores.size();
 
                 if (storesSize == 0) {
