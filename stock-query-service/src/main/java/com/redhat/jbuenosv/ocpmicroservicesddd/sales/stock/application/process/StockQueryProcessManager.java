@@ -1,6 +1,7 @@
 package com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.application.process;
 
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.domain.model.StockValue;
+import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.domain.model.StoreValue;
 
 import java.util.List;
 
@@ -23,5 +24,16 @@ public interface StockQueryProcessManager {
      * @return stock value
      */
     StockValue processQuery(Integer storeId, String productId);
+
+    /**
+     * Get the store list
+     * @return stores list
+     */
+    List<StoreValue> processQuery();
+
+    /**
+     * Removes the stock
+     */
+    void processDelete();
 
 }

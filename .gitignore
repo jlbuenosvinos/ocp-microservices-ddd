@@ -1633,3 +1633,7 @@ stock-query-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales
 stock-query-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/stock/application/process/StockQueryProcessManagerImpl.class
 stock-query-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/stock/application/command/StockByStoreProductQueryCommand.class
 stock-query-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/stock/application/command/StockByStoreProductQueryCommandCommandHandler.class
+stock-query-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/stock/application/command/StockRemoveCommand.class
+stock-query-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/stock/application/command/StockRemoveCommandHandler.class
+stock-query-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/stock/application/command/StoreQueryCommand.class
+stock-query-service/target/classes/com/redhat/jbuenosv/ocpmicroservicesddd/sales/stock/application/command/StoreQueryCommandHandler.class
