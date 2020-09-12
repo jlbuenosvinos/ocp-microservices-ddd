@@ -19,7 +19,6 @@ public class StockByStoreQueryCommand implements Command {
 
     Integer storeId;
 
-    @Autowired
     private List<StockValue> stockValueList;
 
     public List<StockValue> getStockValueList() {
