@@ -100,6 +100,7 @@ public class StockController {
         try {
             if (storeid != null) {
                 logger.debug("Getting the stock for store [{}]",storeid);
+
                 stock = stockQueryProcessManager.processQuery(storeid);
                 stockSize = stock.size();
 
@@ -147,8 +148,8 @@ public class StockController {
             logger.debug("begins [{}][{}]",storeid,productid);
             if (storeid != null) {
                 if (productid != null) {
-                    // stock must be queried by store id and product id
-                    stock = stockService.getStock(storeid, productid);
+
+                    stock = stockQueryProcessManager.processQuery(storeid,productid);
 
                     if (stock == null) {
                         logger.debug("No stock for store and product [{},{}]",storeid,productid);

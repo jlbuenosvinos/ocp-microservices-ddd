@@ -7,21 +7,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 /**
  * Created by jlbuenosvinos.
  */
 @Component
-public class StockByStoreQueryCommandCommandHandler implements CommandHandler {
+public class StockByStoreProductQueryCommandCommandHandler implements CommandHandler {
 
-    public static final Logger logger = LoggerFactory.getLogger(StockByStoreQueryCommandCommandHandler.class);
+    public static final Logger logger = LoggerFactory.getLogger(StockByStoreProductQueryCommandCommandHandler.class);
 
     @Autowired
     private StockRepository stockRepository;
 
     @Autowired
-    private StockByStoreQueryCommand stockByStoreQueryCommand;
+    private StockByStoreProductQueryCommand stockByStoreProductQueryCommand;
 
     /**
      * Executes the command
@@ -29,16 +27,16 @@ public class StockByStoreQueryCommandCommandHandler implements CommandHandler {
      */
     @Override
     public void execute(Command command) {
-        this.stockByStoreQueryCommand = (StockByStoreQueryCommand)command;
-        this.stockByStoreQueryCommand.setStockValueList(stockRepository.findByByStoreId(this.stockByStoreQueryCommand.getStoreId()));
+        this.stockByStoreProductQueryCommand = (StockByStoreProductQueryCommand)command;
+        this.stockByStoreProductQueryCommand.setStockValue(stockRepository.findByStoreIdProductId(this.stockByStoreProductQueryCommand.getStoreId(),this.stockByStoreProductQueryCommand.getProductId()));
     }
 
     /**
      * Gets the stock query result by store id
      * @return stock query result by store id
      */
-    public List<StockValue> getStockValueList() {
-        return this.stockByStoreQueryCommand.getStockValueList();
+    public StockValue getStockValue() {
+        return this.stockByStoreProductQueryCommand.getStockValue();
     }
 
 }

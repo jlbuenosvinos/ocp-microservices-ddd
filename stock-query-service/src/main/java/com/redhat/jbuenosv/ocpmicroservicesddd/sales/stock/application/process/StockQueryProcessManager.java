@@ -16,4 +16,12 @@ public interface StockQueryProcessManager {
      */
     List<StockValue> processQuery(Integer storeId);
 
+    /**
+     * Get the current stock for an specific  store
+     * @param storeId store id
+     * @param productId product id
+     * @return stock value
+     */
+    StockValue processQuery(Integer storeId, String productId);
+
 }
