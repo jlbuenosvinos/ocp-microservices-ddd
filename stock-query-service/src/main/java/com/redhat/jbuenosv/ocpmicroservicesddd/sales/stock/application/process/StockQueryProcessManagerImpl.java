@@ -51,6 +51,7 @@ public class StockQueryProcessManagerImpl implements  StockQueryProcessManager {
     public StockValue processQuery(Integer storeId, String productId) {
         stockByStoreProductQueryCommand.setStoreId(storeId);
         stockByStoreProductQueryCommand.setProductId(productId);
+        stockByStoreProductQueryCommandCommandHandler.execute(stockByStoreProductQueryCommand);
         return stockByStoreProductQueryCommandCommandHandler.getStockValue();
     }
 

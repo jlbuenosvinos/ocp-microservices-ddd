@@ -28,7 +28,9 @@ public class StockByStoreProductQueryCommandCommandHandler implements CommandHan
     @Override
     public void execute(Command command) {
         this.stockByStoreProductQueryCommand = (StockByStoreProductQueryCommand)command;
-        this.stockByStoreProductQueryCommand.setStockValue(stockRepository.findByStoreIdProductId(this.stockByStoreProductQueryCommand.getStoreId(),this.stockByStoreProductQueryCommand.getProductId()));
+        String productId = this.stockByStoreProductQueryCommand.getProductId();
+        Integer storeId = this.stockByStoreProductQueryCommand.getStoreId();
+        this.stockByStoreProductQueryCommand.setStockValue(stockRepository.findByStoreIdProductId(storeId,productId));
     }
 
     /**

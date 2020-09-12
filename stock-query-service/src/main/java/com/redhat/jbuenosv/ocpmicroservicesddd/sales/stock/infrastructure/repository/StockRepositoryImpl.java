@@ -103,10 +103,6 @@ public class StockRepositoryImpl implements StockRepository {
         try {
 
             if (cache != null) {
-
-                logger.debug("cache size [{}].",cache.size());
-                logger.debug("Cache key entries: [{}]",cacheUtil.cacheKeystoString(cache));
-
                 stockValue = (StockValue)cache.get(stockKey);
 
                 if (stockValue != null) {
