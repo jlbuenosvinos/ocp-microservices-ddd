@@ -9,6 +9,11 @@ import java.util.List;
  */
 public interface StockQueryProcessManager {
 
+    /**
+     * Get the current stock for an specific  store
+     * @param storeId store id
+     * @return stock value
+     */
     List<StockValue> processQuery(Integer storeId);
 
 }

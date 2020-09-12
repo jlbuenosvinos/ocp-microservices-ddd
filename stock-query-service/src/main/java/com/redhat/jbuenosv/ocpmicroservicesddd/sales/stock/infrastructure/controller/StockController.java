@@ -1,6 +1,7 @@
 package com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.infrastructure.controller;
 
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.application.exception.StockApplicationException;
+import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.application.process.StockQueryProcessManagerImpl;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.application.service.StockService;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.domain.model.StockValue;
 import com.redhat.jbuenosv.ocpmicroservicesddd.sales.stock.domain.model.StoreValue;
@@ -30,6 +31,9 @@ public class StockController {
 
     @Autowired
     private StockService stockService;
+
+    @Autowired
+    private StockQueryProcessManagerImpl stockQueryProcessManager;
 
     /**
      * Gets the stock
@@ -95,10 +99,8 @@ public class StockController {
 
         try {
             if (storeid != null) {
-                // stock must be queried only by store id
                 logger.debug("Getting the stock for store [{}]",storeid);
-
-                stock = stockService.getStock(storeid);
+                stock = stockQueryProcessManager.processQuery(storeid);
                 stockSize = stock.size();
 
                 if (stockSize == 0) {
