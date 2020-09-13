@@ -3,7 +3,7 @@ kind: DestinationRule
 metadata:
   name: stock-processor-service
 spec:
-  host: stock-processor-service
+  host: "*"
   subsets:
   - name: stock-processor-service
     labels:

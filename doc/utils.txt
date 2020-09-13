@@ -209,9 +209,7 @@ oc create -f https://raw.githubusercontent.com/jboss-container-images/jboss-data
 oc project devops-tools
 
 # for OCP 4
-oc new-app --template=jenkins-ephemeral -p JENKINS_IMAGE_STREAM_TAG=jenkins:latest -p MEMORY_LIMIT=1024Mi -p ENABLE_OAUTH=true
-
-oc new-app --template=jenkins-persistent -p JENKINS_IMAGE_STREAM_TAG=jenkins:latest -p MEMORY_LIMIT=1024Mi -p ENABLE_OAUTH=true
+oc new-app --template=jenkins-ephemeral -p JENKINS_IMAGE_STREAM_TAG=jenkins:latest -p MEMORY_LIMIT=2048Mi -p ENABLE_OAUTH=true
 
 oc project devops-tools
 
@@ -635,16 +633,6 @@ Patching the sales-data-store deployment adding the STOCK cache configuration
 _____________________________________________________________________________
 
 oc env dc/sales-data-store STOCK_CACHE_START=EAGER STOCK_CACHE_SECURITY_AUTHORIZATION_ENABLED=true  STOCK_CACHE_SECURITY_AUTHORIZATION_ROLES=sales-data-store,___schema_manager,___script_manager HOTROD_AUTHENTICATION=true  CONTAINER_SECURITY_ROLE_MAPPER=identity-role-mapper CONTAINER_SECURITY_ROLES=sales-data-store\\=ALL  ADMIN_GROUP=REST,___schema_manager,sales-data-store
-
-
-AMQ-Streams
------------
-
-sed -i '' 's/namespace: .*/namespace: ocp-microservices-ddd/' install/cluster-operator/*RoleBinding*.yaml
-
-oc apply -f install/cluster-operator -n ocp-microservices-ddd
-
-oc apply -f examples/templates/cluster-operator -n ocp-microservices-ddd
 
 
 MS deployment

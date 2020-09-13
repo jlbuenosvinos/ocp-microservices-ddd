@@ -3,7 +3,7 @@ kind: DestinationRule
 metadata:
   name: stock-query-endpoint
 spec:
-  host: stock-query-endpoint
+  host: "*"
   subsets:
   - name: stock-query-endpoint-v1
     labels:

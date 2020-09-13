@@ -3,7 +3,7 @@ kind: DestinationRule
 metadata:
   name: ticket-processor-endpoint
 spec:
-  host: ticket-processor-endpoint
+  host: "*"
   subsets:
   - name: ticket-processor-endpoint-v1
     labels:
