@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: ${project.artifactId}
   labels:
-    version: v0
+    service: ${project.artifactId}
     app: ${project.artifactId}
 spec:
   ports:
