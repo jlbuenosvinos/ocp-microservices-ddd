@@ -20,7 +20,9 @@ spec:
         version: ${project.version}
     spec:
       containers:
-        -
+        - name: ${project.artifactId}
+          ports:
+          - containerPort: 9080
           livenessProbe:
             failureThreshold: 3
             httpGet:
