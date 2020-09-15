@@ -3,11 +3,11 @@ kind: Service
 metadata:
   name: ${project.artifactId}
   labels:
-    app: ${project.artifactId}
+    custom-service: ${project.artifactId}
 spec:
   ports:
     - name: http-web
       port: 8080
       targetPort: 8080
   selector:
-    app: ${project.artifactId}
+    custom-service: ${project.artifactId}
