@@ -1,8 +1,9 @@
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: ${project.artifactId}-${project.version}
+  name: ${project.artifactId}
   labels:
     app: ${project.artifactId}
-    version: ${project.version}
 spec:
   replicas: 2
   selector:
