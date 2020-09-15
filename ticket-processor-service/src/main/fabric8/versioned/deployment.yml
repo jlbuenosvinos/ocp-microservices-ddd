@@ -3,21 +3,21 @@ kind: Deployment
 metadata:
   name: ${project.artifactId}-${project.version}
   labels:
-    customer-service: ${project.artifactId}
-    customer-version: ${project.version}
+    app: ${project.artifactId}
+    version: ${project.version}
 spec:
   replicas: 2
   selector:
     matchLabels:
-      customer-service: ${project.artifactId}
-      customer-version: ${project.version}
+      app: ${project.artifactId}
+      version: ${project.version}
   template:
     metadata:
       annotations:
         sidecar.istio.io/inject: "true"
       labels:
-        customer-service: ${project.artifactId}
-        customer-version: ${project.version}
+        app: ${project.artifactId}
+        version: ${project.version}
     spec:
       containers:
         -
