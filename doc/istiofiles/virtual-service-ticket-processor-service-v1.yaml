@@ -1,7 +1,7 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: ticket-processor-service-virtual-service
+  name: t-p-s-vs
 spec:
   hosts:
   - ticket-processor-service
