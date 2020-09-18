@@ -12,3 +12,4 @@ spec:
       targetPort: 8080
   selector:
     app: ${project.artifactId}
+    version: ${project.version}
