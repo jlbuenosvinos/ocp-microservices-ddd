@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: ${project.artifactId}
+  name: ${project.artifactId}-${project.version}
   labels:
     app: ${project.artifactId}
     service: ${project.artifactId}
