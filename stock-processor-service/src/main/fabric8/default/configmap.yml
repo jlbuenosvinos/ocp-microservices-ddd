@@ -7,7 +7,7 @@ data:
   TICKETING_TICKETS_DESTINATION_NAME: "sales.ticketing.tickets.destination"
   TICKETING_TICKETS_BROKER_URI: "tcp://sales-event-store-amq-tcp:61616?jms.redeliveryPolicy.maximumRedeliveries=10"
   TICKETING_TICKETS_BROKER_USERNAME: "sales-event-store"
-  TICKETING_TICKETS_KAFKA_BOOTSTRAP_SERVERS: "event-store-kafka-bootstrap:9092"
+  TICKETING_TICKETS_KAFKA_BOOTSTRAP_SERVERS: "events-store-kafka-bootstrap:9092"
   TICKETING_TICKETS_KAFKA_USERNAME: "user-event-store"
   TICKETING_TICKETS_KAFKA_DESTINATION_NAME: "tickets-events"
   STOCK_SERVICE_VERSION: "${project.version}"
