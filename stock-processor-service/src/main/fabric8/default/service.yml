@@ -5,6 +5,7 @@ metadata:
   labels:
     service: ${project.artifactId}
     app: ${project.artifactId}
+    version: v0
 spec:
   ports:
     - name: http
@@ -13,3 +14,4 @@ spec:
       targetPort: 8080
   selector:
     app: ${project.artifactId}
+    version: v0
