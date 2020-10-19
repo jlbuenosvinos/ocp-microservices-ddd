@@ -1,0 +1,64 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: stock-query-knative-service
+  namespace: sales-demo-app-dev
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/target: "50"
+    spec:
+      containers:
+        - image: image-registry.openshift-image-registry.svc:5000/sales-demo-app-dev/stock-query-service@sha256:ee33253673346034cec634ae37df6b84b9288e081c6df8ea4f7bcba76aec77d0
+          env:
+            - name: "STOCK_DATAGRID_BROKER_URI"
+              valueFrom:
+                configMapKeyRef:
+                  name: stock-query-service-v1
+                  key: STOCK_DATAGRID_BROKER_URI
+            - name: "STOCK_DATAGRID_BROKER_URI_PORT"
+              valueFrom:
+                configMapKeyRef:
+                  name: stock-query-service-v1
+                  key: STOCK_DATAGRID_BROKER_URI_PORT
+            - name: "STOCK_DATAGRID_BROKER_USERNAME"
+              valueFrom:
+                configMapKeyRef:
+                  name: stock-query-service-v1
+                  key: STOCK_DATAGRID_BROKER_USERNAME
+            - name: "STOCK_DATAGRID_BROKER_PASSWORD"
+              valueFrom:
+                secretKeyRef:
+                  name: stock-query-service-secret
+                  key: STOCK_DATAGRID_BROKER_PASSWORD
+            - name: "STOCK_SERVICE_VERSION"
+              valueFrom:
+                configMapKeyRef:
+                  name: stock-query-service-v1
+                  key: STOCK_SERVICE_VERSION
+            - name: "STOCK_METRICS_ENABLED"
+              valueFrom:
+                configMapKeyRef:
+                  name: stock-query-service-v1
+                  key: STOCK_METRICS_ENABLED
+            - name: "STOCK_METRICS_WEB_EXPOSURE_INCLUDE"
+              valueFrom:
+                configMapKeyRef:
+                  name: stock-query-service-v1
+                  key: STOCK_METRICS_WEB_EXPOSURE_INCLUDE
+            - name: "STOCK_METRICS_PROMETHEUS_ENABLED"
+              valueFrom:
+                configMapKeyRef:
+                  name: stock-query-service-v1
+                  key: STOCK_METRICS_PROMETHEUS_ENABLED
+            - name: "STOCK_METRICS_PROMETHEUS_EXPORT_ENABLED"
+              valueFrom:
+                configMapKeyRef:
+                  name: stock-query-service-v1
+                  key: STOCK_METRICS_PROMETHEUS_EXPORT_ENABLED
+            - name: "STOCK_METRICS_ARTIFACTID_NAME"
+              valueFrom:
+                configMapKeyRef:
+                  name: stock-query-service-v1
+                  key: STOCK_METRICS_ARTIFACTID_NAME
