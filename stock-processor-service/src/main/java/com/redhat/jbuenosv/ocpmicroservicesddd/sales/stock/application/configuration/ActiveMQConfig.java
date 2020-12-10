@@ -20,9 +20,6 @@ public class ActiveMQConfig {
     @Value("${ticketing.activemq.broker.username}")
     String userName;
 
-    @Value("${ticketing.activemq.broker.password}")
-    String password;
-
     @Value("${ticketing.activemq.tickets.topic}")
     String ticketsTopicName;
 
@@ -35,10 +32,6 @@ public class ActiveMQConfig {
 
     public String getUserName() {
         return userName;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public String getTicketsTopicName() {
@@ -55,7 +48,6 @@ public class ActiveMQConfig {
     public ActiveMQConnectionFactory topicListenerFactory() {
         ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
         connectionFactory.setBrokerURL(getBrokerUrl());
-        connectionFactory.setPassword(getPassword());
         connectionFactory.setUserName(getUserName());
         return connectionFactory;
     }
